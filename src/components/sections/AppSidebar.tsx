@@ -12,17 +12,17 @@ export function AppSidebar() {
 
     const sidebarGroups: SidebarGroupComponentProps[] = [
         {
-            label: "Application",
+            label: "Accounting",
             items: [
-                { label: "Project 1", href: "/project/1", icon: <Database /> },
-                { label: "Project 2", href: "/project/2", icon: <FileText /> },
+                { label: "Chart of Accounts", href: "/accounting/accounts", icon: <Database className="w-4 h-4" /> },
+                { label: "Journal Entries", href: "/accounting/journals", icon: <FileText className="w-4 h-4" /> },
             ],
         },
         {
-            label: "Settings",
+            label: "System",
             items: [
-                { label: "Project 1", href: "/project/1", icon: <Settings /> },
-                { label: "Project 2", href: "/project/2", icon: <UserRoundPlus /> },
+                { label: "Settings", href: "/settings", icon: <Settings className="w-4 h-4" /> },
+                { label: "User Management", href: "/users", icon: <UserRoundPlus className="w-4 h-4" /> },
             ],
         },
     ];

@@ -8,6 +8,8 @@ import { ThemeProvider } from "@components/provider/ThemeProvider";
 import { ToastProvider } from "@components/provider/ToastProvider";
 import DataTablePage from "@pages/dashboard/data-table/DataTablePage";
 import AccountListing from "@/pages/dashboard/account/AccountListing";
+import JournalEntryPage from "@/pages/dashboard/journal/JournalEntryPage";
+import JournalListing from "@/pages/dashboard/journal/JournalListing";
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<HomePage />} />
             <Route path="data-table" element={<DataTablePage />} />
-            <Route path="account" element={<AccountListing />} />
+            <Route path="/accounting/accounts" element={<AccountListing />} />
+            <Route path="/accounting/journals" element={<JournalListing />} />
+            <Route path="/accounting/journal/new" element={<JournalEntryPage />} />
           </Route>
 
           <Route path="/login" element={<AuthLayout />}>

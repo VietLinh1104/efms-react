@@ -7,8 +7,9 @@ export interface Toast extends AlertAppProps {
     isExiting?: boolean;
 }
 
-export type ToastOptions = Omit<Toast, "id" | "type" | "variant"> & {
+export type ToastOptions = Omit<Toast, "id" | "type" | "variant" | "title" | "description"> & {
     title?: string;
+    description?: string;
     variant?: "default" | "destructive";
 };
 

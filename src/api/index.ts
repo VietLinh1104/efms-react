@@ -4,7 +4,10 @@ import { apiConfig } from "./config";
 
 import {
     AccountsApi,
-    BankAccountsApi
+    BankAccountsApi,
+    JournalEntriesApi,
+    PartnersApi,
+    FiscalPeriodsApi
 } from "@/api/generated/api";
 
 export const accountsApi = new AccountsApi(
@@ -19,3 +22,20 @@ export const bankAccountsApi = new BankAccountsApi(
     axiosInstance
 );
 
+export const journalEntriesApi = new JournalEntriesApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
+export const partnersApi = new PartnersApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
+export const fiscalPeriodsApi = new FiscalPeriodsApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);

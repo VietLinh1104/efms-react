@@ -48,7 +48,7 @@ const AccountListing: React.FC = () => {
     }, []);
 
     return (
-        <div className="p-8 space-y-8">
+        <div className="">
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Account</h2>
@@ -57,10 +57,10 @@ const AccountListing: React.FC = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button 
-                        variant="outline" 
-                        size="icon" 
-                        onClick={handleGetAllAccounts} 
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleGetAllAccounts}
                         disabled={isLoading}
                     >
                         <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
