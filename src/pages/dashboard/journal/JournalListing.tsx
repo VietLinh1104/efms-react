@@ -18,7 +18,7 @@ const JournalListing: React.FC = () => {
     const fetchJournals = async () => {
         setIsLoading(true);
         try {
-            const companyId = '4df27c87-491d-473e-999c-ce5678436be1';
+            const companyId = 'b7430d8f-9698-42af-8160-45dc83d1fdd8';
             const response = await journalEntriesApi.list5(companyId, undefined, undefined, undefined, 0, 100);
             setData(response.data.data?.content || []);
         } catch (err) {
@@ -66,13 +66,20 @@ const JournalListing: React.FC = () => {
     }, []);
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Journal Entries</h2>
-                    <p className="text-muted-foreground">
-                        Danh sách các bút toán kế toán tổng hợp.
-                    </p>
+        <div className="space-y-2">
+            <div>
+                <h2 className="text-2xl font-bold tracking-tight">Journal Entries</h2>
+                <p className="text-muted-foreground">
+                    Danh sách các bút toán kế toán tổng hợp.
+                </p>
+            </div>
+                
+
+            <div className="flex justify-between mb-5">
+                
+                <div className="relative max-w-sm w-full">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Tìm kiếm chứng từ..." className="pl-8" />
                 </div>
                 <div className="flex items-center gap-2">
                     <Button
@@ -86,13 +93,6 @@ const JournalListing: React.FC = () => {
                     <Button onClick={() => navigate("/accounting/journal/new")}>
                         <Plus className="mr-2 h-4 w-4" /> Tạo chứng từ
                     </Button>
-                </div>
-            </div>
-
-            <div className="flex items-center gap-4 py-4">
-                <div className="relative max-w-sm w-full">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Tìm kiếm chứng từ..." className="pl-8" />
                 </div>
             </div>
 

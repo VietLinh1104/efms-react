@@ -10,6 +10,7 @@ import DataTablePage from "@pages/dashboard/data-table/DataTablePage";
 import AccountListing from "@/pages/dashboard/account/AccountListing";
 import JournalEntryPage from "@/pages/dashboard/journal/JournalEntryPage";
 import JournalListing from "@/pages/dashboard/journal/JournalListing";
+import TrialBalanceListing from "@/pages/dashboard/accounting/trial-balance/TrialBalanceListing";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/accounting/accounts" element={<AccountListing />} />
             <Route path="/accounting/journals" element={<JournalListing />} />
             <Route path="/accounting/journal/new" element={<JournalEntryPage />} />
+            <Route path="/accounting/trial-balance" element={<TrialBalanceListing />} />
           </Route>
 
           <Route path="/login" element={<AuthLayout />}>

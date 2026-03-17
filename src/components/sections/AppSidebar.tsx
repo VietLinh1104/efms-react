@@ -16,6 +16,7 @@ export function AppSidebar() {
             items: [
                 { label: "Chart of Accounts", href: "/accounting/accounts", icon: <Database className="w-4 h-4" /> },
                 { label: "Journal Entries", href: "/accounting/journals", icon: <FileText className="w-4 h-4" /> },
+                { label: "Trial Balance", href: "/accounting/trial-balance", icon: <FileText className="w-4 h-4" /> },
             ],
         },
         {

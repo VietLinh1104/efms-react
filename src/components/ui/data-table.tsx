@@ -21,12 +21,14 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     isLoading?: boolean
+    footer?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     isLoading,
+    footer,
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({})
 
@@ -47,7 +49,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="overflow-x-auto no-scrollbar rounded-md border">
-            <Table className="border-b">
+            <Table className="border-b bg-card">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
@@ -89,6 +91,7 @@ export function DataTable<TData, TValue>({
                         </TableRow>
                     )}
                 </TableBody>
+                {footer}
             </Table>
             <DataTablePagination table={table} />
         </div>
