@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { DataTable } from "@/components/ui/data-table";
-import { getColumns } from "./columns";
-import { Button } from "@/components/ui/button";
+import { DataTable } from "@components/ui/data-table.tsx";
+import { getColumns } from "./columns.tsx";
+import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
 import { journalEntriesApi } from "@/api";
 import type { JournalEntryResponse } from "@/api/generated";
-import { useToastApp } from "@/hooks/use-toast-app";
+import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/input";
+import { Input } from "@components/ui/input.tsx";
 
 const JournalListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);

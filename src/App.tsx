@@ -7,9 +7,9 @@ import AuthPage from "./pages/dashboard/AuthPage";
 import { ThemeProvider } from "@components/provider/ThemeProvider";
 import { ToastProvider } from "@components/provider/ToastProvider";
 import DataTablePage from "@pages/dashboard/data-table/DataTablePage";
-import AccountListing from "@/pages/dashboard/account/AccountListing";
-import JournalEntryPage from "@/pages/dashboard/journal/JournalEntryPage";
-import JournalListing from "@/pages/dashboard/journal/JournalListing";
+import AccountListing from "@pages/dashboard/accounting/account/AccountListing";
+import JournalEntryPage from "@pages/dashboard/accounting/journal/JournalEntryPage";
+import JournalListing from "@pages/dashboard/accounting/journal/JournalListing";
 import TrialBalanceListing from "@/pages/dashboard/accounting/trial-balance/TrialBalanceListing";
 
 function App() {

@@ -9,7 +9,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog";
+} from "@components/ui/dialog.tsx";
 import {
     Form,
     FormControl,
@@ -18,17 +18,17 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@components/ui/form.tsx";
+import { Input } from "@components/ui/input.tsx";
+import { Button } from "@components/ui/button.tsx";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+} from "@components/ui/select.tsx";
+import { Switch } from "@components/ui/switch.tsx";
 import { accountsApi } from "@/api";
 import type { AccountResponse, CreateAccountRequest } from "@/api/generated";
 import { Loader2 } from "lucide-react";

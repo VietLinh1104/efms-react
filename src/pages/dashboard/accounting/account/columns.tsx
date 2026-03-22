@@ -1,9 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@components/ui/checkbox.tsx"
+import { Badge } from "@components/ui/badge.tsx"
 import { MoreHorizontal, Edit, Power } from "lucide-react"
 import type { AccountResponse } from "@/api/generated"
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button.tsx"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@components/ui/dropdown-menu.tsx"
 
 export const getColumns = (
     onEdit: (account: AccountResponse) => void,

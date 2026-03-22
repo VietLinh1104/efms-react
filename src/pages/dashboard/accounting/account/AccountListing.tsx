@@ -1,11 +1,11 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DataTable } from "@/components/ui/data-table";
-import { getColumns } from "./columns";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs.tsx"
+import { DataTable } from "@components/ui/data-table.tsx";
+import { getColumns } from "./columns.tsx";
+import { Button } from "@components/ui/button.tsx";
 import React from "react";
 import type { AccountResponse } from "@/api/generated"
 import { accountsApi } from "@/api";
-import { AccountDialog } from "./AccountDialog";
+import { AccountDialog } from "./AccountDialog.tsx";
 import { Plus, RefreshCcw } from "lucide-react";
 
 const AccountListing: React.FC = () => {

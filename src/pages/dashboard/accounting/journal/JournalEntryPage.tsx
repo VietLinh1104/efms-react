@@ -4,8 +4,8 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Plus, Trash2, Save } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils.ts";
+import { Button } from "@components/ui/button.tsx";
 import {
     Form,
     FormControl,
@@ -13,15 +13,15 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@components/ui/form.tsx";
+import { Input } from "@components/ui/input.tsx";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from "@components/ui/select.tsx";
 import {
     Table,
     TableBody,
@@ -30,10 +30,10 @@ import {
     TableHeader,
     TableRow,
     TableFooter,
-} from "@/components/ui/table";
+} from "@components/ui/table.tsx";
 import { accountsApi, partnersApi, fiscalPeriodsApi, journalEntriesApi } from "@/api";
 import type { AccountResponse, PartnerResponse, FiscalPeriodResponse, CreateJournalRequest, JournalLineRequest } from "@/api/generated";
-import { useToastApp } from "@/hooks/use-toast-app";
+import { useToastApp } from "@hooks/use-toast-app.ts";
 
 const journalLineSchema = z.object({
     accountId: z.string().min(1, "Tài khoản là bắt buộc"),

@@ -1,8 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@components/ui/badge.tsx"
 import { MoreHorizontal, Eye, Trash2, CheckCircle2 } from "lucide-react"
 import type { JournalEntryResponse } from "@/api/generated"
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button.tsx"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@components/ui/dropdown-menu.tsx"
 
 const formatDate = (dateStr: string) => {
     if (!dateStr) return "---";
