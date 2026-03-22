@@ -33,6 +33,7 @@ const JournalListing: React.FC = () => {
         // For now, move to view page (which we might need to create or use the same form)
         // navigate(`/accounting/journal/${journal.id}`);
         warning("Tính năng xem chi tiết đang được phát triển.");
+        console.log(journal);
     };
 
     const handleDelete = async (journal: JournalEntryResponse) => {
@@ -44,7 +45,7 @@ const JournalListing: React.FC = () => {
             success("Đã xoá chứng từ thành công.");
             fetchJournals();
         } catch (err) {
-            error("Lỗi khi xoá chứng từ.");
+            error("Lỗi khi xoá chứng từ: ["+err+"]");
         }
     };
 
@@ -55,7 +56,7 @@ const JournalListing: React.FC = () => {
             success("Đã ghi sổ chứng từ thành công.");
             fetchJournals();
         } catch (err) {
-            error("Lỗi khi ghi sổ.");
+            error("Lỗi khi ghi sổ: ["+err+"]");
         }
     };
 
