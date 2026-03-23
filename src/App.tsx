@@ -10,6 +10,7 @@ import AccountListing from "@pages/dashboard/accounting/account/AccountListing";
 import JournalEntryPage from "@pages/dashboard/accounting/journal/JournalEntryPage";
 import JournalListing from "@pages/dashboard/accounting/journal/JournalListing";
 import TrialBalanceListing from "@/pages/dashboard/accounting/trial-balance/TrialBalanceListing";
+import PartnersListing from "@pages/dashboard/invoices/partners/PartnersListing.tsx";
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
             <Route path="/accounting/journal/new" element={<JournalEntryPage />} />
             <Route path="/accounting/trial-balance" element={<TrialBalanceListing />} />
 
-            {/*<Route path="/partners" element={< />} />*/}
+            <Route path="/partners" element={<PartnersListing />} />
             {/*<Route path="/partners/new" element={< />} />*/}
             {/*<Route path="/invoices" element={< />} />*/}
             {/*<Route path="/invoices/new" element={< />} />*/}
