@@ -4,7 +4,22 @@ import {
     SidebarFooter,
     SidebarHeader
 } from "@/components/ui/sidebar"
-import { Codepen, Database, FileText, Settings, UserRoundPlus, User } from 'lucide-react';
+import {
+    Codepen,
+    UserRoundPlus,
+    User,
+    ListTree,           // Thay cho LayoutChartScatter (Phù hợp với Chart of Accounts)
+    BookText,
+    Scale,
+    Users,
+    Receipt,
+    CreditCard,
+    Landmark,
+    History,
+    ShieldCheck,
+    Building2,
+    CalendarDays
+} from 'lucide-react';
 import SidebarGroupComponent from "@components/common/SidebarGroupComponent";
 import type { SidebarGroupComponentProps } from "@components/common/SidebarGroupComponent";
 
@@ -12,18 +27,35 @@ export function AppSidebar() {
 
     const sidebarGroups: SidebarGroupComponentProps[] = [
         {
-            label: "Accounting",
+            label: "Kế toán (Accounting)",
             items: [
-                { label: "Chart of Accounts", href: "/accounting/accounts", icon: <Database className="w-4 h-4" /> },
-                { label: "Journal Entries", href: "/accounting/journals", icon: <FileText className="w-4 h-4" /> },
-                { label: "Trial Balance", href: "/accounting/trial-balance", icon: <FileText className="w-4 h-4" /> },
+                { label: "Hệ thống tài khoản", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
+                { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
+                { label: "Bảng cân đối thử", href: "/accounting/trial-balance", icon: <Scale className="w-4 h-4" /> },
             ],
         },
         {
-            label: "System",
+            label: "Chứng từ (Invoices)",
             items: [
-                { label: "Settings", href: "/settings", icon: <Settings className="w-4 h-4" /> },
-                { label: "User Management", href: "/users", icon: <UserRoundPlus className="w-4 h-4" /> },
+                { label: "Đối tác", href: "/partners", icon: <Users className="w-4 h-4" /> },
+                { label: "Hóa đơn & Chứng từ", href: "/invoices", icon: <Receipt className="w-4 h-4" /> },
+                { label: "Thanh toán", href: "/payments", icon: <CreditCard className="w-4 h-4" /> },
+            ],
+        },
+        {
+            label: "Tiền mặt & Ngân hàng",
+            items: [
+                { label: "Tài khoản ngân hàng", href: "/finance/accounts", icon: <Landmark className="w-4 h-4" /> },
+                { label: "Lịch sử giao dịch", href: "/finance/transactions", icon: <History className="w-4 h-4" /> },
+                { label: "Đối soát", href: "/finance/reconciliation", icon: <ShieldCheck className="w-4 h-4" /> },
+            ],
+        },
+        {
+            label: "Cấu hình (Settings)",
+            items: [
+                { label: "Thông tin công ty", href: "/settings/company", icon: <Building2 className="w-4 h-4" /> },
+                { label: "Người dùng & Phân quyền", href: "/settings/users", icon: <UserRoundPlus className="w-4 h-4" /> },
+                { label: "Kỳ kế toán", href: "/settings/periods", icon: <CalendarDays className="w-4 h-4" /> },
             ],
         },
     ];
@@ -47,8 +79,8 @@ export function AppSidebar() {
                         <User className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col">
-                        <h1 className="text-sm font-normal">Viet Linh</h1>
-                        <p className="text-xs text-muted-foreground">Admin</p>
+                        <h1 className="text-sm font-normal text-sidebar-foreground">Viet Linh</h1>
+                        <p className="text-[10px] text-muted-foreground leading-none">Quản trị viên</p>
                     </div>
                 </div>
             </SidebarFooter>
