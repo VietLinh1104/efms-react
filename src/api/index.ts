@@ -9,6 +9,7 @@ import {
     PartnersApi,
     FiscalPeriodsApi,
     TrialBalanceApi,
+    InvoicesApi,
 } from "@/api/generated/api";
 
 export const accountsApi = new AccountsApi(
@@ -17,6 +18,11 @@ export const accountsApi = new AccountsApi(
     axiosInstance
 );
 
+export const invoicesApi = new InvoicesApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
 
 export const trialBalanceApi = new TrialBalanceApi(
     apiConfig,
