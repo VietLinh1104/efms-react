@@ -4,15 +4,18 @@ import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
 import { partnersApi } from "@/api";
-import type { PartnerResponse } from "@/api/generated";
+import type { PartnerResponse} from "@/api/generated";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
+import {PartnerDialog} from "@pages/dashboard/invoices/partners/PartnerDialog.tsx";
 
 const PartnersListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<PartnerResponse[]>([]);
     const { success, error } = useToastApp();
+    const [selectedPartner, setSelectedPartner] = React.useState<PartnerResponse | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const navigate = useNavigate();
 
     // 1. Hàm fetch dữ liệu dùng useCallback để tránh tạo mới function mỗi lần render
@@ -43,8 +46,9 @@ const PartnersListing: React.FC = () => {
     }, [navigate]);
 
     const handleEdit = useCallback((partner: PartnerResponse) => {
-        navigate(`/partners/${partner.id}/edit`);
-    }, [navigate]);
+        setSelectedPartner(partner);
+        setIsDialogOpen(true);
+    }, []);
 
     const handleDelete = useCallback(async (partner: PartnerResponse) => {
         if (!partner.id) return;
@@ -98,9 +102,15 @@ const PartnersListing: React.FC = () => {
                     >
                         <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                     </Button>
-                    <Button onClick={() => navigate("/partners/new")}>
+                    <Button
+                        onClick={() => {
+                            setSelectedPartner(null);
+                            setIsDialogOpen(true);
+                        }}
+                    >
                         <Plus className="mr-2 h-4 w-4" /> Thêm đối tác
                     </Button>
+
                 </div>
             </div>
 
@@ -111,6 +121,12 @@ const PartnersListing: React.FC = () => {
                     isLoading={isLoading}
                 />
             </div>
+            <PartnerDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                initialData={selectedPartner}
+                onSuccess={fetchPartners}
+            />
         </div>
     );
 };
