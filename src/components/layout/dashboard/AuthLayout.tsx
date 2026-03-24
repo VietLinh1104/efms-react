@@ -12,6 +12,7 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ title }) => {
+    console.log(title);
   return (
     <div className="layout flex h-screen">
       <header className="bg-primary-foreground w-1/2 border-r border-border p-8">
