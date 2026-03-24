@@ -11,6 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu.tsx"
+import {Checkbox} from "@components/ui/checkbox.tsx";
 
 const formatDate = (dateStr: string) => {
     if (!dateStr) return "---";
@@ -35,9 +36,26 @@ export const getColumns = (
     onPost: (journal: JournalEntryResponse) => void
 ): ColumnDef<JournalEntryResponse>[] => [
     {
-        accessorKey: "id",
-        header: "Số CT",
-        cell: ({ row }) => <div className="font-medium text-xs truncate w-[80px]">{row.getValue("id")}</div>,
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
+                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
     },
     {
         accessorKey: "entryDate",

@@ -11,6 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu.tsx"
+import {Checkbox} from "@components/ui/checkbox.tsx";
 
 const formatDateTime = (dateStr?: string) => {
     if (!dateStr) return "---";
@@ -30,9 +31,26 @@ export const getColumns = (
     onDelete: (partner: PartnerResponse) => void,
 ): ColumnDef<PartnerResponse>[] => [
     {
-        accessorKey: "id",
-        header: "Mã HT",
-        cell: ({ row }) => <div className="font-medium text-xs truncate w-[70px]">{row.getValue("id")}</div>,
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
+                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
     },
     {
         accessorKey: "name",
