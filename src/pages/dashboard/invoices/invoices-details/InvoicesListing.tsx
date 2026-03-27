@@ -23,7 +23,7 @@ const InvoicesListing: React.FC = () => {
         setIsLoading(true);
         try {
             // ID công ty lấy từ Context hoặc hardcode tạm thời
-            const companyId = 'b7430d8f-9698-42af-8160-45dc83d1fdd8';
+            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
 
             // Gọi API list2 của invoices
             const response = await invoicesApi.list2(
