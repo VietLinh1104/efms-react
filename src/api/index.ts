@@ -10,9 +10,16 @@ import {
     FiscalPeriodsApi,
     TrialBalanceApi,
     InvoicesApi,
+    PaymentsApi
 } from "@/api/generated/api";
 
 export const accountsApi = new AccountsApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
+export const paymentsApi = new PaymentsApi(
     apiConfig,
     undefined,
     axiosInstance
