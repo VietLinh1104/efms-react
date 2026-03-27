@@ -12,7 +12,6 @@ import {
 import {
     CalendarDays,
     CreditCard,
-    Edit,
     ExternalLink,
     Hash,
     ReceiptText,
@@ -80,7 +79,6 @@ export function PaymentQuickViewDialog({
     payment,
     open,
     onOpenChange,
-    onViewDetail,
     onEdit,
 }: PaymentQuickViewDialogProps) {
     if (!payment) return null;
