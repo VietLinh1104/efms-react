@@ -15,6 +15,7 @@ import InvoicesListing from "@pages/dashboard/invoices/invoices-details/Invoices
 import InvoiceFormPage from "@pages/dashboard/invoices/invoices-details/InvoiceFormPage.tsx";
 import PaymentsListing from "./pages/dashboard/invoices/payments/PaymentsListing";
 import PaymentFormPage from "./pages/dashboard/invoices/payments/PaymentFormPage";
+import BankAccountsListing from "./pages/dashboard/finance/accounts/BankAccountsListing";
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
             <Route path="/payments/new" element={<PaymentFormPage />} />
             <Route path="/payments/:id/edit" element={<PaymentFormPage />} />
 
-            {/*<Route path="/finance/accounts" element={< />} />*/}
+            <Route path="/finance/accounts" element={<BankAccountsListing />} />
             {/*<Route path="/finance/accounts/new" element={< />} />*/}
             {/*<Route path="/finance/transactions" element={< />} />*/}
             {/*<Route path="/finance/reconciliation" element={< />} />*/}
