@@ -5,12 +5,16 @@ import { apiConfig } from "./config";
 import {
     AccountsApi,
     BankAccountsApi,
+    BankTransactionsApi,
     JournalEntriesApi,
     PartnersApi,
     FiscalPeriodsApi,
     TrialBalanceApi,
     InvoicesApi,
-    PaymentsApi
+    PaymentsApi,
+    BankReconciliationApi,
+    ReportsApi,
+    SettingsUsersApi
 } from "@/api/generated/api";
 
 export const accountsApi = new AccountsApi(
@@ -42,6 +46,12 @@ export const bankAccountsApi = new BankAccountsApi(
     axiosInstance
 );
 
+export const bankTransactionsApi = new BankTransactionsApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
 export const journalEntriesApi = new JournalEntriesApi(
     apiConfig,
     undefined,
@@ -55,6 +65,24 @@ export const partnersApi = new PartnersApi(
 );
 
 export const fiscalPeriodsApi = new FiscalPeriodsApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
+export const bankReconciliationApi = new BankReconciliationApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
+export const reportsApi = new ReportsApi(
+    apiConfig,
+    undefined,
+    axiosInstance
+);
+
+export const settingsUsersApi = new SettingsUsersApi(
     apiConfig,
     undefined,
     axiosInstance

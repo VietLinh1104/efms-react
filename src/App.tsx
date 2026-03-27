@@ -16,6 +16,11 @@ import InvoiceFormPage from "@pages/dashboard/invoices/invoices-details/InvoiceF
 import PaymentsListing from "./pages/dashboard/invoices/payments/PaymentsListing";
 import PaymentFormPage from "./pages/dashboard/invoices/payments/PaymentFormPage";
 import BankAccountsListing from "./pages/dashboard/finance/accounts/BankAccountsListing";
+import TransactionsListing from "./pages/dashboard/finance/transactions/TransactionsListing";
+import ReconciliationListing from "./pages/dashboard/finance/reconciliation/ReconciliationListing";
+import BalanceSheet from "./pages/dashboard/reports/BalanceSheet";
+import ProfitAndLoss from "./pages/dashboard/reports/ProfitAndLoss";
+import AgingReport from "./pages/dashboard/reports/AgingReport";
 
 function App() {
   return (
@@ -40,8 +45,13 @@ function App() {
 
             <Route path="/finance/accounts" element={<BankAccountsListing />} />
             {/*<Route path="/finance/accounts/new" element={< />} />*/}
+            <Route path="/finance/transactions" element={<TransactionsListing />} />
+            <Route path="/finance/reconciliation" element={<ReconciliationListing />} />
+            
+            <Route path="/reports/balance-sheet" element={<BalanceSheet />} />
+            <Route path="/reports/profit-loss" element={<ProfitAndLoss />} />
+            <Route path="/reports/aging" element={<AgingReport />} />
             {/*<Route path="/finance/transactions" element={< />} />*/}
-            {/*<Route path="/finance/reconciliation" element={< />} />*/}
 
             {/*<Route path="/reports/balance-sheet" element={< />} />*/}
             {/*<Route path="/reports/profit-loss" element={< />} />*/}
