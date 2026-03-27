@@ -22,6 +22,7 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
     isLoading?: boolean
     footer?: React.ReactNode
+    onRowClick?: (row: TData) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -29,6 +30,7 @@ export function DataTable<TData, TValue>({
     data,
     isLoading,
     footer,
+    onRowClick,
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = React.useState({})
 
@@ -74,10 +76,17 @@ export function DataTable<TData, TValue>({
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
-                                className="cursor-pointer h-[40px]"
+                                className={`h-[40px] ${onRowClick ? "cursor-pointer" : ""}`}
+                                onClick={() => onRowClick?.(row.original)}
                             >
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
+                                    <TableCell
+                                        key={cell.id}
+                                        onClick={cell.column.id === "actions" || cell.column.id === "select"
+                                            ? (e) => e.stopPropagation()
+                                            : undefined
+                                        }
+                                    >
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </TableCell>
                                 ))}

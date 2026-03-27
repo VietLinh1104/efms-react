@@ -8,10 +8,13 @@ import type { PaymentResponse } from "@/api/generated/api.ts";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
+import { PaymentQuickViewDialog } from "./PaymentQuickViewDialog.tsx";
 
 const PaymentsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<PaymentResponse[]>([]);
+    const [selectedPayment, setSelectedPayment] = useState<PaymentResponse | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const { success, error } = useToastApp();
     const navigate = useNavigate();
 
@@ -24,7 +27,7 @@ const PaymentsListing: React.FC = () => {
             const response = await paymentsApi.list(
                 companyId,
                 undefined,
-                undefined, 
+                undefined,
                 0,
                 100
             );
@@ -39,11 +42,19 @@ const PaymentsListing: React.FC = () => {
         }
     }, [error]);
 
+    // Mở quick-view dialog khi click vào row
+    const handleRowClick = useCallback((payment: PaymentResponse) => {
+        setSelectedPayment(payment);
+        setDialogOpen(true);
+    }, []);
+
+    // Từ dialog: điều hướng xem chi tiết
     const handleView = useCallback((payment: PaymentResponse) => {
         if (!payment.id) return;
         navigate(`/payments/${payment.id}`);
     }, [navigate]);
 
+    // Từ dialog hoặc dropdown: điều hướng chỉnh sửa
     const handleEdit = useCallback((payment: PaymentResponse) => {
         if (!payment.id) return;
         navigate(`/payments/${payment.id}/edit`);
@@ -117,8 +128,18 @@ const PaymentsListing: React.FC = () => {
                     columns={columns}
                     data={data}
                     isLoading={isLoading}
+                    onRowClick={handleRowClick}
                 />
             </div>
+
+            {/* Quick-view Dialog */}
+            <PaymentQuickViewDialog
+                payment={selectedPayment}
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                onViewDetail={handleView}
+                onEdit={handleEdit}
+            />
         </div>
     );
 };

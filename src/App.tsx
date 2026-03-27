@@ -14,6 +14,7 @@ import PartnersListing from "@pages/dashboard/invoices/partners/PartnersListing.
 import InvoicesListing from "@pages/dashboard/invoices/invoices-details/InvoicesListing.tsx";
 import InvoiceFormPage from "@pages/dashboard/invoices/invoices-details/InvoiceFormPage.tsx";
 import PaymentsListing from "./pages/dashboard/invoices/payments/PaymentsListing";
+import PaymentFormPage from "./pages/dashboard/invoices/payments/PaymentFormPage";
 
 function App() {
   return (
@@ -33,7 +34,8 @@ function App() {
             <Route path="/invoices" element={<InvoicesListing />} />
             <Route path="/invoices/create" element={<InvoiceFormPage />} />
             <Route path="/payments" element={<PaymentsListing />} />
-            {/*<Route path="/payments/new" element={< />} />*/}
+            <Route path="/payments/new" element={<PaymentFormPage />} />
+            <Route path="/payments/:id/edit" element={<PaymentFormPage />} />
 
             {/*<Route path="/finance/accounts" element={< />} />*/}
             {/*<Route path="/finance/accounts/new" element={< />} />*/}
