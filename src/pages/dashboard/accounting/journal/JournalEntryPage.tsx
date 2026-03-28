@@ -84,7 +84,7 @@ const JournalEntryPage: React.FC = () => {
     });
 
     useEffect(() => {
-        const companyId = 'ceb4da87-a0a5-44f8-8978-003a645ac86b';
+        const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
 
         const fetchData = async () => {
             try {

@@ -17,7 +17,7 @@ const AccountListing: React.FC = () => {
     const handleGetAllAccounts = async () => {
         setIsLoading(true);
         try {
-            const response = await accountsApi.listPage('b7430d8f-9698-42af-8160-45dc83d1fdd8', 0, 100);
+            const response = await accountsApi.listPage('a5fbb4a1-e8bd-4749-aa6d-c422ded28107', 0, 100);
             setData(response.data.data?.content || []);
         } catch (error) {
             console.error("Error fetching accounts:", error);
@@ -55,9 +55,9 @@ const AccountListing: React.FC = () => {
                     Quản lý danh mục tài khoản kế toán doanh nghiệp.
                 </p>
             </div>
-               
+
             <Tabs defaultValue="list" className="gap-0">
-                 <div className="flex justify-between mb-5">
+                <div className="flex justify-between mb-5">
                     <TabsList>
                         <TabsTrigger value="list">Danh sách</TabsTrigger>
                         <TabsTrigger value="tree">Cây tài khoản</TabsTrigger>
@@ -78,7 +78,7 @@ const AccountListing: React.FC = () => {
                             <Plus className="mr-2 h-4 w-4" /> Thêm tài khoản
                         </Button>
                     </div>
-            
+
                 </div>
                 <TabsContent value="list" className="">
                     <DataTable columns={columns} data={data} isLoading={isLoading} />

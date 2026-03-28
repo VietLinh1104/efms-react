@@ -18,7 +18,7 @@ const JournalListing: React.FC = () => {
     const fetchJournals = async () => {
         setIsLoading(true);
         try {
-            const companyId = 'b7430d8f-9698-42af-8160-45dc83d1fdd8';
+            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
             const response = await journalEntriesApi.list5(companyId, undefined, undefined, undefined, 0, 100);
             setData(response.data.data?.content || []);
         } catch (err) {
@@ -30,7 +30,7 @@ const JournalListing: React.FC = () => {
     };
 
     const handleView = (journal: JournalEntryResponse) => {
-        console.log("[journal] input:",journal);
+        console.log("[journal] input:", journal);
         warning("Tính năng xem chi tiết đang được phát triển.");
     };
 
@@ -44,7 +44,7 @@ const JournalListing: React.FC = () => {
             fetchJournals();
         } catch (err) {
             error("Lỗi khi xoá chứng từ.");
-            console.log("Lỗi khi xoá chứng từ:",err);
+            console.log("Lỗi khi xoá chứng từ:", err);
         }
     };
 
@@ -56,7 +56,7 @@ const JournalListing: React.FC = () => {
             fetchJournals();
         } catch (err) {
             error("Lỗi khi ghi sổ.");
-            console.log("Lỗi khi ghi sổ:",err);
+            console.log("Lỗi khi ghi sổ:", err);
         }
     };
 
@@ -74,10 +74,10 @@ const JournalListing: React.FC = () => {
                     Danh sách các bút toán kế toán tổng hợp.
                 </p>
             </div>
-                
+
 
             <div className="flex justify-between mb-5">
-                
+
                 <div className="relative max-w-sm w-full">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Tìm kiếm chứng từ..." className="pl-8" />

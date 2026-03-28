@@ -105,7 +105,7 @@ const InvoiceFormPage: React.FC = () => {
     /* ================= FETCH DATA ================= */
 
     useEffect(() => {
-        const companyId = "b7430d8f-9698-42af-8160-45dc83d1fdd8";
+        const companyId = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
         const fetch = async () => {
             try {
@@ -162,7 +162,7 @@ const InvoiceFormPage: React.FC = () => {
         try {
             const request: CreateInvoiceRequest = {
                 ...values,
-                companyId: "b7430d8f-9698-42af-8160-45dc83d1fdd8",
+                companyId: "a5fbb4a1-e8bd-4749-aa6d-c422ded28107",
                 lines: values.lines.map((l) => ({
                     ...l,
                     taxRate: l.taxRate ?? 0,
@@ -196,73 +196,73 @@ const InvoiceFormPage: React.FC = () => {
                     <div className="rounded-xl border p-6 grid md:grid-cols-3 gap-4">
 
                         <FormField name="invoiceType" control={form.control}
-                                   render={({ field }) => (
-                                       <FormItem>
-                                           <FormLabel>Loại</FormLabel>
-                                           <Select onValueChange={field.onChange} value={field.value}>
-                                               <FormControl>
-                                                   <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
-                                               </FormControl>
-                                               <SelectContent>
-                                                   <SelectItem value="AR">AR Invoice</SelectItem>
-                                                   <SelectItem value="AP">AP Bill</SelectItem>
-                                               </SelectContent>
-                                           </Select>
-                                       </FormItem>
-                                   )}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Loại</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="AR">AR Invoice</SelectItem>
+                                            <SelectItem value="AP">AP Bill</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
                         />
 
                         <FormField name="partnerId" control={form.control}
-                                   render={({ field }) => (
-                                       <FormItem>
-                                           <FormLabel>Đối tác</FormLabel>
-                                           <Select onValueChange={field.onChange} value={field.value}>
-                                               <FormControl>
-                                                   <SelectTrigger className={"w-full"}><SelectValue placeholder="Chọn" /></SelectTrigger>
-                                               </FormControl>
-                                               <SelectContent>
-                                                   {partners.map(p => (
-                                                       <SelectItem key={p.id} value={p.id!}>
-                                                           {p.name}
-                                                       </SelectItem>
-                                                   ))}
-                                               </SelectContent>
-                                           </Select>
-                                       </FormItem>
-                                   )}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Đối tác</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className={"w-full"}><SelectValue placeholder="Chọn" /></SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {partners.map(p => (
+                                                <SelectItem key={p.id} value={p.id!}>
+                                                    {p.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
                         />
 
                         <FormField name="invoiceDate" control={form.control}
-                                   render={({ field }) => (
-                                       <FormItem>
-                                           <FormLabel>Ngày hóa đơn</FormLabel>
-                                           <Input type="date" {...field} />
-                                       </FormItem>
-                                   )}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Ngày hóa đơn</FormLabel>
+                                    <Input type="date" {...field} />
+                                </FormItem>
+                            )}
                         />
 
                         <FormField name="invoiceNumber" control={form.control}
-                                   render={({ field }) => (
-                                       <FormItem>
-                                           <FormLabel>Số HĐ</FormLabel>
-                                           <Input {...field} />
-                                       </FormItem>
-                                   )}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Số HĐ</FormLabel>
+                                    <Input {...field} />
+                                </FormItem>
+                            )}
                         />
 
                         <FormField name="currencyCode" control={form.control}
-                                   render={({ field }) => (
-                                       <FormItem>
-                                           <FormLabel>Tiền tệ</FormLabel>
-                                           <Select onValueChange={field.onChange} value={field.value}>
-                                               <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
-                                               <SelectContent>
-                                                   <SelectItem value="VND">VND</SelectItem>
-                                                   <SelectItem value="USD">USD</SelectItem>
-                                               </SelectContent>
-                                           </Select>
-                                       </FormItem>
-                                   )}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Tiền tệ</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="VND">VND</SelectItem>
+                                            <SelectItem value="USD">USD</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
                         />
 
                     </div>

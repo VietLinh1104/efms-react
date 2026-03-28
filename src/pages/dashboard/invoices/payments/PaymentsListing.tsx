@@ -81,7 +81,7 @@ const PaymentsListing: React.FC = () => {
     }, [fetchPayments, success, error]);
 
     const columns = useMemo(() =>
-            getColumns(handleView, handleEdit, handleDelete),
+        getColumns(handleView, handleEdit, handleDelete),
         [handleView, handleEdit, handleDelete]);
 
     useEffect(() => {

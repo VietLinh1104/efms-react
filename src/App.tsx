@@ -13,11 +13,11 @@ import TrialBalanceListing from "@/pages/dashboard/accounting/trial-balance/Tria
 import PartnersListing from "@pages/dashboard/invoices/partners/PartnersListing.tsx";
 import InvoicesListing from "@pages/dashboard/invoices/invoices-details/InvoicesListing.tsx";
 import InvoiceFormPage from "@pages/dashboard/invoices/invoices-details/InvoiceFormPage.tsx";
-import PaymentsListing from "./pages/dashboard/invoices/payments/PaymentsListing";
-import PaymentFormPage from "./pages/dashboard/invoices/payments/PaymentFormPage";
-import BankAccountsListing from "./pages/dashboard/finance/accounts/BankAccountsListing";
-import TransactionsListing from "./pages/dashboard/finance/transactions/TransactionsListing";
-import ReconciliationListing from "./pages/dashboard/finance/reconciliation/ReconciliationListing";
+import PaymentsListing from "@pages/dashboard/invoices/payments/PaymentsListing";
+import PaymentFormPage from "@pages/dashboard/invoices/payments/PaymentFormPage";
+import BankAccountsListing from "@pages/dashboard/finance/accounts/BankAccountsListing";
+import TransactionsListing from "@pages/dashboard/finance/transactions/TransactionsListing";
+import ReconciliationListing from "@pages/dashboard/finance/reconciliation/ReconciliationListing";
 
 function App() {
   return (
@@ -41,7 +41,6 @@ function App() {
             <Route path="/payments/:id/edit" element={<PaymentFormPage />} />
 
             <Route path="/finance/accounts" element={<BankAccountsListing />} />
-            {/*<Route path="/finance/accounts/new" element={< />} />*/}
             <Route path="/finance/transactions" element={<TransactionsListing />} />
             <Route path="/finance/reconciliation" element={<ReconciliationListing />} />
 

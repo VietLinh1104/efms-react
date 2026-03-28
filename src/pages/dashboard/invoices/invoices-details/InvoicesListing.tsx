@@ -74,7 +74,7 @@ const InvoicesListing: React.FC = () => {
 
     // 3. Memoize columns
     const columns = useMemo(() =>
-            getColumns(handleView, handleEdit, handleDelete),
+        getColumns(handleView, handleEdit, handleDelete),
         [handleView, handleEdit, handleDelete]);
 
     // 4. Gọi fetch lần đầu

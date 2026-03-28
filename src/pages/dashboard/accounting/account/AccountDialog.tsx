@@ -90,7 +90,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
             // Fetch potential parent accounts
             const fetchParents = async () => {
                 try {
-                    const response = await accountsApi.list7('ceb4da87-a0a5-44f8-8978-003a645ac86b');
+                    const response = await accountsApi.list7('a5fbb4a1-e8bd-4749-aa6d-c422ded28107');
                     setParentAccounts(response.data.data || []);
                 } catch (error) {
                     console.error("Error fetching parent accounts:", error);
@@ -129,7 +129,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
                 type: values.type,
                 balanceType: values.balanceType,
                 parentId: (values.parentId === "none" || !values.parentId) ? undefined : values.parentId,
-                companyId: 'ceb4da87-a0a5-44f8-8978-003a645ac86b',
+                companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
             };
 
             if (initialData?.id) {

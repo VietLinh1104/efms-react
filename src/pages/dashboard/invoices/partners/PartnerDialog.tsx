@@ -73,11 +73,11 @@ interface PartnerDialogProps {
 
 // ================= COMPONENT =================
 export const PartnerDialog: React.FC<PartnerDialogProps> = ({
-                                                                open,
-                                                                onOpenChange,
-                                                                initialData,
-                                                                onSuccess,
-                                                            }) => {
+    open,
+    onOpenChange,
+    initialData,
+    onSuccess,
+}) => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [accounts, setAccounts] = React.useState<AccountResponse[]>([]);
 
@@ -102,7 +102,7 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
             const fetchAccounts = async () => {
                 try {
                     const res = await accountsApi.list7(
-                        "ceb4da87-a0a5-44f8-8978-003a645ac86b"
+                        "a5fbb4a1-e8bd-4749-aa6d-c422ded28107"
                     );
                     setAccounts(res.data.data || []);
                 } catch (err) {
@@ -153,7 +153,7 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
                 address: values.address || undefined,
                 arAccountId: values.arAccountId,
                 apAccountId: values.apAccountId,
-                companyId: "ceb4da87-a0a5-44f8-8978-003a645ac86b",
+                companyId: "a5fbb4a1-e8bd-4749-aa6d-c422ded28107",
             };
 
             if (initialData?.id) {

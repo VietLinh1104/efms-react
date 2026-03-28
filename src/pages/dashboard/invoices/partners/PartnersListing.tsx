@@ -4,11 +4,11 @@ import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
 import { partnersApi } from "@/api";
-import type { PartnerResponse} from "@/api/generated";
+import type { PartnerResponse } from "@/api/generated";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
-import {PartnerDialog} from "@pages/dashboard/invoices/partners/PartnerDialog.tsx";
+import { PartnerDialog } from "@pages/dashboard/invoices/partners/PartnerDialog.tsx";
 
 const PartnersListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +23,7 @@ const PartnersListing: React.FC = () => {
         setIsLoading(true);
         try {
             // ID công ty tạm thời để hardcode hoặc lấy từ Auth Context
-            const companyId = 'b7430d8f-9698-42af-8160-45dc83d1fdd8';
+            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
 
             // Gọi API với đúng cấu trúc interface mới
             const response = await partnersApi.list1(companyId, undefined, undefined, 0, 100);
@@ -69,7 +69,7 @@ const PartnersListing: React.FC = () => {
 
     // 3. Memoize columns - Truyền các handler vào getColumns
     const columns = useMemo(() =>
-            getColumns(handleView, handleEdit, handleDelete),
+        getColumns(handleView, handleEdit, handleDelete),
         [handleView, handleEdit, handleDelete]);
 
     // 4. Gọi fetch lần đầu
