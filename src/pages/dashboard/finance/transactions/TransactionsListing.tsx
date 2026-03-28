@@ -11,11 +11,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@components/ui/select.tsx";
-import { RefreshCcw, Filter, X } from "lucide-react";
+import { RefreshCcw, Filter, X, Plus } from "lucide-react";
 
 import { bankTransactionsApi, bankAccountsApi } from "@/api";
 import type { BankTransactionResponse, BankAccountResponse } from "@/api/generated";
 import { useToastApp } from "@hooks/use-toast-app.ts";
+import { BankTransactionDialog } from "./BankTransactionDialog.tsx";
 
 const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
@@ -25,6 +26,9 @@ const formatCurrency = (amount: number) =>
 const TransactionsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<BankTransactionResponse[]>([]);
+
+    // Dialog
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     // Filters
     const [bankAccounts, setBankAccounts] = useState<BankAccountResponse[]>([]);
@@ -234,16 +238,25 @@ const TransactionsListing: React.FC = () => {
             </div>
 
             {/* Toolbar */}
-            <div className="flex justify-end">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={fetchData}
-                    disabled={isLoading}
-                    title="Làm mới"
-                >
-                    <RefreshCcw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-                </Button>
+            <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                    {data.length} giao dịch
+                </p>
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={fetchData}
+                        disabled={isLoading}
+                        title="Làm mới"
+                    >
+                        <RefreshCcw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+                    </Button>
+                    <Button onClick={() => setDialogOpen(true)} className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Thêm giao dịch
+                    </Button>
+                </div>
             </div>
 
             {/* Table */}
@@ -254,6 +267,14 @@ const TransactionsListing: React.FC = () => {
                     isLoading={isLoading}
                 />
             </div>
+
+            {/* Dialog */}
+            <BankTransactionDialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                defaultBankAccountId={filterAccount !== "all" ? filterAccount : undefined}
+                onSuccess={fetchData}
+            />
         </div>
     );
 };
