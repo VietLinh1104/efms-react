@@ -5,10 +5,10 @@ import { Button } from "@components/ui/button.tsx";
 import { Input } from "@components/ui/input.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
 
-import { bankAccountsApi } from "@/api";
-import type { BankAccountResponse } from "@/api/generated";
+import type { BankAccountResponse, BankAccountsApiList4Request, BankAccountsApiToggleActive1Request } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { BankAccountDialog } from "./BankAccountDialog.tsx";
+import { coreBankAccountsApi } from "@/api";
 
 const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
@@ -23,7 +23,14 @@ const BankAccountsListing: React.FC = () => {
     const fetchAccounts = useCallback(async (q?: string) => {
         setIsLoading(true);
         try {
-            const res = await bankAccountsApi.list4(COMPANY_ID, undefined, q || "", 0, 100);
+            const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+                companyId: COMPANY_ID,
+                type: undefined,
+                search: q || "",
+                page: 0,
+                size: 100,
+            };
+            const res = await coreBankAccountsApi.list4(bankAccountsApiList4Request);
             setData(res.data.data?.content || []);
         } catch (e) {
             console.error(e);
@@ -45,7 +52,10 @@ const BankAccountsListing: React.FC = () => {
     const handleToggleActive = useCallback(async (row: BankAccountResponse) => {
         if (!row.id) return;
         try {
-            await bankAccountsApi.toggleActive2(row.id);
+            const bankAccountsApiToggleActive1Request: BankAccountsApiToggleActive1Request = {
+                id: row.id,
+            };
+            await coreBankAccountsApi.toggleActive1(bankAccountsApiToggleActive1Request);
             success(`Đã ${row.isActive ? "vô hiệu hóa" : "kích hoạt"} tài khoản.`);
             fetchAccounts(search);
         } catch (e) {

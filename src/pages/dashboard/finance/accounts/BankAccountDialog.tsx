@@ -30,13 +30,16 @@ import {
 import { Loader2 } from "lucide-react";
 import { Separator } from "@components/ui/separator.tsx";
 
-import { bankAccountsApi, accountsApi } from "@/api";
 import type {
     BankAccountResponse,
     CreateBankAccountRequest,
     AccountResponse,
-} from "@/api/generated";
+    AccountsApiList7Request,
+    BankAccountsApiUpdate3Request,
+    BankAccountsApiCreate4Request,
+} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
+import { coreAccountsApi, coreBankAccountsApi } from "@/api";
 
 /* ─── Schema ─────────────────────────────────────────────────────────── */
 
@@ -100,7 +103,10 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
 
         const fetchGlAccounts = async () => {
             try {
-                const res = await accountsApi.list7(COMPANY_ID);
+                const accountsApiList7Request: AccountsApiList7Request = {
+                    companyId: COMPANY_ID,
+                };
+                const res = await coreAccountsApi.list7(accountsApiList7Request);
                 setGlAccounts(res.data.data || []);
             } catch (e) {
                 console.error(e);
@@ -142,10 +148,17 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
             };
 
             if (initialData?.id) {
-                await bankAccountsApi.update3(initialData.id, payload);
+                const bankAccountsApiUpdate3Request: BankAccountsApiUpdate3Request = {
+                    id: initialData.id,
+                    createBankAccountRequest: payload,
+                };
+                await coreBankAccountsApi.update3(bankAccountsApiUpdate3Request);
                 success("Cập nhật tài khoản thành công!");
             } else {
-                await bankAccountsApi.create4(payload);
+                const bankAccountsApiCreate4Request: BankAccountsApiCreate4Request = {
+                    createBankAccountRequest: payload,
+                };
+                await coreBankAccountsApi.create4(bankAccountsApiCreate4Request);
                 success("Tạo tài khoản thành công!");
             }
             onSuccess();

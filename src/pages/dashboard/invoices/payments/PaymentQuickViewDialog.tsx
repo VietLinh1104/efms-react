@@ -1,4 +1,4 @@
-import type { PaymentResponse } from "@/api/generated/api.ts";
+import type { PaymentResponse } from "@/api/generated/core";
 import { Badge } from "@components/ui/badge.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Separator } from "@components/ui/separator.tsx";

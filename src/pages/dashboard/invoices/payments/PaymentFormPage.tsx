@@ -26,12 +26,17 @@ import {
 import { Separator } from "@components/ui/separator.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert.tsx";
 
-import { paymentsApi, partnersApi, bankAccountsApi } from "@/api";
+import { corePaymentsApi, corePartnersApi, coreBankAccountsApi } from "@/api";
 import type {
     PartnerResponse,
     BankAccountResponse,
     CreatePaymentRequest,
-} from "@/api/generated";
+    BankAccountsApiList4Request,
+    PartnersApiList1Request,
+    PaymentsApiGetDetailRequest,
+    PaymentsApiUpdateRequest,
+    PaymentsApiCreateRequest
+} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 
 /* ================= SCHEMA ================= */
@@ -101,9 +106,21 @@ const PaymentFormPage: React.FC = () => {
         const fetchData = async () => {
             setIsLoading(true);
             try {
+                const params: PartnersApiList1Request = {
+                    companyId: COMPANY_ID,
+                    page: 0,
+                    size: 200,
+                };
+
+                const params2: BankAccountsApiList4Request = {
+                    companyId: COMPANY_ID,
+                    page: 0,
+                    size: 100,
+                };
+
                 const [partRes, bankRes] = await Promise.all([
-                    partnersApi.list1(COMPANY_ID, undefined, undefined, 0, 200),
-                    bankAccountsApi.list4(COMPANY_ID, undefined, "", 0, 100),
+                    corePartnersApi.list1(params),
+                    coreBankAccountsApi.list4(params2),
                 ]);
                 setPartners(partRes.data.data?.content || []);
                 setBankAccounts(bankRes.data.data?.content || []);
@@ -124,8 +141,13 @@ const PaymentFormPage: React.FC = () => {
 
         const fetchPayment = async () => {
             setIsLoading(true);
+
+            const params: PaymentsApiGetDetailRequest = {
+                id: id,
+            };
+
             try {
-                const res = await paymentsApi.getDetail(id);
+                const res = await corePaymentsApi.getDetail(params);
                 const p = res.data.data;
                 if (!p) return;
 
@@ -171,10 +193,19 @@ const PaymentFormPage: React.FC = () => {
             };
 
             if (isEditMode && id) {
-                await paymentsApi.update(id, request);
+                const params: PaymentsApiUpdateRequest = {
+                    id: id,
+                    createPaymentRequest: request
+                };
+
+                await corePaymentsApi.update(params);
                 success("Cập nhật phiếu thanh toán thành công!");
             } else {
-                await paymentsApi.create(request);
+                const params: PaymentsApiCreateRequest = {
+                    createPaymentRequest: request
+                };
+
+                await corePaymentsApi.create(params);
                 success("Tạo phiếu thanh toán thành công!");
                 form.reset();
             }

@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
+import * as React from "react"
 
-export interface ButtonSpinProps {
+export interface ButtonSpinProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children" | "className"> {
     variant: "outline" | "secondary" | "default";
     isLoading?: boolean;
     icon?: React.ReactNode;
     children?: React.ReactNode;
-    onClick?: () => void;
     className?: string;
     loadingText?: string;
 }
 
-export function ButtonSpin({ variant, isLoading = false, icon, children, onClick, className, loadingText }: ButtonSpinProps) {
+export function ButtonSpin({ variant, isLoading = false, icon, children, className, loadingText, ...props }: ButtonSpinProps) {
     return (
-        <Button variant={variant} disabled={isLoading} onClick={onClick} className={`${className}`}>
+        <Button variant={variant} disabled={isLoading || props.disabled} className={`${className}`} {...props}>
             {isLoading ? <Spinner data-icon="inline-start" /> : icon}
             {isLoading ? loadingText || children : children}
         </Button>

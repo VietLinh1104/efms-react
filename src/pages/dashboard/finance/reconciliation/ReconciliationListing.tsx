@@ -19,15 +19,20 @@ import {
 } from "lucide-react";
 
 import {
-    bankReconciliationApi,
-    bankAccountsApi,
-    bankTransactionsApi
+    coreBankReconciliationApi,
+    coreBankAccountsApi,
+    coreBankTransactionsApi
 } from "@/api";
 import type {
     BankAccountResponse,
+    BankAccountsApiList4Request,
     BankTransactionResponse,
-    ReconciliationSummaryResponse
-} from "@/api/generated";
+    ReconciliationSummaryResponse,
+    BankTransactionsApiList3Request,
+    BankReconciliationApiGetSummaryRequest,
+    BankReconciliationApiUnmatchRequest,
+    BankReconciliationApiAutoMatchRequest
+} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 
 const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
@@ -55,7 +60,14 @@ const ReconciliationListing: React.FC = () => {
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
-                const res = await bankAccountsApi.list4(COMPANY_ID, undefined, "", 0, 100);
+                const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+                    companyId: COMPANY_ID,
+                    type: undefined,
+                    search: "",
+                    page: 0,
+                    size: 100,
+                };
+                const res = await coreBankAccountsApi.list4(bankAccountsApiList4Request);
                 const content = res.data.data?.content || [];
                 setBankAccounts(content);
                 // Set first account if exists
@@ -74,9 +86,22 @@ const ReconciliationListing: React.FC = () => {
         if (!selectedBankId) return;
         setIsLoading(true);
         try {
+            const bankTransactionsApiList3Request: BankTransactionsApiList3Request = {
+                companyId: COMPANY_ID,
+                bankAccountId: selectedBankId,
+                type: undefined,
+                fromDate: undefined,
+                toDate: undefined,
+                page: 0,
+                size: 100,
+            };
+
+            const bankReconciliationApiGetSummaryRequest: BankReconciliationApiGetSummaryRequest = {
+                bankAccountId: COMPANY_ID,
+            };
             const [txRes, summaryRes] = await Promise.all([
-                bankTransactionsApi.list3(COMPANY_ID, selectedBankId, undefined, undefined, undefined, undefined, 0, 100),
-                bankReconciliationApi.getSummary(selectedBankId),
+                coreBankTransactionsApi.list3(bankTransactionsApiList3Request),
+                coreBankReconciliationApi.getSummary(bankReconciliationApiGetSummaryRequest),
             ]);
             setData(txRes.data.data?.content || []);
             setSummary(summaryRes.data.data || null);
@@ -95,7 +120,10 @@ const ReconciliationListing: React.FC = () => {
     const handleUnmatch = async (tx: BankTransactionResponse) => {
         if (!tx.id) return;
         try {
-            await bankReconciliationApi.unmatch(tx.id);
+            const bankReconciliationApiUnmatchRequest: BankReconciliationApiUnmatchRequest = {
+                bankTransactionId: tx.id,
+            };
+            await coreBankReconciliationApi.unmatch(bankReconciliationApiUnmatchRequest);
             success("Gỡ liên kết thành công.");
             fetchData();
         } catch (e) {
@@ -107,7 +135,10 @@ const ReconciliationListing: React.FC = () => {
     const handleAutoMatch = async () => {
         if (!selectedBankId) return;
         try {
-            await bankReconciliationApi.autoMatch(selectedBankId);
+            const bankReconciliationApiAutoMatchRequest: BankReconciliationApiAutoMatchRequest = {
+                bankAccountId: selectedBankId,
+            };
+            await coreBankReconciliationApi.autoMatch(bankReconciliationApiAutoMatchRequest);
             success("Đã tìm kiếm và ghép tự động thành công.");
             fetchData();
         } catch (e) {

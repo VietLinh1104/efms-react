@@ -33,12 +33,16 @@ import {
 } from "@components/ui/select.tsx";
 import { Switch } from "@components/ui/switch.tsx";
 
-import { partnersApi, accountsApi } from "@/api";
+import { corePartnersApi, coreAccountsApi } from "@/api";
 import type {
     CreatePartnerRequest,
     PartnerResponse,
     AccountResponse,
-} from "@/api/generated";
+    AccountsApiList7Request,
+    PartnersApiToggleActiveRequest,
+    PartnersApiUpdate1Request,
+    PartnersApiCreate1Request
+} from "@/api/generated/core";
 
 import { Loader2 } from "lucide-react";
 
@@ -101,9 +105,10 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
         if (open) {
             const fetchAccounts = async () => {
                 try {
-                    const res = await accountsApi.list7(
-                        "a5fbb4a1-e8bd-4749-aa6d-c422ded28107"
-                    );
+                    const params: AccountsApiList7Request = {
+                        companyId: "a5fbb4a1-e8bd-4749-aa6d-c422ded28107",
+                    };
+                    const res = await coreAccountsApi.list7(params);
                     setAccounts(res.data.data || []);
                 } catch (err) {
                     console.error("Error fetching accounts:", err);
@@ -157,13 +162,23 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
             };
 
             if (initialData?.id) {
-                await partnersApi.update1(initialData.id, requestData);
+                const params: PartnersApiUpdate1Request = {
+                    id: initialData.id,
+                    createPartnerRequest: requestData,
+                };
+                await corePartnersApi.update1(params);
 
                 if (initialData.isActive !== values.isActive) {
-                    await partnersApi.toggleActive1(initialData.id);
+                    const params: PartnersApiToggleActiveRequest = {
+                        id: initialData.id,
+                    };
+                    await corePartnersApi.toggleActive(params);
                 }
             } else {
-                await partnersApi.create1(requestData);
+                const params: PartnersApiCreate1Request = {
+                    createPartnerRequest: requestData,
+                };
+                await corePartnersApi.create1(params);
             }
 
             onSuccess();

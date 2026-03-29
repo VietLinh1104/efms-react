@@ -3,8 +3,8 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
-import { partnersApi } from "@/api";
-import type { PartnerResponse } from "@/api/generated";
+import { corePartnersApi } from "@/api";
+import type { PartnerResponse, PartnersApiList1Request } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
@@ -26,7 +26,14 @@ const PartnersListing: React.FC = () => {
             const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
 
             // Gọi API với đúng cấu trúc interface mới
-            const response = await partnersApi.list1(companyId, undefined, undefined, 0, 100);
+            const params: PartnersApiList1Request = {
+                companyId: companyId,
+                type: undefined,
+                search: "",
+                page: 0,
+                size: 100,
+            };
+            const response = await corePartnersApi.list1(params);
 
             // Truy cập sâu vào: response (Axios) -> .data (ApiResponse) -> .data (PagedResponse) -> .content
             const partners = response.data.data?.content || [];

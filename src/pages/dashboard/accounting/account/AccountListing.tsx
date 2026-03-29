@@ -3,8 +3,8 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import React from "react";
-import type { AccountResponse } from "@/api/generated"
-import { accountsApi } from "@/api";
+import type { AccountResponse, AccountsApiListPageRequest, AccountsApiToggleActive2Request } from "@/api/generated/core"
+import { coreAccountsApi } from "@/api";
 import { AccountDialog } from "./AccountDialog.tsx";
 import { Plus, RefreshCcw } from "lucide-react";
 
@@ -17,7 +17,12 @@ const AccountListing: React.FC = () => {
     const handleGetAllAccounts = async () => {
         setIsLoading(true);
         try {
-            const response = await accountsApi.listPage('a5fbb4a1-e8bd-4749-aa6d-c422ded28107', 0, 100);
+            const accountsListPageRequest: AccountsApiListPageRequest = {
+                companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
+                page: 0,
+                size: 100,
+            };
+            const response = await coreAccountsApi.listPage(accountsListPageRequest);
             setData(response.data.data?.content || []);
         } catch (error) {
             console.error("Error fetching accounts:", error);
@@ -34,7 +39,10 @@ const AccountListing: React.FC = () => {
     const handleToggleActive = async (account: AccountResponse) => {
         if (!account.id) return;
         try {
-            await accountsApi.toggleActive3(account.id);
+            const accountsToggleActive2Request: AccountsApiToggleActive2Request = {
+                id: account.id,
+            };
+            await coreAccountsApi.toggleActive2(accountsToggleActive2Request);
             handleGetAllAccounts();
         } catch (error) {
             console.error("Error toggling status:", error);

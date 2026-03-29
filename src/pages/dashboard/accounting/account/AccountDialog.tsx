@@ -29,8 +29,8 @@ import {
     SelectValue,
 } from "@components/ui/select.tsx";
 import { Switch } from "@components/ui/switch.tsx";
-import { accountsApi } from "@/api";
-import type { AccountResponse, CreateAccountRequest } from "@/api/generated";
+import { coreAccountsApi } from "@/api";
+import type { AccountResponse, CreateAccountRequest, AccountsApiList7Request, AccountsApiUpdate5Request, AccountsApiToggleActive2Request, AccountsApiCreate7Request } from "@/api/generated/core";
 import { Loader2 } from "lucide-react";
 
 const accountSchema = z.object({
@@ -72,6 +72,9 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
 }) => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [parentAccounts, setParentAccounts] = React.useState<AccountResponse[]>([]);
+    const [accountsListRequest, setAccountsListRequest] = React.useState<AccountsApiList7Request>({
+        companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
+    });
 
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountSchema),
@@ -90,7 +93,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
             // Fetch potential parent accounts
             const fetchParents = async () => {
                 try {
-                    const response = await accountsApi.list7('a5fbb4a1-e8bd-4749-aa6d-c422ded28107');
+                    const response = await coreAccountsApi.list7(accountsListRequest);
                     setParentAccounts(response.data.data || []);
                 } catch (error) {
                     console.error("Error fetching parent accounts:", error);
@@ -132,13 +135,25 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
                 companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
             };
 
+            const accountsUpdateRequest: AccountsApiUpdate5Request = {
+                id: initialData?.id as string,
+                createAccountRequest: requestData,
+            };
+
+            const accountsToggleActive2Request: AccountsApiToggleActive2Request = {
+                id: initialData?.id as string,
+            };
+
             if (initialData?.id) {
-                await accountsApi.update5(initialData.id, requestData);
+                await coreAccountsApi.update5(accountsUpdateRequest);
                 if (initialData.isActive !== values.isActive) {
-                    await accountsApi.toggleActive3(initialData.id);
+                    await coreAccountsApi.toggleActive2(accountsToggleActive2Request);
                 }
             } else {
-                await accountsApi.create7(requestData);
+                const accountsCreate7Request: AccountsApiCreate7Request = {
+                    createAccountRequest: requestData,
+                };
+                await coreAccountsApi.create7(accountsCreate7Request);
             }
 
             onSuccess();

@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import type { TrialBalanceLineResponse } from "@/api/generated"
+import type { TrialBalanceLineResponse } from "@/api/generated/core"
 import { formatCurrency } from "@/lib/utils"
-import {Checkbox} from "@components/ui/checkbox.tsx";
+import { Checkbox } from "@components/ui/checkbox.tsx";
 
 
 export const getColumns = (): ColumnDef<TrialBalanceLineResponse>[] => [

@@ -3,8 +3,8 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
-import { paymentsApi } from "@/api";
-import type { PaymentResponse } from "@/api/generated/api.ts";
+import { corePaymentsApi } from "@/api";
+import type { PaymentResponse, PaymentsApiDeleteRequest, PaymentsApiListRequest } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
@@ -24,13 +24,13 @@ const PaymentsListing: React.FC = () => {
             // ID công ty lấy từ Context hoặc hardcode tạm thời
             const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
 
-            const response = await paymentsApi.list(
-                companyId,
-                undefined,
-                undefined,
-                0,
-                100
-            );
+            const params: PaymentsApiListRequest = {
+                companyId: companyId,
+                page: 0,
+                size: 100,
+            };
+
+            const response = await corePaymentsApi.list(params);
 
             const payments = response.data.data?.content || [];
             setData(payments);
@@ -71,7 +71,11 @@ const PaymentsListing: React.FC = () => {
         if (!confirmDelete) return;
 
         try {
-            await paymentsApi._delete(payment.id);
+            const params: PaymentsApiDeleteRequest = {
+                id: payment.id,
+            };
+
+            await corePaymentsApi._delete(params);
             success(`Đã xóa thanh toán thành công.`);
             fetchPayments();
         } catch (err) {

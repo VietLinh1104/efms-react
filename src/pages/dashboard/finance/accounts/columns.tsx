@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { BankAccountResponse } from "@/api/generated/api.ts";
+import type { BankAccountResponse } from "@/api/generated/core";
 import { Badge } from "@components/ui/badge.tsx";
 import { Button } from "@components/ui/button.tsx";
 import {
@@ -13,8 +13,8 @@ import { MoreHorizontal, Pencil, PowerOff, Power } from "lucide-react";
 
 const accountTypeLabel: Record<string, string> = {
     checking: "Ngân hàng",
-    savings:  "Tiết kiệm",
-    cash:     "Tiền mặt",
+    savings: "Tiết kiệm",
+    cash: "Tiền mặt",
 };
 
 const formatCurrency = (amount?: number, code = "VND") => {

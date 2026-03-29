@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { BankTransactionResponse } from "@/api/generated/api.ts";
+import type { BankTransactionResponse } from "@/api/generated/core";
 import { Badge } from "@components/ui/badge.tsx";
 import { Button } from "@components/ui/button.tsx";
 import {
@@ -53,11 +53,10 @@ export function getColumns(
             cell: ({ row }) => {
                 const isIn = row.original.type?.toLowerCase() === "in";
                 return (
-                    <Badge className={`border-none font-medium ${
-                        isIn
+                    <Badge className={`border-none font-medium ${isIn
                             ? "bg-green-100 text-green-800 hover:bg-green-200"
                             : "bg-orange-100 text-orange-800 hover:bg-orange-200"
-                    }`}>
+                        }`}>
                         {isIn ? "Thu vào" : "Chi ra"}
                     </Badge>
                 );

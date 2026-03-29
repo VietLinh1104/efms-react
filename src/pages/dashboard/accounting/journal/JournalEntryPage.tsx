@@ -31,8 +31,8 @@ import {
     TableRow,
     TableFooter,
 } from "@components/ui/table.tsx";
-import { accountsApi, partnersApi, fiscalPeriodsApi, journalEntriesApi } from "@/api";
-import type { AccountResponse, PartnerResponse, FiscalPeriodResponse, CreateJournalRequest, JournalLineRequest } from "@/api/generated";
+import { coreAccountsApi, corePartnersApi, coreFiscalPeriodsApi, coreJournalEntriesApi } from "@/api";
+import type { AccountResponse, PartnerResponse, FiscalPeriodResponse, CreateJournalRequest, JournalLineRequest, AccountsApiList7Request, PartnersApiList1Request, FiscalPeriodsApiList6Request, JournalEntriesApiCreate5Request } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 
 const journalLineSchema = z.object({
@@ -88,10 +88,27 @@ const JournalEntryPage: React.FC = () => {
 
         const fetchData = async () => {
             try {
+
+                const accountsApiListRequest: AccountsApiList7Request = {
+                    companyId: companyId
+                }
+
+                const partnersApiListRequest: PartnersApiList1Request = {
+                    companyId: companyId,
+                    type: undefined,
+                    search: "",
+                    page: 0,
+                    size: 100,
+                }
+
+                const fiscalPeriodsApiList6Request: FiscalPeriodsApiList6Request = {
+                    companyId: companyId
+                }
+
                 const [accRes, partRes, perRes] = await Promise.all([
-                    accountsApi.list7(companyId),
-                    partnersApi.list1(companyId, undefined, undefined, 0, 100),
-                    fiscalPeriodsApi.list6(companyId)
+                    coreAccountsApi.list7(accountsApiListRequest),
+                    corePartnersApi.list1(partnersApiListRequest),
+                    coreFiscalPeriodsApi.list6(fiscalPeriodsApiList6Request)
                 ]);
                 setAccounts(accRes.data.data || []);
                 setPartners(partRes.data.data?.content || []);
@@ -141,7 +158,11 @@ const JournalEntryPage: React.FC = () => {
                 })) as JournalLineRequest[]
             };
 
-            await journalEntriesApi.create5(request);
+            const request2: JournalEntriesApiCreate5Request = {
+                createJournalRequest: request
+            };
+
+            await coreJournalEntriesApi.create5(request2);
             success("Đã tạo chứng từ ghi sổ thành công.", { title: "Thành công" });
             form.reset();
         } catch (err) {

@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { BankTransactionResponse } from "@/api/generated/api.ts";
+import type { BankTransactionResponse } from "@/api/generated/core";
 import { Badge } from "@components/ui/badge.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Link } from "react-router-dom";

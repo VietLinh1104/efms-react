@@ -30,12 +30,15 @@ import {
     TableFooter,
 } from "@components/ui/table.tsx";
 
-import { accountsApi, partnersApi, invoicesApi } from "@/api";
+import { coreAccountsApi, corePartnersApi, coreInvoicesApi } from "@/api";
 import type {
     AccountResponse,
     PartnerResponse,
     CreateInvoiceRequest,
-} from "@/api/generated";
+    AccountsApiList7Request,
+    PartnersApiList1Request,
+    InvoicesApiCreate2Request
+} from "@/api/generated/core";
 
 import { useToastApp } from "@hooks/use-toast-app.ts";
 
@@ -107,11 +110,23 @@ const InvoiceFormPage: React.FC = () => {
     useEffect(() => {
         const companyId = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
+        const AccountsApiList7Request: AccountsApiList7Request = {
+            companyId: companyId,
+        }
+
+        const PartnersApiList1Request: PartnersApiList1Request = {
+            companyId: companyId,
+            type: undefined,
+            search: "",
+            page: 0,
+            size: 100,
+        }
+
         const fetch = async () => {
             try {
                 const [acc, part] = await Promise.all([
-                    accountsApi.list7(companyId),
-                    partnersApi.list1(companyId, undefined, undefined, 0, 100),
+                    coreAccountsApi.list7(AccountsApiList7Request),
+                    corePartnersApi.list1(PartnersApiList1Request),
                 ]);
 
                 setAccounts(acc.data.data || []);
@@ -158,6 +173,8 @@ const InvoiceFormPage: React.FC = () => {
     /* ================= SUBMIT ================= */
 
     const onSubmit: SubmitHandler<InvoiceFormValues> = async (values) => {
+
+
         setIsSubmitting(true);
         try {
             const request: CreateInvoiceRequest = {
@@ -172,7 +189,11 @@ const InvoiceFormPage: React.FC = () => {
                 }))
             };
 
-            await invoicesApi.create2(request);
+            const InvoicesApiCreate2Request: InvoicesApiCreate2Request = {
+                createInvoiceRequest: request
+            };
+
+            await coreInvoicesApi.create2(InvoicesApiCreate2Request);
             success("Tạo hóa đơn thành công");
             form.reset();
         } catch (e) {

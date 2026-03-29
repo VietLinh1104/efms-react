@@ -3,8 +3,8 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
-import { journalEntriesApi } from "@/api";
-import type { JournalEntryResponse } from "@/api/generated";
+import { coreJournalEntriesApi } from "@/api";
+import type { JournalEntriesApiDelete3Request, JournalEntriesApiList5Request, JournalEntriesApiPostRequest, JournalEntryResponse } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
@@ -18,8 +18,14 @@ const JournalListing: React.FC = () => {
     const fetchJournals = async () => {
         setIsLoading(true);
         try {
-            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
-            const response = await journalEntriesApi.list5(companyId, undefined, undefined, undefined, 0, 100);
+            const journalEntriesApiListRequest: JournalEntriesApiList5Request = {
+                companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
+                fromDate: undefined,
+                toDate: undefined,
+                page: 0,
+                size: 100
+            };
+            const response = await coreJournalEntriesApi.list5(journalEntriesApiListRequest);
             setData(response.data.data?.content || []);
         } catch (err) {
             console.error("Error fetching journals:", err);
@@ -39,7 +45,10 @@ const JournalListing: React.FC = () => {
         if (!confirm("Bạn có chắc chắn muốn xoá chứng từ này?")) return;
 
         try {
-            await journalEntriesApi.delete2(journal.id);
+            const journalEntriesApiDeleteRequest: JournalEntriesApiDelete3Request = {
+                id: journal.id,
+            };
+            await coreJournalEntriesApi.delete3(journalEntriesApiDeleteRequest);
             success("Đã xoá chứng từ thành công.");
             fetchJournals();
         } catch (err) {
@@ -51,7 +60,10 @@ const JournalListing: React.FC = () => {
     const handlePost = async (journal: JournalEntryResponse) => {
         if (!journal.id) return;
         try {
-            await journalEntriesApi.post(journal.id);
+            const journalEntriesApiPostRequest: JournalEntriesApiPostRequest = {
+                id: journal.id,
+            };
+            await coreJournalEntriesApi.post(journalEntriesApiPostRequest);
             success("Đã ghi sổ chứng từ thành công.");
             fetchJournals();
         } catch (err) {

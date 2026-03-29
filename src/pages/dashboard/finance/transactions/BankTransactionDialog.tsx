@@ -32,11 +32,13 @@ import { Loader2, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { Separator } from "@components/ui/separator.tsx";
 import { cn } from "@/lib/utils.ts";
 
-import { bankTransactionsApi, bankAccountsApi } from "@/api";
+import { coreBankTransactionsApi, coreBankAccountsApi } from "@/api";
 import type {
     BankAccountResponse,
+    BankAccountsApiList4Request,
+    BankTransactionsApiCreate3Request,
     CreateBankTransactionRequest,
-} from "@/api/generated";
+} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 
 /* ─── Schema ─────────────────────────────────────────────────────────── */
@@ -96,8 +98,16 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
     useEffect(() => {
         if (!open) return;
 
-        bankAccountsApi
-            .list4(COMPANY_ID, undefined, "", 0, 200)
+        const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+            companyId: COMPANY_ID,
+            type: undefined,
+            search: "",
+            page: 0,
+            size: 200,
+        };
+
+        coreBankAccountsApi
+            .list4(bankAccountsApiList4Request)
             .then((r) => setBankAccounts(r.data.data?.content || []))
             .catch(console.error);
 
@@ -124,7 +134,11 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
                 reference: values.reference || undefined,
             };
 
-            await bankTransactionsApi.create3(payload);
+            const bankTransactionsApiCreate3Request: BankTransactionsApiCreate3Request = {
+                createBankTransactionRequest: payload
+            };
+
+            await coreBankTransactionsApi.create3(bankTransactionsApiCreate3Request);
             success("Tạo giao dịch thành công!");
             onSuccess();
             onOpenChange(false);

@@ -17,8 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 
 import { useAuth } from "@/hooks/useAuth";
-import { trialBalanceApi, fiscalPeriodsApi } from "@/api";
-import type { FiscalPeriodResponse, TrialBalanceLineResponse } from "@/api/generated";
+import { coreFiscalPeriodsApi, coreTrialBalanceApi } from "@/api";
+import type { FiscalPeriodResponse, TrialBalanceLineResponse, FiscalPeriodsApiList6Request, TrialBalanceApiGetRequest } from "@/api/generated/core";
 import { useToastApp } from "@/hooks/use-toast-app";
 import { getColumns } from "./columns";
 
@@ -43,7 +43,10 @@ export default function TrialBalanceListing() {
   useEffect(() => {
     const fetchPeriods = async () => {
       try {
-        const res = await fiscalPeriodsApi.list6(companyId);
+        const fiscalPeriodsApiList6Request: FiscalPeriodsApiList6Request = {
+          companyId: companyId,
+        };
+        const res = await coreFiscalPeriodsApi.list6(fiscalPeriodsApiList6Request);
         setPeriods(res.data.data || []);
       } catch (err) {
         console.error("Error fetching periods", err);
@@ -71,13 +74,15 @@ export default function TrialBalanceListing() {
 
     setIsLoading(true);
     try {
-      const res = await trialBalanceApi.get(
-        companyId,
-        periodId !== "custom" ? periodId : undefined,
-        fromDate,
-        toDate
-      );
-      
+      const trialBalanceApiGetRequest: TrialBalanceApiGetRequest = {
+        companyId: companyId,
+        periodId: periodId !== "custom" ? periodId : undefined,
+        fromDate: fromDate,
+        toDate: toDate,
+      };
+
+      const res = await coreTrialBalanceApi.get(trialBalanceApiGetRequest);
+
       const lines = res.data.data?.lines || [];
       setData(lines);
       setHasFetched(true);
@@ -186,10 +191,10 @@ export default function TrialBalanceListing() {
             Chọn kỳ hoặc khoảng thời gian để xem báo cáo
           </div>
         ) : (
-          <DataTable 
-            columns={columns} 
-            data={data} 
-            isLoading={isLoading} 
+          <DataTable
+            columns={columns}
+            data={data}
+            isLoading={isLoading}
             footer={
               hasFetched && data.length > 0 && (
                 <TableFooter className="sticky bottom-0 z-20">
@@ -197,12 +202,12 @@ export default function TrialBalanceListing() {
                     <TableCell className="sticky left-0 bg-muted z-30"></TableCell>
                     <TableCell>
                       <div className="flex items-center justify-between">
-                          <span>Tổng cộng</span>
-                          {isBalanced ? (
-                              <Badge className="bg-green-500 hover:bg-green-600">Cân bằng</Badge>
-                          ) : (
-                              <Badge variant="destructive">Chênh lệch</Badge>
-                          )}
+                        <span>Tổng cộng</span>
+                        {isBalanced ? (
+                          <Badge className="bg-green-500 hover:bg-green-600">Cân bằng</Badge>
+                        ) : (
+                          <Badge variant="destructive">Chênh lệch</Badge>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">{formatCurrency(totals.openingDebit || 0)}</TableCell>

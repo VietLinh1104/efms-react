@@ -3,8 +3,8 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
-import { invoicesApi } from "@/api";
-import type { InvoiceResponse } from "@/api/generated";
+import { coreInvoicesApi } from "@/api";
+import type { InvoiceResponse, InvoicesApiList2Request } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
@@ -25,14 +25,17 @@ const InvoicesListing: React.FC = () => {
             // ID công ty lấy từ Context hoặc hardcode tạm thời
             const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
 
+            const InvoicesApiList2Request: InvoicesApiList2Request = {
+                companyId: companyId,
+                invoiceType: undefined,
+                status: undefined,
+                page: 0,
+                size: 100,
+                partnerId: undefined,
+            }
             // Gọi API list2 của invoices
-            const response = await invoicesApi.list2(
-                companyId,
-                undefined, // search
-                undefined, // invoiceType
-                undefined, // status
-                0,
-                100
+            const response = await coreInvoicesApi.list2(
+                InvoicesApiList2Request
             );
 
             // Truy cập theo cấu trúc response của hệ thống
@@ -63,7 +66,7 @@ const InvoicesListing: React.FC = () => {
         if (!confirmDelete) return;
 
         try {
-            // await invoicesApi.deleteInvoice(invoice.id);
+            // await coreInvoicesApi.deleteInvoice(invoice.id);
             success(`Đã xóa hóa đơn ${invoice.invoiceNumber} thành công.`);
             fetchInvoices();
         } catch (err) {
