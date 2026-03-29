@@ -16,32 +16,42 @@ This skill defines the structural and architectural guidelines for the EFMS (Ent
   - **Forms**: Build all forms using `react-hook-form` combined with `zod` for robust schema validation. 
   - **Dialogs**: Utilize the standard Shadcn UI `Dialog` component for all modal interactions.
 
-## 2. API Integration & Services
+## 2. API Integration & Services (Microservices Architecture)
+
+- **Microservices Structure**:
+  The backend is split into two primary services behind an API Gateway:
+  - **Identity Service (`/api/identity`)**: Manages multi-tenancy (`companies`), `users`, `roles`, and `permissions`. Handles login and JWT token distribution.
+  - **Core Service (`/api/core`)**: Handles all financial entities like `invoices`, `payments`, `journal_entries`, `accounts`, `partners`, and `fiscal_periods`.
+  
+- **Authentication & Tenants**:
+  - Standard API requests MUST include the `Authorization: Bearer <token>` header.
+  - Multi-tenancy is enforced. All entities belong to a `company_id`. The UI should cleanly handle tenant segregation (usually configured via token extraction and global state).
+
+- **Standard Response Format**:
+  All APIs now return a standard wrapper. To extract the actual data, you must unwrap it:
+  ```json
+  {
+    "status": 200,
+    "message": "Success",
+    "data": { ... } // Your actual payload list / object is here
+  }
+  ```
 
 - **Available API Services (`src/api/index.ts`)**:
-  All external API service instances are initialized and exported from `src/api/index.ts`. Do not initialize Axios instances directly in your components. The available pre-configured services are:
-  - `accountsApi`: Chart of Accounts and account balances (Types: `AccountResponse`, `CreateAccountRequest`).
-  - `paymentsApi`: Creating and managing payments/receipts (Types: `PaymentResponse`, `CreatePaymentRequest`).
-  - `invoicesApi`: Managing AR (Sales) and AP (Purchase) invoices (Types: `InvoiceResponse`, `CreateInvoiceRequest`).
-  - `bankAccountsApi`: Managing bank accounts (Types: `BankAccountResponse`, `CreateBankAccountRequest`).
-  - `journalEntriesApi`: Internal accounting journal entries (Types: `JournalEntryResponse`, `CreateJournalRequest`).
-  - `partnersApi`: Vendor and customer management (Types: `PartnerResponse`, `CreatePartnerRequest`).
-  - `fiscalPeriodsApi`: Managing financial and accounting periods (Types: `FiscalPeriodResponse`).
-  - `trialBalanceApi`: Extracting reports like balance sheets or trial balances.
+  All external API service instances are initialized and exported from `src/api/index.ts`. The project uses an OpenAPI generator, typically meaning endpoints reside in `src/api/generated/`.
+  - **Identity API**: Context `/api/identity/...`
+  - **Core API**: Context `/api/core/...`
+  - **Audit Logging API**: Both services have `/v1/audit-logs/record` endpoints.
+  Do not initialize Axios instances directly in your components.
 
 - **Generated Types and Models**:
-  - The project utilizes an OpenAPI generator. All data models, entity types, request payloads, and response definitions are auto-generated and reside in `src/api/generated/api.ts`.
-  - ALWAYS import strong typings (like `InvoiceResponse`, `AccountResponse`, `CreateInvoiceRequest`, etc.) from `src/api/generated` rather than creating redundant manual types.
-  - When in doubt about endpoints, refer to `src/api/generated/api.ts` to inspect available properties, DTOs, and methods.
+  - ALWAYS import strong typings (like `InvoiceResponse`, `CreateInvoiceRequest`, etc.) from `src/api/generated` rather than creating redundant manual types.
+  - Due to the microservice split, note that the generated client might have updated operation names or prefixes. When in doubt, refer to the generated `api.ts` to inspect available methods.
 
 - **API Method Signatures (OpenAPI Generated Classes)**:
-  - Typical API method execution follows standard CRUD patterns. Examples:
-    - `api.createX(requestPayload)` - Creates a new entity. (e.g. `accountsApi.create7(payload)`). Use Axios options for fine-grained control if needed.
-    - `api.getByIdX(id)` - Fetches a single entity by ID.
-    - `api.updateX(id, requestPayload)` - Updates an entity.
-    - `api.deleteX(id)` - Deletes an entity.
-    - `api.getAllX(...)` or `api.listX(...)` - Fetches a list. Returns wrapped list structures like `ApiResponsePagedResponse...` or `ApiResponseList...`.
-  - To extract the actual interface data from the response, typically you will resolve the promise and use `.data.data` (e.g. `const response = await invoicesApi.getById1(id); return response.data.data;`), where `response` is an AxiosResponse containing an `ApiResponseX` wrapper.
+  - Typical API method execution follows standard CRUD patterns:
+    - Extract wrapped data: `const response = await invoicesApi.getInvoices(...); return response.data.data;`
+  - For currency or monetary values, remember that the backend employs `BigDecimal` (sent as numeric or string in JSON); ensure the frontend formats these values correctly without precision loss.
 
 ## 3. Project Directory Structure
 
