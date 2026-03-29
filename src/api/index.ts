@@ -1,6 +1,6 @@
 // src/api/index.ts
 import axiosInstance from "@/lib/axios";
-import { apiConfig } from "./config";
+import { apiConfigCore, apiConfigIdentity } from "./config";
 
 import {
     AccountsApi,
@@ -17,66 +17,66 @@ import {
 } from "@/api/generated/core/api";
 
 export const coreAccountsApi = new AccountsApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const corePaymentsApi = new PaymentsApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreInvoicesApi = new InvoicesApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreTrialBalanceApi = new TrialBalanceApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 export const coreBankAccountsApi = new BankAccountsApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreBankTransactionsApi = new BankTransactionsApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreJournalEntriesApi = new JournalEntriesApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const corePartnersApi = new PartnersApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreFiscalPeriodsApi = new FiscalPeriodsApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreBankReconciliationApi = new BankReconciliationApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
 
 export const coreReportsApi = new ReportsApi(
-    apiConfig,
+    apiConfigCore,
     undefined,
     axiosInstance
 );
@@ -91,37 +91,37 @@ import {
 } from "@/api/generated/identity/api";
 
 export const identityAuditLogControllerApi = new AuditLogControllerApi(
-    apiConfig,
+    apiConfigIdentity,
     undefined,
     axiosInstance
 );
 
 export const identityAuthControllerApi = new AuthControllerApi(
-    apiConfig,
+    apiConfigIdentity,
     undefined,
     axiosInstance
 );
 
 export const identityCompanyControllerApi = new CompanyControllerApi(
-    apiConfig,
+    apiConfigIdentity,
     undefined,
     axiosInstance
 );
 
 export const identityPermissionControllerApi = new PermissionControllerApi(
-    apiConfig,
+    apiConfigIdentity,
     undefined,
     axiosInstance
 );
 
 export const identityRoleControllerApi = new RoleControllerApi(
-    apiConfig,
+    apiConfigIdentity,
     undefined,
     axiosInstance
 );
 
 export const identityUserControllerApi = new UserControllerApi(
-    apiConfig,
+    apiConfigIdentity,
     undefined,
     axiosInstance
 );
