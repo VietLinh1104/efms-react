@@ -9,6 +9,7 @@ import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
 import { PaymentQuickViewDialog } from "./PaymentQuickViewDialog.tsx";
+import { useAuth } from "@/hooks/useAuth";
 
 const PaymentsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,15 +18,13 @@ const PaymentsListing: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const { success, error } = useToastApp();
     const navigate = useNavigate();
+    const { companyId } = useAuth();
 
     const fetchPayments = useCallback(async () => {
         setIsLoading(true);
         try {
-            // ID công ty lấy từ Context hoặc hardcode tạm thời
-            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
-
             const params: PaymentsApiListRequest = {
-                companyId: companyId,
+                companyId: companyId ?? "",
                 page: 0,
                 size: 100,
             };

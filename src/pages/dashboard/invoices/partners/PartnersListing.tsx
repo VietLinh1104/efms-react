@@ -9,6 +9,7 @@ import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
 import { PartnerDialog } from "@pages/dashboard/invoices/partners/PartnerDialog.tsx";
+import { useAuth } from "@/hooks/useAuth";
 
 const PartnersListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,17 +18,14 @@ const PartnersListing: React.FC = () => {
     const [selectedPartner, setSelectedPartner] = React.useState<PartnerResponse | null>(null);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const navigate = useNavigate();
+    const { companyId } = useAuth();
 
     // 1. Hàm fetch dữ liệu dùng useCallback để tránh tạo mới function mỗi lần render
     const fetchPartners = useCallback(async () => {
         setIsLoading(true);
         try {
-            // ID công ty tạm thời để hardcode hoặc lấy từ Auth Context
-            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
-
-            // Gọi API với đúng cấu trúc interface mới
             const params: PartnersApiList1Request = {
-                companyId: companyId,
+                companyId: companyId ?? "",
                 type: undefined,
                 search: "",
                 page: 0,

@@ -34,8 +34,7 @@ import type {
     BankReconciliationApiAutoMatchRequest
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
-
-const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
+import { useAuth } from "@/hooks/useAuth";
 
 const formatCurrency = (amount?: number) => {
     if (amount === undefined || amount === null) return "---";
@@ -49,19 +48,17 @@ const ReconciliationListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [bankAccounts, setBankAccounts] = useState<BankAccountResponse[]>([]);
     const [selectedBankId, setSelectedBankId] = useState<string>("");
-
-    // Data
     const [data, setData] = useState<BankTransactionResponse[]>([]);
     const [summary, setSummary] = useState<ReconciliationSummaryResponse | null>(null);
-
     const { success, error } = useToastApp();
+    const { companyId } = useAuth();
 
     /* ─── Load bank accounts first ─── */
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
                 const bankAccountsApiList4Request: BankAccountsApiList4Request = {
-                    companyId: COMPANY_ID,
+                    companyId: companyId ?? "",
                     type: undefined,
                     search: "",
                     page: 0,
@@ -87,7 +84,7 @@ const ReconciliationListing: React.FC = () => {
         setIsLoading(true);
         try {
             const bankTransactionsApiList3Request: BankTransactionsApiList3Request = {
-                companyId: COMPANY_ID,
+                companyId: companyId ?? "",
                 bankAccountId: selectedBankId,
                 type: undefined,
                 fromDate: undefined,
@@ -97,7 +94,7 @@ const ReconciliationListing: React.FC = () => {
             };
 
             const bankReconciliationApiGetSummaryRequest: BankReconciliationApiGetSummaryRequest = {
-                bankAccountId: COMPANY_ID,
+                bankAccountId: selectedBankId,
             };
             const [txRes, summaryRes] = await Promise.all([
                 coreBankTransactionsApi.list3(bankTransactionsApiList3Request),

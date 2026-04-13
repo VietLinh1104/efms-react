@@ -10,8 +10,7 @@ const axiosInstance = axios.create({
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
     (config) => {
-        // You can add logic here to inject the auth token
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('efms_token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -37,10 +36,14 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        // Handle global errors here, e.g. 401 Unauthorized
         if (error.response && error.response.status === 401) {
-            // Redirect to login or refresh token
-            console.error('Unauthorized access - redirecting to login');
+            // Clear auth data and redirect to login page
+            localStorage.removeItem('efms_token');
+            localStorage.removeItem('efms_user');
+            // Use window.location to navigate outside the React component tree
+            if (window.location.pathname !== '/login') {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

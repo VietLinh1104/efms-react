@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ButtonSpin } from "@/components/common/ButtonSpin";
 import { InputSpin } from "@/components/common/InputSpin";
 import { Separator } from "@/components/ui/separator";
 import { identityAuthControllerApi } from "@/api/index";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import googleLogo from "@/assets/image/google-logo.png";
+import { useAuthContext } from "@/context/AuthContext";
+import type { UserResponse } from "@/api/generated/identity/api";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,7 +21,12 @@ type FormValues = z.infer<typeof formSchema>;
 
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setAuthData } = useAuthContext();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Where to go after login — falls back to "/"
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/";
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -32,24 +39,36 @@ const AuthPage: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     setErrorMsg(null);
     try {
-      // The API call based on AuthControllerApi
-      const { data } = await identityAuthControllerApi.authenticateUser({
+      const response = await identityAuthControllerApi.authenticateUser({
         loginRequest: {
           email: values.email,
           password: values.password,
         },
       });
-      
-      console.log("Login successful:", data);
-      
-      // Token management goes here, for e.g. checking response and storing
-      // If the backend returns a token in 'data', it could be saved.
-      // localStorage.setItem("token", (data as any).token);
-      
-      // Navigate to home after successful auth
-      navigate("/");
-    } catch (error: any) {
-      setErrorMsg(error?.response?.data?.message || "Login failed. Please check your credentials.");
+
+      // The backend returns an opaque `object`. Cast to access token and user.
+      const payload = response.data as { token?: string; user?: UserResponse };
+
+      if (!payload?.token) {
+        setErrorMsg("Login failed: No token received from server.");
+        return;
+      }
+
+      // Persist auth data in context + localStorage
+      setAuthData({
+        token: payload.token,
+        user: payload.user ?? {},
+      });
+
+      // Navigate to the originally intended route
+      navigate(from, { replace: true });
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } }; message?: string };
+      setErrorMsg(
+        axiosError?.response?.data?.message ??
+        axiosError?.message ??
+        "Login failed. Please check your credentials."
+      );
       console.error("Login Error:", error);
     }
   };
@@ -132,4 +151,4 @@ const AuthPage: React.FC = () => {
   );
 };
 
-export default AuthPage;
+export default AuthPage;

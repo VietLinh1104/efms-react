@@ -9,8 +9,7 @@ import type { BankAccountResponse, BankAccountsApiList4Request, BankAccountsApiT
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { BankAccountDialog } from "./BankAccountDialog.tsx";
 import { coreBankAccountsApi } from "@/api";
-
-const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
+import { useAuth } from "@/hooks/useAuth";
 
 const BankAccountsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +18,13 @@ const BankAccountsListing: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selected, setSelected] = useState<BankAccountResponse | null>(null);
     const { success, error } = useToastApp();
+    const { companyId } = useAuth();
 
     const fetchAccounts = useCallback(async (q?: string) => {
         setIsLoading(true);
         try {
             const bankAccountsApiList4Request: BankAccountsApiList4Request = {
-                companyId: COMPANY_ID,
+                companyId: companyId ?? "",
                 type: undefined,
                 search: q || "",
                 page: 0,

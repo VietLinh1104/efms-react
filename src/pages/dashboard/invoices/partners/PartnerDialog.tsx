@@ -45,6 +45,7 @@ import type {
 } from "@/api/generated/core";
 
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 // ================= SCHEMA =================
 const partnerSchema = z.object({
@@ -84,6 +85,7 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
 }) => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [accounts, setAccounts] = React.useState<AccountResponse[]>([]);
+    const { companyId } = useAuth();
 
     const form = useForm<PartnerFormValues>({
         resolver: zodResolver(partnerSchema),
@@ -106,7 +108,7 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
             const fetchAccounts = async () => {
                 try {
                     const params: AccountsApiList7Request = {
-                        companyId: "a5fbb4a1-e8bd-4749-aa6d-c422ded28107",
+                        companyId: companyId ?? "",
                     };
                     const res = await coreAccountsApi.list7(params);
                     setAccounts(res.data.data || []);
@@ -158,7 +160,7 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
                 address: values.address || undefined,
                 arAccountId: values.arAccountId,
                 apAccountId: values.apAccountId,
-                companyId: "a5fbb4a1-e8bd-4749-aa6d-c422ded28107",
+                companyId: companyId ?? "",
             };
 
             if (initialData?.id) {

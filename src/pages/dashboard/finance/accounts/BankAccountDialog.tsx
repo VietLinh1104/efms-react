@@ -40,6 +40,7 @@ import type {
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { coreAccountsApi, coreBankAccountsApi } from "@/api";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ─── Schema ─────────────────────────────────────────────────────────── */
 
@@ -54,8 +55,6 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-
-const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
 const TYPES = [
     { value: "checking", label: "Ngân hàng (Checking)" },
@@ -83,6 +82,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
     const { success, error } = useToastApp();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [glAccounts, setGlAccounts] = useState<AccountResponse[]>([]);
+    const { companyId } = useAuth();;
 
     const form = useForm<FormValues>({
         resolver: zodResolver(schema),
@@ -104,7 +104,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
         const fetchGlAccounts = async () => {
             try {
                 const accountsApiList7Request: AccountsApiList7Request = {
-                    companyId: COMPANY_ID,
+                    companyId: companyId ?? "",
                 };
                 const res = await coreAccountsApi.list7(accountsApiList7Request);
                 setGlAccounts(res.data.data || []);
@@ -143,7 +143,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
         try {
             const payload: CreateBankAccountRequest = {
                 ...values,
-                companyId: COMPANY_ID,
+                companyId: companyId ?? "",
                 glAccountId: (!values.glAccountId || values.glAccountId === "none") ? undefined : values.glAccountId,
             };
 

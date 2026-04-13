@@ -41,6 +41,7 @@ import type {
 } from "@/api/generated/core";
 
 import { useToastApp } from "@hooks/use-toast-app.ts";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ================= SCHEMA ================= */
 
@@ -71,6 +72,7 @@ type InvoiceFormValues = z.infer<typeof invoiceSchema>;
 
 const InvoiceFormPage: React.FC = () => {
     const { success, error } = useToastApp();
+    const { companyId } = useAuth();
 
     const [accounts, setAccounts] = useState<AccountResponse[]>([]);
     const [partners, setPartners] = useState<PartnerResponse[]>([]);
@@ -108,14 +110,12 @@ const InvoiceFormPage: React.FC = () => {
     /* ================= FETCH DATA ================= */
 
     useEffect(() => {
-        const companyId = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
-
         const AccountsApiList7Request: AccountsApiList7Request = {
-            companyId: companyId,
+            companyId: companyId ?? "",
         }
 
         const PartnersApiList1Request: PartnersApiList1Request = {
-            companyId: companyId,
+            companyId: companyId ?? "",
             type: undefined,
             search: "",
             page: 0,
@@ -179,7 +179,7 @@ const InvoiceFormPage: React.FC = () => {
         try {
             const request: CreateInvoiceRequest = {
                 ...values,
-                companyId: "a5fbb4a1-e8bd-4749-aa6d-c422ded28107",
+                companyId: companyId ?? "",
                 lines: values.lines.map((l) => ({
                     ...l,
                     taxRate: l.taxRate ?? 0,

@@ -6,6 +6,9 @@ import AuthLayout from "./components/layout/dashboard/AuthLayout";
 import AuthPage from "./pages/dashboard/AuthPage";
 import { ThemeProvider } from "@components/provider/ThemeProvider";
 import { ToastProvider } from "@components/provider/ToastProvider";
+import { AuthProvider } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/common/ProtectedRoute";
+import PublicRoute from "@/components/common/PublicRoute";
 import AccountListing from "@pages/dashboard/accounting/account/AccountListing";
 import JournalEntryPage from "@pages/dashboard/accounting/journal/JournalEntryPage";
 import JournalListing from "@pages/dashboard/accounting/journal/JournalListing";
@@ -23,46 +26,39 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <ToastProvider>
-        <Routes>
-          <Route path="/" element={<DashboardLayout />}>
-            <Route index element={<HomePage />} />
+        <AuthProvider>
+          <Routes>
+            {/* ── Public routes (redirect to / if already logged in) ── */}
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<AuthLayout />}>
+                <Route index element={<AuthPage />} />
+              </Route>
+            </Route>
 
-            <Route path="/accounting/accounts" element={<AccountListing />} />
-            <Route path="/accounting/journals" element={<JournalListing />} />
-            <Route path="/accounting/journal/new" element={<JournalEntryPage />} />
-            <Route path="/accounting/trial-balance" element={<TrialBalanceListing />} />
+            {/* ── Protected routes (require authentication) ── */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<DashboardLayout />}>
+                <Route index element={<HomePage />} />
 
-            <Route path="/partners" element={<PartnersListing />} />
-            {/*<Route path="/partners/new" element={< />} />*/}
-            <Route path="/invoices" element={<InvoicesListing />} />
-            <Route path="/invoices/create" element={<InvoiceFormPage />} />
-            <Route path="/payments" element={<PaymentsListing />} />
-            <Route path="/payments/new" element={<PaymentFormPage />} />
-            <Route path="/payments/:id/edit" element={<PaymentFormPage />} />
+                <Route path="/accounting/accounts" element={<AccountListing />} />
+                <Route path="/accounting/journals" element={<JournalListing />} />
+                <Route path="/accounting/journal/new" element={<JournalEntryPage />} />
+                <Route path="/accounting/trial-balance" element={<TrialBalanceListing />} />
 
-            <Route path="/finance/accounts" element={<BankAccountsListing />} />
-            <Route path="/finance/transactions" element={<TransactionsListing />} />
-            <Route path="/finance/reconciliation" element={<ReconciliationListing />} />
+                <Route path="/partners" element={<PartnersListing />} />
+                <Route path="/invoices" element={<InvoicesListing />} />
+                <Route path="/invoices/create" element={<InvoiceFormPage />} />
+                <Route path="/payments" element={<PaymentsListing />} />
+                <Route path="/payments/new" element={<PaymentFormPage />} />
+                <Route path="/payments/:id/edit" element={<PaymentFormPage />} />
 
-            {/* <Route path="/reports/balance-sheet" element={<BalanceSheet />} />
-            <Route path="/reports/profit-loss" element={<ProfitAndLoss />} />
-            <Route path="/reports/aging" element={<AgingReport />} /> */}
-            {/*<Route path="/finance/transactions" element={< />} />*/}
-
-            {/*<Route path="/reports/balance-sheet" element={< />} />*/}
-            {/*<Route path="/reports/profit-loss" element={< />} />*/}
-            {/*<Route path="/reports/cash-flow" element={< />} />*/}
-            {/*<Route path="/reports/aging" element={< />} />*/}
-
-            {/*<Route path="/settings/company" element={< />} />*/}
-            {/*<Route path="/settings/users" element={< />} />*/}
-            {/*<Route path="/settings/periods" element={< />} />*/}
-          </Route>
-
-          <Route path="/login" element={<AuthLayout />}>
-            <Route index element={<AuthPage />} />
-          </Route>
-        </Routes>
+                <Route path="/finance/accounts" element={<BankAccountsListing />} />
+                <Route path="/finance/transactions" element={<TransactionsListing />} />
+                <Route path="/finance/reconciliation" element={<ReconciliationListing />} />
+              </Route>
+            </Route>
+          </Routes>
+        </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
   );

@@ -7,18 +7,20 @@ import type { AccountResponse, AccountsApiListPageRequest, AccountsApiToggleActi
 import { coreAccountsApi } from "@/api";
 import { AccountDialog } from "./AccountDialog.tsx";
 import { Plus, RefreshCcw } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const AccountListing: React.FC = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [data, setData] = React.useState<AccountResponse[]>([]);
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [selectedAccount, setSelectedAccount] = React.useState<AccountResponse | null>(null);
+    const { companyId } = useAuth();
 
     const handleGetAllAccounts = async () => {
         setIsLoading(true);
         try {
             const accountsListPageRequest: AccountsApiListPageRequest = {
-                companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
+                companyId: companyId ?? "",
                 page: 0,
                 size: 100,
             };

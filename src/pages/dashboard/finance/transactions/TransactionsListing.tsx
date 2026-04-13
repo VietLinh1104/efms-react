@@ -17,8 +17,7 @@ import { coreBankTransactionsApi, coreBankAccountsApi } from "@/api";
 import type { BankTransactionResponse, BankAccountResponse, BankAccountsApiList4Request, BankTransactionsApiList3Request, BankTransactionsApiDelete2Request } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { BankTransactionDialog } from "./BankTransactionDialog.tsx";
-
-const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
+import { useAuth } from "@/hooks/useAuth";
 
 const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
@@ -39,6 +38,7 @@ const TransactionsListing: React.FC = () => {
     const [toDate, setToDate] = useState<string>("");
 
     const { success, error } = useToastApp();
+    const { companyId } = useAuth();
 
     /* ── tổng kết ── */
     const summary = useMemo(() => {
@@ -51,7 +51,7 @@ const TransactionsListing: React.FC = () => {
     /* ── fetch bank accounts for filter dropdown ── */
     useEffect(() => {
         const bankAccountsApiList4Request: BankAccountsApiList4Request = {
-            companyId: COMPANY_ID,
+            companyId: companyId ?? "",
             type: undefined,
             search: "",
             page: 0,
@@ -67,7 +67,7 @@ const TransactionsListing: React.FC = () => {
         setIsLoading(true);
         try {
             const BankTransactionsApiList3Request: BankTransactionsApiList3Request = {
-                companyId: COMPANY_ID,
+                companyId: companyId ?? "",
                 bankAccountId: filterAccount !== "all" ? filterAccount : undefined,
                 type: filterType !== "all" ? filterType : undefined,
                 status: filterStatus !== "all" ? filterStatus : undefined,

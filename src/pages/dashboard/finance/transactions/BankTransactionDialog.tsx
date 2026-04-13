@@ -40,6 +40,7 @@ import type {
     CreateBankTransactionRequest,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ─── Schema ─────────────────────────────────────────────────────────── */
 
@@ -55,8 +56,6 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-
-const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
 /* ─── Props ─────────────────────────────────────────────────────────── */
 
@@ -79,6 +78,7 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
     const { success, error } = useToastApp();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [bankAccounts, setBankAccounts] = useState<BankAccountResponse[]>([]);
+    const { companyId } = useAuth();
 
     const form = useForm<FormValues>({
         resolver: zodResolver(schema),
@@ -99,7 +99,7 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
         if (!open) return;
 
         const bankAccountsApiList4Request: BankAccountsApiList4Request = {
-            companyId: COMPANY_ID,
+            companyId: companyId ?? "",
             type: undefined,
             search: "",
             page: 0,

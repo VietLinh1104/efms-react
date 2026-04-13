@@ -8,12 +8,14 @@ import type { InvoiceResponse, InvoicesApiList2Request } from "@/api/generated/c
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
+import { useAuth } from "@/hooks/useAuth";
 
 const InvoicesListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<InvoiceResponse[]>([]);
     const { success, error } = useToastApp();
     const navigate = useNavigate();
+    const { companyId } = useAuth();
 
     // Giữ cấu trúc giống PartnersListing (nếu sau này bạn có Dialog tạo nhanh invoice)
     // const [selectedInvoice, setSelectedInvoice] = useState<InvoiceResponse | null>(null);
@@ -22,11 +24,8 @@ const InvoicesListing: React.FC = () => {
     const fetchInvoices = useCallback(async () => {
         setIsLoading(true);
         try {
-            // ID công ty lấy từ Context hoặc hardcode tạm thời
-            const companyId = 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107';
-
             const InvoicesApiList2Request: InvoicesApiList2Request = {
-                companyId: companyId,
+                companyId: companyId ?? "",
                 invoiceType: undefined,
                 status: undefined,
                 page: 0,

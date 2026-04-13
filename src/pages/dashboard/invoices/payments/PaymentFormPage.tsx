@@ -38,6 +38,7 @@ import type {
     PaymentsApiCreateRequest
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ================= SCHEMA ================= */
 
@@ -66,7 +67,6 @@ type PaymentFormValues = z.infer<typeof paymentSchema>;
 
 /* ================= COMPONENT ================= */
 
-const COMPANY_ID = "a5fbb4a1-e8bd-4749-aa6d-c422ded28107";
 
 const PaymentFormPage: React.FC = () => {
     const { id } = useParams<{ id?: string }>();
@@ -74,6 +74,7 @@ const PaymentFormPage: React.FC = () => {
 
     const navigate = useNavigate();
     const { success, error } = useToastApp();
+    const { companyId } = useAuth();
 
     const [partners, setPartners] = useState<PartnerResponse[]>([]);
     const [bankAccounts, setBankAccounts] = useState<BankAccountResponse[]>([]);
@@ -107,13 +108,13 @@ const PaymentFormPage: React.FC = () => {
             setIsLoading(true);
             try {
                 const params: PartnersApiList1Request = {
-                    companyId: COMPANY_ID,
+                    companyId: companyId ?? "",
                     page: 0,
                     size: 200,
                 };
 
                 const params2: BankAccountsApiList4Request = {
-                    companyId: COMPANY_ID,
+                    companyId: companyId ?? "",
                     page: 0,
                     size: 100,
                 };
@@ -188,7 +189,7 @@ const PaymentFormPage: React.FC = () => {
         try {
             const request: CreatePaymentRequest = {
                 ...values,
-                companyId: COMPANY_ID,
+                companyId: companyId ?? "",
                 bankAccountId: isBankTransfer ? values.bankAccountId : undefined,
             };
 
