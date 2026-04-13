@@ -14,7 +14,8 @@ export function useAuth() {
         /** Full user object from the Identity service */
         user: auth?.user ?? null,
         /** Company UUID scoped to the current session */
-        companyId: auth?.user?.company?.id ?? null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        companyId: auth?.user?.company?.id ?? (auth?.user as any)?.companyId ?? null,
         isAuthenticated,
         isLoading,
         logout,

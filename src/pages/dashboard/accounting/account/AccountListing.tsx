@@ -18,9 +18,10 @@ const AccountListing: React.FC = () => {
 
     const handleGetAllAccounts = async () => {
         setIsLoading(true);
+        console.log("companyId", companyId);
         try {
             const accountsListPageRequest: AccountsApiListPageRequest = {
-                companyId: companyId ?? "",
+                companyId: companyId,
                 page: 0,
                 size: 100,
             };

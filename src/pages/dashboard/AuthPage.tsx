@@ -46,18 +46,32 @@ const AuthPage: React.FC = () => {
         },
       });
 
-      // The backend returns an opaque `object`. Cast to access token and user.
-      const payload = response.data as { token?: string; user?: UserResponse };
+      // DEBUG: log full response to inspect actual backend structure
+      console.log("[AuthPage] raw response:", response);
+      console.log("[AuthPage] response.data:", response.data);
 
-      if (!payload?.token) {
+      // Data trả về đang ở dạng mảng/object phẳng thay cho key `user` lồng nhau.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = (response.data as any)?.data ?? response.data;
+      
+      if (!data?.token) {
         setErrorMsg("Login failed: No token received from server.");
         return;
       }
 
+      // Map lại structure phẳng sang nested UserResponse
+      const mappedUser = {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        company: data.companyId ? { id: data.companyId } : undefined,
+      };
+
       // Persist auth data in context + localStorage
       setAuthData({
-        token: payload.token,
-        user: payload.user ?? {},
+        token: data.token,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        user: mappedUser as any,
       });
 
       // Navigate to the originally intended route
