@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * core-api
- * core-api
+ * EFMS API
+ * Enterprise Financial Management System APIs
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -928,9 +928,25 @@ export interface InvoiceResponse {
      */
     'createdAt'?: string;
     /**
+     * Trạng thái duyệt (pending, approved, rejected)
+     */
+    'approvalStatus'?: string;
+    /**
+     * ID xử lý BPMN Camunda
+     */
+    'camundaProcessId'?: string;
+    /**
      * ID Bút toán liên kết (nếu đã confirm)
      */
     'journalEntryId'?: string;
+    /**
+     * ID Task duyệt (nếu có)
+     */
+    'taskId'?: string;
+    /**
+     * Tên Task duyệt (nếu có)
+     */
+    'taskName'?: string;
     /**
      * Chi tiết các dòng hóa đơn (chỉ có khi gọi detail)
      */
@@ -3983,6 +3999,190 @@ export class FiscalPeriodsApi extends BaseAPI {
      */
     public reopen(requestParameters: FiscalPeriodsApiReopenRequest, options?: RawAxiosRequestConfig) {
         return FiscalPeriodsApiFp(this.configuration).reopen(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * InvoiceApprovalControllerApi - axios parameter creator
+ */
+export const InvoiceApprovalControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllTasks: async (page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/core/invoices/tasks`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} taskId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getInvoiceByTaskId: async (taskId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'taskId' is not null or undefined
+            assertParamExists('getInvoiceByTaskId', 'taskId', taskId)
+            const localVarPath = `/api/core/invoices/tasks/{taskId}/invoice`
+                .replace(`{${"taskId"}}`, encodeURIComponent(String(taskId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * InvoiceApprovalControllerApi - functional programming interface
+ */
+export const InvoiceApprovalControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = InvoiceApprovalControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllTasks(page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllTasks(page, size, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['InvoiceApprovalControllerApi.getAllTasks']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} taskId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getInvoiceByTaskId(taskId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getInvoiceByTaskId(taskId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['InvoiceApprovalControllerApi.getInvoiceByTaskId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * InvoiceApprovalControllerApi - factory interface
+ */
+export const InvoiceApprovalControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = InvoiceApprovalControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {InvoiceApprovalControllerApiGetAllTasksRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllTasks(requestParameters: InvoiceApprovalControllerApiGetAllTasksRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseInvoiceResponse> {
+            return localVarFp.getAllTasks(requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getInvoiceByTaskId(requestParameters: InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.getInvoiceByTaskId(requestParameters.taskId, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for getAllTasks operation in InvoiceApprovalControllerApi.
+ */
+export interface InvoiceApprovalControllerApiGetAllTasksRequest {
+    readonly page?: number
+
+    readonly size?: number
+}
+
+/**
+ * Request parameters for getInvoiceByTaskId operation in InvoiceApprovalControllerApi.
+ */
+export interface InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest {
+    readonly taskId: string
+}
+
+/**
+ * InvoiceApprovalControllerApi - object-oriented interface
+ */
+export class InvoiceApprovalControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {InvoiceApprovalControllerApiGetAllTasksRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getAllTasks(requestParameters: InvoiceApprovalControllerApiGetAllTasksRequest = {}, options?: RawAxiosRequestConfig) {
+        return InvoiceApprovalControllerApiFp(this.configuration).getAllTasks(requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getInvoiceByTaskId(requestParameters: InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest, options?: RawAxiosRequestConfig) {
+        return InvoiceApprovalControllerApiFp(this.configuration).getInvoiceByTaskId(requestParameters.taskId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

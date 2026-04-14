@@ -3,32 +3,27 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search, CheckSquare } from "lucide-react";
-import { coreInvoicesApi } from "@/api";
-import type { InvoiceResponse, InvoicesApiList2Request } from "@/api/generated/core";
+import { coreInvoicesApi,coreInvoiceApprovalControllerApi } from "@/api";
+import type { InvoiceResponse, InvoicesApiList2Request ,InvoiceApprovalControllerApiGetAllTasksRequest} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
 import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import axiosInstance from "@/lib/axios";
 import { Badge } from "@/components/ui/badge";
 import type { ColumnDef } from "@tanstack/react-table";
 
-interface ExtTask {
-    id: string;
-    name: string;
-    processName: string;
-    creationDate: string;
-    processInstanceKey: string;
-    invoiceData?: InvoiceResponse;
-}
+type TaskInvoiceResponse = InvoiceResponse & {
+    taskId?: string;
+    taskName?: string;
+};
 
 const InvoicesListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<InvoiceResponse[]>([]);
 
     const [isTasksLoading, setIsTasksLoading] = useState(false);
-    const [tasksData, setTasksData] = useState<ExtTask[]>([]);
+    const [tasksData, setTasksData] = useState<TaskInvoiceResponse[]>([]);
 
     const { success, error } = useToastApp();
     const navigate = useNavigate();
@@ -62,10 +57,14 @@ const InvoicesListing: React.FC = () => {
     const fetchTasks = useCallback(async () => {
         setIsTasksLoading(true);
         try {
-            const res = await axiosInstance.get('/core/invoices/tasks');
-            const dataFields = res.data?.data || [];
-            if (Array.isArray(dataFields)) {
-                setTasksData(dataFields);
+            const reqUrl: InvoiceApprovalControllerApiGetAllTasksRequest = {
+                page: 0,
+                size: 100,
+            }
+            const res = await coreInvoiceApprovalControllerApi.getAllTasks(reqUrl);
+            const content = res.data?.data?.content || [];
+            if (Array.isArray(content)) {
+                setTasksData(content);
             }
         } catch (err) {
             console.error("Error fetching tasks:", err);
@@ -111,31 +110,30 @@ const InvoicesListing: React.FC = () => {
     }, [fetchInvoices, fetchTasks]);
 
     // 3. Define columns cho Tasks
-    const tasksColumns: ColumnDef<ExtTask>[] = [
+    const tasksColumns: ColumnDef<TaskInvoiceResponse>[] = [
         {
-            accessorKey: "name",
+            accessorKey: "taskName",
             header: "Nhiệm vụ",
-            cell: ({ row }) => <div className="font-semibold text-blue-600">{row.original.name || "Task"}</div>,
+            cell: ({ row }) => <div className="font-semibold text-blue-600">{row.original.taskName || "Phê duyệt hoá đơn"}</div>,
         },
         {
             accessorKey: "invoiceNumber",
             header: "Số hóa đơn",
-            cell: ({ row }) => <div>{row.original.invoiceData?.invoiceNumber || "DRAFT"}</div>,
+            cell: ({ row }) => <div>{row.original.invoiceNumber || "DRAFT"}</div>,
         },
         {
             accessorKey: "partner",
             header: "Đối tác",
-            cell: ({ row }) => <div>{row.original.invoiceData?.partnerName || "---"}</div>,
+            cell: ({ row }) => <div>{row.original.partnerName || "---"}</div>,
         },
         {
             accessorKey: "totalAmount",
             header: () => <div className="text-right">Tổng tiền</div>,
             cell: ({ row }) => {
-                const invoice = row.original.invoiceData;
-                const amt = invoice?.totalAmount || 0;
+                const amt = row.original.totalAmount || 0;
                 return (
                     <div className="text-right font-medium">
-                        {new Intl.NumberFormat("vi-VN", { style: "currency", currency: invoice?.currencyCode || "VND" }).format(amt)}
+                        {new Intl.NumberFormat("vi-VN", { style: "currency", currency: row.original.currencyCode || "VND" }).format(amt)}
                     </div>
                 );
             },
@@ -144,7 +142,7 @@ const InvoicesListing: React.FC = () => {
             accessorKey: "status",
             header: "Trạng thái",
             cell: ({ row }) => {
-                const status = (row.original.invoiceData as any)?.approvalStatus || "pending";
+                const status = (row.original as any)?.approvalStatus || "pending";
                 return <Badge className="uppercase" variant="secondary">{status}</Badge>;
             }
         },
@@ -152,7 +150,7 @@ const InvoicesListing: React.FC = () => {
             id: "actions",
             header: () => <div className="text-center">Thao tác</div>,
             cell: ({ row }) => {
-                const invoice = row.original.invoiceData;
+                const invoice = row.original;
                 return (
                     <div className="flex justify-center">
                         <Button

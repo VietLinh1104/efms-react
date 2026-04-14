@@ -173,7 +173,7 @@ const InvoiceFormPage: React.FC = () => {
     /* ================= SUBMIT ================= */
 
     const onSubmit: SubmitHandler<InvoiceFormValues> = async (values) => {
-
+        console.log("log1");
 
         setIsSubmitting(true);
         try {
@@ -188,6 +188,7 @@ const InvoiceFormPage: React.FC = () => {
                         (l.quantity * l.unitPrice * (l.taxRate ?? 0)) / 100,
                 }))
             };
+            console.log(request);
 
             const InvoicesApiCreate2Request: InvoicesApiCreate2Request = {
                 createInvoiceRequest: request

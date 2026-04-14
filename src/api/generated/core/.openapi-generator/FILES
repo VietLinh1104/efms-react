@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 api.ts
 base.ts
 common.ts
@@ -56,6 +55,7 @@ docs/CreatePartnerRequest.md
 docs/CreatePaymentRequest.md
 docs/FiscalPeriodResponse.md
 docs/FiscalPeriodsApi.md
+docs/InvoiceApprovalControllerApi.md
 docs/InvoiceLineRequest.md
 docs/InvoiceLineResponse.md
 docs/InvoicePaymentResponse.md

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /**
- * core-api
- * core-api
+ * EFMS API
+ * Enterprise Financial Management System APIs
  *
  * The version of the OpenAPI document: 1.0.0
  * 

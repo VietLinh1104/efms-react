@@ -14,7 +14,14 @@ import {
     PaymentsApi,
     BankReconciliationApi,
     ReportsApi,
+    InvoiceApprovalControllerApi,
 } from "@/api/generated/core/api";
+
+export const coreInvoiceApprovalControllerApi = new InvoiceApprovalControllerApi(
+    apiConfigCore,
+    undefined,
+    axiosInstance
+);
 
 export const coreAccountsApi = new AccountsApi(
     apiConfigCore,

@@ -22,7 +22,11 @@ Name | Type | Description | Notes
 **status** | **string** | Trạng thái (draft, open, in_payment, paid, cancelled) | [optional] [default to undefined]
 **createdBy** | **string** | Người lập | [optional] [default to undefined]
 **createdAt** | **string** | Thời điểm tạo | [optional] [default to undefined]
+**approvalStatus** | **string** | Trạng thái duyệt (pending, approved, rejected) | [optional] [default to undefined]
+**camundaProcessId** | **string** | ID xử lý BPMN Camunda | [optional] [default to undefined]
 **journalEntryId** | **string** | ID Bút toán liên kết (nếu đã confirm) | [optional] [default to undefined]
+**taskId** | **string** | ID Task duyệt (nếu có) | [optional] [default to undefined]
+**taskName** | **string** | Tên Task duyệt (nếu có) | [optional] [default to undefined]
 **lines** | [**Array&lt;InvoiceLineResponse&gt;**](InvoiceLineResponse.md) | Chi tiết các dòng hóa đơn (chỉ có khi gọi detail) | [optional] [default to undefined]
 
 ## Example
@@ -47,7 +51,11 @@ const instance: InvoiceResponse = {
     status,
     createdBy,
     createdAt,
+    approvalStatus,
+    camundaProcessId,
     journalEntryId,
+    taskId,
+    taskName,
     lines,
 };
 ```
