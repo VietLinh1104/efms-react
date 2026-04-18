@@ -196,47 +196,48 @@ const InvoicesListing: React.FC = () => {
                     </TabsList>
                 </Tabs>
 
-                <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={refreshData}
-                        disabled={isLoading || isTasksLoading}
-                        title="Làm mới"
-                    >
-                        <RefreshCcw className={`h-4 w-4 ${(isLoading || isTasksLoading) ? 'animate-spin' : ''}`} />
-                    </Button>
-                    <Button
-                        onClick={() => navigate("/invoices/create")}
-                    >
-                        <Plus className="mr-2 h-4 w-4" /> Thêm hóa đơn
-                    </Button>
-                </div>
             </div>
 
-            <div className="rounded-md border bg-card">
-                {activeTab === "all" ? (
-                    <div className="p-4">
-                        <div className="relative max-w-sm w-full mb-4">
-                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input placeholder="Tìm số hóa đơn, đối tác..." className="pl-8" />
+            {/*<div className="">*/}
+
+                    <div className="p-0">
+                        <div className="flex mb-4 justify-between">
+                            <div className="relative max-w-sm w-full ">
+                                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input placeholder="Tìm số hóa đơn, đối tác..." className="pl-8" />
+
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={refreshData}
+                                    disabled={isLoading || isTasksLoading}
+                                    title="Làm mới"
+                                >
+                                    <RefreshCcw className={`h-4 w-4 ${(isLoading || isTasksLoading) ? 'animate-spin' : ''}`} />
+                                </Button>
+                                <Button
+                                    onClick={() => navigate("/invoices/create")}
+                                >
+                                    <Plus className="mr-2 h-4 w-4" /> Thêm hóa đơn
+                                </Button>
+                            </div>
                         </div>
-                        <DataTable
-                            columns={columns}
-                            data={data}
-                            isLoading={isLoading}
-                        />
+                        {activeTab === "all" ? (
+                            <DataTable
+                                columns={columns}
+                                data={data}
+                                isLoading={isLoading}
+                            />
+                        ) : (
+                            <DataTable
+                                columns={tasksColumns}
+                                data={tasksData}
+                                isLoading={isTasksLoading}
+                            />
+                        )}
                     </div>
-                ) : (
-                    <div className="p-4">
-                        <DataTable
-                            columns={tasksColumns}
-                            data={tasksData}
-                            isLoading={isTasksLoading}
-                        />
-                    </div>
-                )}
-            </div>
         </div>
     );
 };

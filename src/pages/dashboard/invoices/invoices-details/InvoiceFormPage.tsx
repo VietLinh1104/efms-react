@@ -3,8 +3,10 @@ import { useForm, useFieldArray } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Plus, Trash2, Save } from "lucide-react";
+import {Plus, Trash2, MoreHorizontal} from "lucide-react";
 import { Button } from "@components/ui/button.tsx";
+import { Card,CardHeader,CardFooter,CardTitle,CardContent,CardDescription,CardAction } from "@components/ui/card.tsx";
+
 import {
     Form,
     FormControl,
@@ -42,6 +44,12 @@ import type {
 
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useAuth } from "@/hooks/useAuth";
+import {
+    DropdownMenu,
+    DropdownMenuContent, DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
+} from "@components/ui/dropdown-menu.tsx";
 
 /* ================= SCHEMA ================= */
 
@@ -209,199 +217,241 @@ const InvoiceFormPage: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold">New Invoice</h2>
-
+            <h2 className="text-2xl font-bold">Tạo hóa đơn</h2>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-10 gap-6">
 
                     {/* HEADER */}
-                    <div className="rounded-xl border p-6 grid md:grid-cols-3 gap-4">
+                    <div className="space-y-6 col-span-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Thông tin chính</CardTitle>
+                                <CardDescription>Nhập các thông tin chính của hóa đơn</CardDescription>
+                            </CardHeader>
+                            <CardContent className={"grid md:grid-cols-3 gap-4"}>
+                                <FormField name="invoiceType" control={form.control}
+                                           render={({ field }) => (
+                                               <FormItem>
+                                                   <FormLabel>Loại</FormLabel>
+                                                   <Select onValueChange={field.onChange} value={field.value}>
+                                                       <FormControl>
+                                                           <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
+                                                       </FormControl>
+                                                       <SelectContent>
+                                                           <SelectItem value="AR">AR Invoice</SelectItem>
+                                                           <SelectItem value="AP">AP Bill</SelectItem>
+                                                       </SelectContent>
+                                                   </Select>
+                                               </FormItem>
+                                           )}
+                                />
 
-                        <FormField name="invoiceType" control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Loại</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="AR">AR Invoice</SelectItem>
-                                            <SelectItem value="AP">AP Bill</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                                <FormField name="partnerId" control={form.control}
+                                           render={({ field }) => (
+                                               <FormItem>
+                                                   <FormLabel>Đối tác</FormLabel>
+                                                   <Select onValueChange={field.onChange} value={field.value}>
+                                                       <FormControl>
+                                                           <SelectTrigger className={"w-full"}><SelectValue placeholder="Chọn" /></SelectTrigger>
+                                                       </FormControl>
+                                                       <SelectContent>
+                                                           {partners.map(p => (
+                                                               <SelectItem key={p.id} value={p.id!}>
+                                                                   {p.name}
+                                                               </SelectItem>
+                                                           ))}
+                                                       </SelectContent>
+                                                   </Select>
+                                               </FormItem>
+                                           )}
+                                />
 
-                        <FormField name="partnerId" control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Đối tác</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className={"w-full"}><SelectValue placeholder="Chọn" /></SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {partners.map(p => (
-                                                <SelectItem key={p.id} value={p.id!}>
-                                                    {p.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                                <FormField name="invoiceDate" control={form.control}
+                                           render={({ field }) => (
+                                               <FormItem>
+                                                   <FormLabel>Ngày hóa đơn</FormLabel>
+                                                   <Input type="date" {...field} />
+                                               </FormItem>
+                                           )}
+                                />
 
-                        <FormField name="invoiceDate" control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Ngày hóa đơn</FormLabel>
-                                    <Input type="date" {...field} />
-                                </FormItem>
-                            )}
-                        />
+                                <FormField name="invoiceNumber" control={form.control}
+                                           render={({ field }) => (
+                                               <FormItem>
+                                                   <FormLabel>Số HĐ</FormLabel>
+                                                   <Input {...field} />
+                                               </FormItem>
+                                           )}
+                                />
 
-                        <FormField name="invoiceNumber" control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Số HĐ</FormLabel>
-                                    <Input {...field} />
-                                </FormItem>
-                            )}
-                        />
+                                <FormField name="currencyCode" control={form.control}
+                                           render={({ field }) => (
+                                               <FormItem>
+                                                   <FormLabel>Tiền tệ</FormLabel>
+                                                   <Select onValueChange={field.onChange} value={field.value}>
+                                                       <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
+                                                       <SelectContent>
+                                                           <SelectItem value="VND">VND</SelectItem>
+                                                           <SelectItem value="USD">USD</SelectItem>
+                                                       </SelectContent>
+                                                   </Select>
+                                               </FormItem>
+                                           )}
+                                />
+                            </CardContent>
+                        </Card>
 
-                        <FormField name="currencyCode" control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Tiền tệ</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="VND">VND</SelectItem>
-                                            <SelectItem value="USD">USD</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                        {/* TABLE */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Chi tiết hóa đơn</CardTitle>
+                                <CardDescription>Dòng hóa đơn</CardDescription>
+                                <CardAction>
+                                    <Button type="button" onClick={() => append({
+                                        description: "",
+                                        accountId: "",
+                                        quantity: 1,
+                                        unitPrice: 0,
+                                        taxRate: 0,
+                                        taxAmount: 0,
+                                        amount: 0,
+                                    })}>
+                                        <Plus className="w-4 h-4 mr-2" /> Thêm
+                                    </Button>
+                                </CardAction>
+                            </CardHeader>
+                            <CardContent>
+                                <Table className={"border"}>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Mô tả</TableHead>
+                                            <TableHead>TK</TableHead>
+                                            <TableHead>SL</TableHead>
+                                            <TableHead>Giá</TableHead>
+                                            <TableHead>Thuế%</TableHead>
+                                            <TableHead>Thuế</TableHead>
+                                            <TableHead>Tiền</TableHead>
+                                            <TableHead></TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+
+                                    <TableBody>
+                                        {fields.map((f, i) => (
+                                            <TableRow key={f.id}>
+
+                                                <TableCell>
+                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "} {...form.register(`lines.${i}.description`)} />
+                                                </TableCell>
+
+                                                <TableCell >
+                                                    <Select
+                                                        onValueChange={(v) =>
+                                                            form.setValue(`lines.${i}.accountId`, v)
+                                                        }
+                                                    >
+                                                        <SelectTrigger className={"w-full"}>
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {accounts.map(a => (
+                                                                <SelectItem key={a.id} value={a.id!}>
+                                                                    {a.code}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "} type="number" {...form.register(`lines.${i}.quantity`, { valueAsNumber: true })} />
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "}  type="number" {...form.register(`lines.${i}.unitPrice`, { valueAsNumber: true })} />
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "}  type="number" {...form.register(`lines.${i}.taxRate`, { valueAsNumber: true })} />
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    {calculatedLines[i]?.taxAmount.toLocaleString()}
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    {calculatedLines[i]?.amount.toLocaleString()}
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                                                <MoreHorizontal className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                                                            <DropdownMenuItem
+                                                                onClick={() => {remove(i)}}
+                                                                className="text-destructive focus:text-destructive"
+                                                            >
+                                                                <Trash2 className="mr-2 h-4 w-4" /> Hủy/Xóa
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TableCell colSpan={6}>Subtotal</TableCell>
+                                            <TableCell>{subtotal.toLocaleString()}</TableCell>
+                                            <TableCell colSpan={1}></TableCell>
+                                        </TableRow>
+
+                                        <TableRow>
+                                            <TableCell colSpan={6}>Tax</TableCell>
+                                            <TableCell>{taxTotal.toLocaleString()}</TableCell>
+                                            <TableCell colSpan={1}></TableCell>
+                                        </TableRow>
+
+                                        <TableRow>
+                                            <TableCell colSpan={6}>Total</TableCell>
+                                            <TableCell>{total.toLocaleString()}</TableCell>
+                                            <TableCell colSpan={1}></TableCell>
+                                        </TableRow>
+
+                                    </TableFooter>
+                                </Table>
+                            </CardContent>
+
+                        </Card>
+                    </div>
+                    <div className="action col-span-2">
+                        <Card className="mx-auto w-full ">
+                            <CardHeader>
+                                <CardTitle>Trạng thái</CardTitle>
+                                <CardDescription>Trạng thái của hóa đơn</CardDescription>
+                            </CardHeader>
+                            <CardContent className={""}>
+                                <div className="relative max-w-sm w-full ">
+                                    {/* Sử dụng top-1/2 và -translate-y-1/2 để căn giữa dọc tuyệt đối */}
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 bg-amber-300 rounded-full" />
+                                    <Input className="pl-8" value={"DRAFT"} readOnly={true}/>
+                                </div>
+                            </CardContent>
+                            <CardFooter className={"flex justify-end"}>
+                                <Button type="submit" className={"w-full"} disabled={isSubmitting}>
+                                    Lưu
+                                </Button>
+                            </CardFooter>
+                        </Card>
 
                     </div>
 
-                    {/* TABLE */}
-                    <div className="border rounded-xl p-6">
-                        <div className="flex justify-between mb-4">
-                            <h3>Dòng hóa đơn</h3>
-                            <Button type="button" onClick={() => append({
-                                description: "",
-                                accountId: "",
-                                quantity: 1,
-                                unitPrice: 0,
-                                taxRate: 0,
-                                taxAmount: 0,
-                                amount: 0,
-                            })}>
-                                <Plus className="w-4 h-4 mr-2" /> Thêm
-                            </Button>
-                        </div>
-
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Mô tả</TableHead>
-                                    <TableHead>TK</TableHead>
-                                    <TableHead>SL</TableHead>
-                                    <TableHead>Giá</TableHead>
-                                    <TableHead>Thuế%</TableHead>
-                                    <TableHead>Thuế</TableHead>
-                                    <TableHead>Tiền</TableHead>
-                                    <TableHead></TableHead>
-                                </TableRow>
-                            </TableHeader>
-
-                            <TableBody>
-                                {fields.map((f, i) => (
-                                    <TableRow key={f.id}>
-
-                                        <TableCell>
-                                            <Input {...form.register(`lines.${i}.description`)} />
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <Select
-                                                onValueChange={(v) =>
-                                                    form.setValue(`lines.${i}.accountId`, v)
-                                                }
-                                            >
-                                                <SelectTrigger className={"w-full"}>
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {accounts.map(a => (
-                                                        <SelectItem key={a.id} value={a.id!}>
-                                                            {a.code}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <Input type="number" {...form.register(`lines.${i}.quantity`, { valueAsNumber: true })} />
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <Input type="number" {...form.register(`lines.${i}.unitPrice`, { valueAsNumber: true })} />
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <Input type="number" {...form.register(`lines.${i}.taxRate`, { valueAsNumber: true })} />
-                                        </TableCell>
-
-                                        <TableCell>
-                                            {calculatedLines[i]?.taxAmount.toLocaleString()}
-                                        </TableCell>
-
-                                        <TableCell>
-                                            {calculatedLines[i]?.amount.toLocaleString()}
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <Button type="button" onClick={() => remove(i)}>
-                                                <Trash2 />
-                                            </Button>
-                                        </TableCell>
-
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-
-                            <TableFooter>
-                                <TableRow>
-                                    <TableCell colSpan={5}>Subtotal</TableCell>
-                                    <TableCell>{subtotal.toLocaleString()}</TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                    <TableCell colSpan={5}>Tax</TableCell>
-                                    <TableCell>{taxTotal.toLocaleString()}</TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                    <TableCell colSpan={5}>Total</TableCell>
-                                    <TableCell>{total.toLocaleString()}</TableCell>
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </div>
-
-                    <div className="flex justify-end">
-                        <Button type="submit" disabled={isSubmitting}>
-                            <Save className="w-4 h-4 mr-2" />
-                            Lưu
-                        </Button>
-                    </div>
 
                 </form>
             </Form>
