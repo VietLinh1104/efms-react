@@ -16,7 +16,6 @@ import TrialBalanceListing from "@/pages/dashboard/accounting/trial-balance/Tria
 import PartnersListing from "@pages/dashboard/invoices/partners/PartnersListing.tsx";
 import InvoicesListing from "@pages/dashboard/invoices/invoices-details/InvoicesListing.tsx";
 import InvoiceFormPage from "@pages/dashboard/invoices/invoices-details/InvoiceFormPage.tsx";
-import InvoiceDetailsPage from "@pages/dashboard/invoices/invoices-details/InvoiceDetailsPage.tsx";
 import PaymentsListing from "@pages/dashboard/invoices/payments/PaymentsListing";
 import PaymentFormPage from "@pages/dashboard/invoices/payments/PaymentFormPage";
 import BankAccountsListing from "@pages/dashboard/finance/accounts/BankAccountsListing";
@@ -49,7 +48,8 @@ function App() {
                 <Route path="/partners" element={<PartnersListing />} />
                 <Route path="/invoices" element={<InvoicesListing />} />
                 <Route path="/invoices/create" element={<InvoiceFormPage />} />
-                <Route path="/invoices/:id" element={<InvoiceDetailsPage />} />
+                <Route path="/invoices/:id" element={<InvoiceFormPage />} />
+                <Route path="/invoices/:id/edit" element={<InvoiceFormPage />} />
                 <Route path="/payments" element={<PaymentsListing />} />
                 <Route path="/payments/new" element={<PaymentFormPage />} />
                 <Route path="/payments/:id/edit" element={<PaymentFormPage />} />

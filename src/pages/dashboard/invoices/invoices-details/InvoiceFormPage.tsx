@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {Plus, Trash2, MoreHorizontal} from "lucide-react";
+import { Plus, Trash2, MoreHorizontal, ArrowLeft } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@components/ui/button.tsx";
-import { Card,CardHeader,CardFooter,CardTitle,CardContent,CardDescription,CardAction } from "@components/ui/card.tsx";
+import { Card, CardHeader, CardFooter, CardTitle, CardContent, CardDescription, CardAction } from "@components/ui/card.tsx";
 
 import {
     Form,
@@ -39,7 +40,8 @@ import type {
     CreateInvoiceRequest,
     AccountsApiList7Request,
     PartnersApiList1Request,
-    InvoicesApiCreate2Request
+    InvoicesApiCreate2Request,
+    InvoiceResponse
 } from "@/api/generated/core";
 
 import { useToastApp } from "@hooks/use-toast-app.ts";
@@ -76,15 +78,26 @@ const invoiceSchema = z.object({
 
 type InvoiceFormValues = z.infer<typeof invoiceSchema>;
 
+interface ExtendedInvoiceResponse extends InvoiceResponse {
+    approvalStatus?: string;
+}
+
 /* ================= COMPONENT ================= */
 
 const InvoiceFormPage: React.FC = () => {
     const { success, error } = useToastApp();
     const { companyId } = useAuth();
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
 
     const [accounts, setAccounts] = useState<AccountResponse[]>([]);
     const [partners, setPartners] = useState<PartnerResponse[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [invoice, setInvoice] = useState<ExtendedInvoiceResponse | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const isEditMode = !!id;
+    const isFinanceOrAdmin = true; // Temporary allow everyone
 
     const form = useForm<InvoiceFormValues>({
         resolver: zodResolver(invoiceSchema),
@@ -115,28 +128,57 @@ const InvoiceFormPage: React.FC = () => {
         name: "lines",
     });
 
-    /* ================= FETCH DATA ================= */
+    const fetchDetail = useCallback(async () => {
+        if (!id) return;
+        setIsLoading(true);
+        try {
+            const res = await coreInvoicesApi.getDetail1({ id });
+            const data = ((res.data).data || res.data) as ExtendedInvoiceResponse;
+            setInvoice(data);
+
+            form.reset({
+                invoiceType: data.invoiceType || "AR",
+                partnerId: data.partnerId || "",
+                invoiceNumber: data.invoiceNumber || "",
+                invoiceDate: data.invoiceDate ? new Date(data.invoiceDate).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+                dueDate: data.dueDate ? new Date(data.dueDate).toISOString().split("T")[0] : "",
+                currencyCode: data.currencyCode || "VND",
+                exchangeRate: data.exchangeRate || 1,
+                lines: data.lines?.map((l) => ({
+                    description: l.description || "",
+                    accountId: l.accountId || "",
+                    quantity: l.quantity || 0,
+                    unitPrice: l.unitPrice || 0,
+                    taxRate: l.taxRate || 0,
+                    taxAmount: l.taxAmount || 0,
+                    amount: l.amount || 0,
+                })) || [],
+            });
+        } catch (err) {
+            console.error("Fetch invoice detail failed:", err);
+            error("Không thể tải chi tiết hóa đơn.");
+        } finally {
+            setIsLoading(false);
+        }
+    }, [id, error, form]);
 
     useEffect(() => {
-        const AccountsApiList7Request: AccountsApiList7Request = {
-            companyId: companyId ?? "",
-        }
-
-        const PartnersApiList1Request: PartnersApiList1Request = {
-            companyId: companyId ?? "",
-            type: undefined,
-            search: "",
-            page: 0,
-            size: 100,
-        }
-
-        const fetch = async () => {
+        const fetchCommon = async () => {
+            const AccountsApiList7Request: AccountsApiList7Request = {
+                companyId: companyId ?? "",
+            }
+            const PartnersApiList1Request: PartnersApiList1Request = {
+                companyId: companyId ?? "",
+                type: undefined,
+                search: "",
+                page: 0,
+                size: 100,
+            }
             try {
                 const [acc, part] = await Promise.all([
                     coreAccountsApi.list7(AccountsApiList7Request),
                     corePartnersApi.list1(PartnersApiList1Request),
                 ]);
-
                 setAccounts(acc.data.data || []);
                 setPartners(part.data.data?.content || []);
             } catch (e) {
@@ -144,8 +186,49 @@ const InvoiceFormPage: React.FC = () => {
             }
         };
 
-        fetch();
-    }, []);
+        fetchCommon();
+        if (id) {
+            fetchDetail();
+        }
+    }, [id, fetchDetail, companyId]);
+
+    /* ================= ACTIONS ================= */
+
+    const handleConfirm = async () => {
+        if (!id) return;
+        try {
+            await coreInvoicesApi.confirm({ id });
+            success("Xác nhận hóa đơn thành công!");
+            fetchDetail();
+        } catch (err) {
+            console.error("Confirm fail", err);
+            error("Xác nhận thất bại.");
+        }
+    };
+
+    const handleApprove = async () => {
+        if (!id) return;
+        try {
+            await coreInvoicesApi.approve({ id });
+            success("Đã duyệt hóa đơn AP!");
+            fetchDetail();
+        } catch (err) {
+            console.error("Approve fail", err);
+            error("Duyệt hóa đơn thất bại.");
+        }
+    };
+
+    const handleReject = async () => {
+        if (!id) return;
+        try {
+            await coreInvoicesApi.reject({ id });
+            success("Đã từ chối hóa đơn!");
+            fetchDetail();
+        } catch (err) {
+            console.error("Reject fail", err);
+            error("Từ chối thất bại.");
+        }
+    };
 
     /* ================= CALC ================= */
 
@@ -181,8 +264,6 @@ const InvoiceFormPage: React.FC = () => {
     /* ================= SUBMIT ================= */
 
     const onSubmit: SubmitHandler<InvoiceFormValues> = async (values) => {
-        console.log("log1");
-
         setIsSubmitting(true);
         try {
             const request: CreateInvoiceRequest = {
@@ -196,7 +277,6 @@ const InvoiceFormPage: React.FC = () => {
                         (l.quantity * l.unitPrice * (l.taxRate ?? 0)) / 100,
                 }))
             };
-            console.log(request);
 
             const InvoicesApiCreate2Request: InvoicesApiCreate2Request = {
                 createInvoiceRequest: request
@@ -215,9 +295,37 @@ const InvoiceFormPage: React.FC = () => {
 
     /* ================= UI ================= */
 
+    if (isLoading) {
+        return <div className="p-8 text-center text-muted-foreground">Đang tải...</div>;
+    }
+
+    const currentStatus = invoice?.status || "DRAFT";
+    const currentApprovalStatus = invoice?.approvalStatus || "---";
+    const isAP = form.watch("invoiceType") === "AP";
+    const isReadOnly = isEditMode && currentStatus.toLowerCase() !== "draft";
+
+    const getStatusColor = (status: string) => {
+        switch (status.toLowerCase()) {
+            case "draft": return "bg-amber-300";
+            case "confirmed": return "bg-blue-500";
+            case "approved": return "bg-green-500";
+            case "rejected": return "bg-red-500";
+            default: return "bg-slate-300";
+        }
+    };
+
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Tạo hóa đơn</h2>
+            <div className="flex items-center gap-2">
+                {isEditMode && (
+                    <Button variant="ghost" size="icon" onClick={() => navigate("/invoices")}>
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                )}
+                <h2 className="text-2xl font-bold">
+                    {isEditMode ? `Hóa đơn: ${invoice?.invoiceNumber || "N/A"}` : "Tạo hóa đơn"}
+                </h2>
+            </div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-10 gap-6">
 
@@ -230,73 +338,73 @@ const InvoiceFormPage: React.FC = () => {
                             </CardHeader>
                             <CardContent className={"grid md:grid-cols-3 gap-4"}>
                                 <FormField name="invoiceType" control={form.control}
-                                           render={({ field }) => (
-                                               <FormItem>
-                                                   <FormLabel>Loại</FormLabel>
-                                                   <Select onValueChange={field.onChange} value={field.value}>
-                                                       <FormControl>
-                                                           <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
-                                                       </FormControl>
-                                                       <SelectContent>
-                                                           <SelectItem value="AR">AR Invoice</SelectItem>
-                                                           <SelectItem value="AP">AP Bill</SelectItem>
-                                                       </SelectContent>
-                                                   </Select>
-                                               </FormItem>
-                                           )}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Loại</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isReadOnly}>
+                                                <FormControl>
+                                                    <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="AR">AR Invoice</SelectItem>
+                                                    <SelectItem value="AP">AP Bill</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormItem>
+                                    )}
                                 />
 
                                 <FormField name="partnerId" control={form.control}
-                                           render={({ field }) => (
-                                               <FormItem>
-                                                   <FormLabel>Đối tác</FormLabel>
-                                                   <Select onValueChange={field.onChange} value={field.value}>
-                                                       <FormControl>
-                                                           <SelectTrigger className={"w-full"}><SelectValue placeholder="Chọn" /></SelectTrigger>
-                                                       </FormControl>
-                                                       <SelectContent>
-                                                           {partners.map(p => (
-                                                               <SelectItem key={p.id} value={p.id!}>
-                                                                   {p.name}
-                                                               </SelectItem>
-                                                           ))}
-                                                       </SelectContent>
-                                                   </Select>
-                                               </FormItem>
-                                           )}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Đối tác</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isReadOnly}>
+                                                <FormControl>
+                                                    <SelectTrigger className={"w-full"}><SelectValue placeholder="Chọn" /></SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {partners.map(p => (
+                                                        <SelectItem key={p.id} value={p.id!}>
+                                                            {p.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormItem>
+                                    )}
                                 />
 
                                 <FormField name="invoiceDate" control={form.control}
-                                           render={({ field }) => (
-                                               <FormItem>
-                                                   <FormLabel>Ngày hóa đơn</FormLabel>
-                                                   <Input type="date" {...field} />
-                                               </FormItem>
-                                           )}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Ngày hóa đơn</FormLabel>
+                                            <Input type="date" {...field} readOnly={isReadOnly} />
+                                        </FormItem>
+                                    )}
                                 />
 
                                 <FormField name="invoiceNumber" control={form.control}
-                                           render={({ field }) => (
-                                               <FormItem>
-                                                   <FormLabel>Số HĐ</FormLabel>
-                                                   <Input {...field} />
-                                               </FormItem>
-                                           )}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Số HĐ</FormLabel>
+                                            <Input {...field} readOnly={isReadOnly} />
+                                        </FormItem>
+                                    )}
                                 />
 
                                 <FormField name="currencyCode" control={form.control}
-                                           render={({ field }) => (
-                                               <FormItem>
-                                                   <FormLabel>Tiền tệ</FormLabel>
-                                                   <Select onValueChange={field.onChange} value={field.value}>
-                                                       <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
-                                                       <SelectContent>
-                                                           <SelectItem value="VND">VND</SelectItem>
-                                                           <SelectItem value="USD">USD</SelectItem>
-                                                       </SelectContent>
-                                                   </Select>
-                                               </FormItem>
-                                           )}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Tiền tệ</FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isReadOnly}>
+                                                <SelectTrigger className={"w-full"}><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="VND">VND</SelectItem>
+                                                    <SelectItem value="USD">USD</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormItem>
+                                    )}
                                 />
                             </CardContent>
                         </Card>
@@ -307,17 +415,19 @@ const InvoiceFormPage: React.FC = () => {
                                 <CardTitle>Chi tiết hóa đơn</CardTitle>
                                 <CardDescription>Dòng hóa đơn</CardDescription>
                                 <CardAction>
-                                    <Button type="button" onClick={() => append({
-                                        description: "",
-                                        accountId: "",
-                                        quantity: 1,
-                                        unitPrice: 0,
-                                        taxRate: 0,
-                                        taxAmount: 0,
-                                        amount: 0,
-                                    })}>
-                                        <Plus className="w-4 h-4 mr-2" /> Thêm
-                                    </Button>
+                                    {!isReadOnly && (
+                                        <Button type="button" onClick={() => append({
+                                            description: "",
+                                            accountId: "",
+                                            quantity: 1,
+                                            unitPrice: 0,
+                                            taxRate: 0,
+                                            taxAmount: 0,
+                                            amount: 0,
+                                        })}>
+                                            <Plus className="w-4 h-4 mr-2" /> Thêm
+                                        </Button>
+                                    )}
                                 </CardAction>
                             </CardHeader>
                             <CardContent>
@@ -340,7 +450,7 @@ const InvoiceFormPage: React.FC = () => {
                                             <TableRow key={f.id}>
 
                                                 <TableCell>
-                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "} {...form.register(`lines.${i}.description`)} />
+                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "} {...form.register(`lines.${i}.description`)} readOnly={isReadOnly} />
                                                 </TableCell>
 
                                                 <TableCell >
@@ -348,6 +458,8 @@ const InvoiceFormPage: React.FC = () => {
                                                         onValueChange={(v) =>
                                                             form.setValue(`lines.${i}.accountId`, v)
                                                         }
+                                                        disabled={isReadOnly}
+                                                        value={form.watch(`lines.${i}.accountId`)}
                                                     >
                                                         <SelectTrigger className={"w-full"}>
                                                             <SelectValue />
@@ -363,15 +475,15 @@ const InvoiceFormPage: React.FC = () => {
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "} type="number" {...form.register(`lines.${i}.quantity`, { valueAsNumber: true })} />
+                                                    <Input placeholder={"SL"} className={"border-0 !bg-card "} type="number" {...form.register(`lines.${i}.quantity`, { valueAsNumber: true })} readOnly={isReadOnly} />
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "}  type="number" {...form.register(`lines.${i}.unitPrice`, { valueAsNumber: true })} />
+                                                    <Input placeholder={"Giá"} className={"border-0 !bg-card "} type="number" {...form.register(`lines.${i}.unitPrice`, { valueAsNumber: true })} readOnly={isReadOnly} />
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <Input placeholder={"Nhập mô tả..."} className={"border-0 !bg-card "}  type="number" {...form.register(`lines.${i}.taxRate`, { valueAsNumber: true })} />
+                                                    <Input placeholder={"0%"} className={"border-0 !bg-card "} type="number" {...form.register(`lines.${i}.taxRate`, { valueAsNumber: true })} readOnly={isReadOnly} />
                                                 </TableCell>
 
                                                 <TableCell>
@@ -383,22 +495,24 @@ const InvoiceFormPage: React.FC = () => {
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                                <MoreHorizontal className="h-4 w-4" />
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end">
-                                                            <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
-                                                            <DropdownMenuItem
-                                                                onClick={() => {remove(i)}}
-                                                                className="text-destructive focus:text-destructive"
-                                                            >
-                                                                <Trash2 className="mr-2 h-4 w-4" /> Hủy/Xóa
-                                                            </DropdownMenuItem>
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
+                                                    {!isReadOnly && (
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                                                    <MoreHorizontal className="h-4 w-4" />
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end">
+                                                                <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
+                                                                <DropdownMenuItem
+                                                                    onClick={() => { remove(i) }}
+                                                                    className="text-destructive focus:text-destructive"
+                                                                >
+                                                                    <Trash2 className="mr-2 h-4 w-4" /> Hủy/Xóa
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    )}
                                                 </TableCell>
 
                                             </TableRow>
@@ -434,28 +548,61 @@ const InvoiceFormPage: React.FC = () => {
                         <Card className="mx-auto w-full ">
                             <CardHeader>
                                 <CardTitle>Trạng thái</CardTitle>
-                                <CardDescription>Trạng thái của hóa đơn</CardDescription>
+                                <CardDescription>
+                                    Trạng thái của hóa đơn
+                                </CardDescription>
                             </CardHeader>
+
                             <CardContent className={""}>
-                                <div className="relative max-w-sm w-full ">
-                                    {/* Sử dụng top-1/2 và -translate-y-1/2 để căn giữa dọc tuyệt đối */}
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 bg-amber-300 rounded-full" />
-                                    <Input className="pl-8" value={"DRAFT"} readOnly={true}/>
+                                <div className="">
+                                    <div className="relative w-full ">
+                                        <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentStatus)}`} />
+                                        <Input className="pl-8 uppercase" value={currentStatus} readOnly={true} />
+                                    </div>
                                 </div>
+
+                                {isAP && isEditMode && (
+                                    <div className="mt-2">
+                                        <div className="relative w-full ">
+                                            <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentApprovalStatus)}`} />
+                                            <Input className="pl-8 uppercase" value={currentApprovalStatus} readOnly={true} />
+                                        </div>
+                                    </div>
+                                )}
+
+
                             </CardContent>
-                            <CardFooter className={"flex justify-end"}>
-                                <Button type="submit" className={"w-full"} disabled={isSubmitting}>
-                                    Lưu
-                                </Button>
+                            <CardFooter className={"flex flex-col gap-4 pt-0"}>
+                                {(!isEditMode || currentStatus.toLowerCase() === 'draft') && (
+                                    <Button type="submit" variant={"secondary"} className={"w-full"} disabled={isSubmitting}>
+                                        {isEditMode ? "Cập nhật" : "Lưu"}
+                                    </Button>
+                                )}
+                                {isEditMode && (currentStatus.toLowerCase() === 'draft') && (
+                                    <Button type="button" onClick={handleConfirm} className="w-full">
+                                        Xác nhận
+                                    </Button>
+                                )}
+
+                                {isAP && (currentApprovalStatus.toLowerCase() === 'pending') && isFinanceOrAdmin && (
+                                    <>
+                                        <Button type="button" onClick={handleApprove} className="bg-green-600 hover:bg-green-700 text-white w-full">
+                                            Duyệt
+                                        </Button>
+                                        <Button type="button" onClick={handleReject} variant="destructive" className="w-full">
+                                            Từ chối
+                                        </Button>
+                                    </>
+                                )}
                             </CardFooter>
                         </Card>
 
                     </div>
 
 
-                </form>
-            </Form>
-        </div>
+                </form >
+            </Form >
+        </div >
     );
 };
 
