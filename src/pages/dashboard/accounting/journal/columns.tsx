@@ -148,7 +148,7 @@ export const getColumns = (
                             {journal.status === "draft" && (
                                 <>
                                     <DropdownMenuItem onClick={() => onPost(journal)}>
-                                        <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" /> Ghi sổ (Post)
+                                        <CheckCircle2 className="mr-2 h-4 w-4" /> Ghi sổ (Post)
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
