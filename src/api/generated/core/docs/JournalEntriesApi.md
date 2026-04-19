@@ -4,16 +4,16 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**cancel1**](#cancel1) | **POST** /v1/accounting/journals/{id}/cancel | Huỷ chứng từ|
-|[**create5**](#create5) | **POST** /v1/accounting/journals | Tạo chứng từ mới (trạng thái draft)|
-|[**delete3**](#delete3) | **DELETE** /v1/accounting/journals/{id} | Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)|
-|[**getDetail2**](#getdetail2) | **GET** /v1/accounting/journals/{id} | Chi tiết chứng từ kèm các dòng bút toán|
-|[**list5**](#list5) | **GET** /v1/accounting/journals | Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)|
+|[**cancel**](#cancel) | **POST** /v1/accounting/journals/{id}/cancel | Huỷ chứng từ|
+|[**create4**](#create4) | **POST** /v1/accounting/journals | Tạo chứng từ mới (trạng thái draft)|
+|[**delete2**](#delete2) | **DELETE** /v1/accounting/journals/{id} | Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)|
+|[**getDetail1**](#getdetail1) | **GET** /v1/accounting/journals/{id} | Chi tiết chứng từ kèm các dòng bút toán|
+|[**list4**](#list4) | **GET** /v1/accounting/journals | Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)|
 |[**post**](#post) | **POST** /v1/accounting/journals/{id}/post | Post chứng từ (draft → posted)|
-|[**update4**](#update4) | **PUT** /v1/accounting/journals/{id} | Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)|
+|[**update3**](#update3) | **PUT** /v1/accounting/journals/{id} | Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)|
 
-# **cancel1**
-> ApiResponseJournalEntryResponse cancel1()
+# **cancel**
+> ApiResponseJournalEntryResponse cancel()
 
 
 ### Example
@@ -29,7 +29,7 @@ const apiInstance = new JournalEntriesApi(configuration);
 
 let id: string; //UUID chứng từ (default to undefined)
 
-const { status, data } = await apiInstance.cancel1(
+const { status, data } = await apiInstance.cancel(
     id
 );
 ```
@@ -62,8 +62,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **create5**
-> ApiResponseJournalEntryResponse create5(createJournalRequest)
+# **create4**
+> ApiResponseJournalEntryResponse create4(createJournalRequest)
 
 Tổng Nợ phải bằng Tổng Có mới tạo được
 
@@ -81,7 +81,7 @@ const apiInstance = new JournalEntriesApi(configuration);
 
 let createJournalRequest: CreateJournalRequest; //
 
-const { status, data } = await apiInstance.create5(
+const { status, data } = await apiInstance.create4(
     createJournalRequest
 );
 ```
@@ -114,8 +114,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **delete3**
-> ApiResponseVoid delete3()
+# **delete2**
+> ApiResponseVoid delete2()
 
 
 ### Example
@@ -131,7 +131,7 @@ const apiInstance = new JournalEntriesApi(configuration);
 
 let id: string; //UUID chứng từ (default to undefined)
 
-const { status, data } = await apiInstance.delete3(
+const { status, data } = await apiInstance.delete2(
     id
 );
 ```
@@ -164,8 +164,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getDetail2**
-> ApiResponseJournalEntryResponse getDetail2()
+# **getDetail1**
+> ApiResponseJournalEntryResponse getDetail1()
 
 
 ### Example
@@ -181,7 +181,7 @@ const apiInstance = new JournalEntriesApi(configuration);
 
 let id: string; //UUID chứng từ (default to undefined)
 
-const { status, data } = await apiInstance.getDetail2(
+const { status, data } = await apiInstance.getDetail1(
     id
 );
 ```
@@ -214,8 +214,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list5**
-> ApiResponsePagedResponseJournalEntryResponse list5()
+# **list4**
+> ApiResponsePagedResponseJournalEntryResponse list4()
 
 
 ### Example
@@ -236,7 +236,7 @@ let toDate: string; //Đến ngày (yyyy-MM-dd) (optional) (default to undefined
 let page: number; //Trang hiện tại (0-indexed) (optional) (default to 0)
 let size: number; //Số phần tử mỗi trang (optional) (default to 20)
 
-const { status, data } = await apiInstance.list5(
+const { status, data } = await apiInstance.list4(
     companyId,
     status,
     fromDate,
@@ -329,8 +329,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **update4**
-> ApiResponseJournalEntryResponse update4(createJournalRequest)
+# **update3**
+> ApiResponseJournalEntryResponse update3(createJournalRequest)
 
 
 ### Example
@@ -348,7 +348,7 @@ const apiInstance = new JournalEntriesApi(configuration);
 let id: string; //UUID chứng từ (default to undefined)
 let createJournalRequest: CreateJournalRequest; //
 
-const { status, data } = await apiInstance.update4(
+const { status, data } = await apiInstance.update3(
     id,
     createJournalRequest
 );

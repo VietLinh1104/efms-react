@@ -1600,6 +1600,68 @@ export interface TrialBalanceResponse {
      */
     'lines'?: Array<TrialBalanceLineResponse>;
 }
+/**
+ * Payload cập nhật dòng hóa đơn
+ */
+export interface UpdateInvoiceLineRequest {
+    /**
+     * UUID dòng hóa đơn hiện tại (null = tạo mới, có giá trị = cập nhật)
+     */
+    'id'?: string;
+    /**
+     * UUID tài khoản doanh thu (AR) hoặc chi phí (AP)
+     */
+    'accountId': string;
+    /**
+     * Mô tả mặt hàng / dịch vụ
+     */
+    'description': string;
+    /**
+     * Số lượng
+     */
+    'quantity': number;
+    /**
+     * Đơn giá
+     */
+    'unitPrice': number;
+    /**
+     * Tỷ lệ thuế (%)
+     */
+    'taxRate': number;
+}
+/**
+ * Payload cập nhật hóa đơn (chỉ cho phép ở trạng thái draft)
+ */
+export interface UpdateInvoiceRequest {
+    /**
+     * UUID đối tác
+     */
+    'partnerId': string;
+    /**
+     * Số hóa đơn
+     */
+    'invoiceNumber'?: string;
+    /**
+     * Ngày phát hành
+     */
+    'invoiceDate': string;
+    /**
+     * Ngày đến hạn
+     */
+    'dueDate'?: string;
+    /**
+     * Loại tiền tệ
+     */
+    'currencyCode'?: string;
+    /**
+     * Tỷ giá quy đổi
+     */
+    'exchangeRate'?: number;
+    /**
+     * Danh sách dòng hóa đơn – nếu id != null thì update dòng đó, id == null thì tạo mới
+     */
+    'lines': Array<UpdateInvoiceLineRequest>;
+}
 
 /**
  * AccountsApi - axios parameter creator
@@ -1613,9 +1675,9 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create7: async (createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create6: async (createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createAccountRequest' is not null or undefined
-            assertParamExists('create7', 'createAccountRequest', createAccountRequest)
+            assertParamExists('create6', 'createAccountRequest', createAccountRequest)
             const localVarPath = `/v1/accounting/accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1735,9 +1797,9 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list7: async (companyId: string, tree?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list6: async (companyId: string, tree?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list7', 'companyId', companyId)
+            assertParamExists('list6', 'companyId', companyId)
             const localVarPath = `/v1/accounting/accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1858,11 +1920,11 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update5: async (id: string, createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        update4: async (id: string, createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('update5', 'id', id)
+            assertParamExists('update4', 'id', id)
             // verify required parameter 'createAccountRequest' is not null or undefined
-            assertParamExists('update5', 'createAccountRequest', createAccountRequest)
+            assertParamExists('update4', 'createAccountRequest', createAccountRequest)
             const localVarPath = `/v1/accounting/accounts/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1905,10 +1967,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create7(createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create7(createAccountRequest, options);
+        async create6(createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create6(createAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.create7']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.create6']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1947,10 +2009,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list7(companyId: string, tree?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list7(companyId, tree, options);
+        async list6(companyId: string, tree?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list6(companyId, tree, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.list7']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.list6']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1989,10 +2051,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update5(id: string, createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update5(id, createAccountRequest, options);
+        async update4(id: string, createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.update4(id, createAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.update5']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.update4']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2007,12 +2069,12 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Tạo tài khoản mới
-         * @param {AccountsApiCreate7Request} requestParameters Request parameters.
+         * @param {AccountsApiCreate6Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create7(requestParameters: AccountsApiCreate7Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
-            return localVarFp.create7(requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
+        create6(requestParameters: AccountsApiCreate6Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
+            return localVarFp.create6(requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2037,12 +2099,12 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         /**
          * Lấy danh sách tài khoản theo công ty. Truyền tree=true để lấy dạng cây.
          * @summary Danh sách tài khoản
-         * @param {AccountsApiList7Request} requestParameters Request parameters.
+         * @param {AccountsApiList6Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list7(requestParameters: AccountsApiList7Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAccountResponse> {
-            return localVarFp.list7(requestParameters.companyId, requestParameters.tree, options).then((request) => request(axios, basePath));
+        list6(requestParameters: AccountsApiList6Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAccountResponse> {
+            return localVarFp.list6(requestParameters.companyId, requestParameters.tree, options).then((request) => request(axios, basePath));
         },
         /**
          * Lấy danh sách tài khoản theo công ty (pagination).
@@ -2067,20 +2129,20 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Cập nhật tài khoản
-         * @param {AccountsApiUpdate5Request} requestParameters Request parameters.
+         * @param {AccountsApiUpdate4Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update5(requestParameters: AccountsApiUpdate5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
-            return localVarFp.update5(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
+        update4(requestParameters: AccountsApiUpdate4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
+            return localVarFp.update4(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for create7 operation in AccountsApi.
+ * Request parameters for create6 operation in AccountsApi.
  */
-export interface AccountsApiCreate7Request {
+export interface AccountsApiCreate6Request {
     readonly createAccountRequest: CreateAccountRequest
 }
 
@@ -2115,9 +2177,9 @@ export interface AccountsApiGetById3Request {
 }
 
 /**
- * Request parameters for list7 operation in AccountsApi.
+ * Request parameters for list6 operation in AccountsApi.
  */
-export interface AccountsApiList7Request {
+export interface AccountsApiList6Request {
     /**
      * UUID công ty
      */
@@ -2154,9 +2216,9 @@ export interface AccountsApiToggleActive2Request {
 }
 
 /**
- * Request parameters for update5 operation in AccountsApi.
+ * Request parameters for update4 operation in AccountsApi.
  */
-export interface AccountsApiUpdate5Request {
+export interface AccountsApiUpdate4Request {
     /**
      * UUID tài khoản
      */
@@ -2172,12 +2234,12 @@ export class AccountsApi extends BaseAPI {
     /**
      * 
      * @summary Tạo tài khoản mới
-     * @param {AccountsApiCreate7Request} requestParameters Request parameters.
+     * @param {AccountsApiCreate6Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create7(requestParameters: AccountsApiCreate7Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).create7(requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public create6(requestParameters: AccountsApiCreate6Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).create6(requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2205,12 +2267,12 @@ export class AccountsApi extends BaseAPI {
     /**
      * Lấy danh sách tài khoản theo công ty. Truyền tree=true để lấy dạng cây.
      * @summary Danh sách tài khoản
-     * @param {AccountsApiList7Request} requestParameters Request parameters.
+     * @param {AccountsApiList6Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list7(requestParameters: AccountsApiList7Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).list7(requestParameters.companyId, requestParameters.tree, options).then((request) => request(this.axios, this.basePath));
+    public list6(requestParameters: AccountsApiList6Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).list6(requestParameters.companyId, requestParameters.tree, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2238,12 +2300,12 @@ export class AccountsApi extends BaseAPI {
     /**
      * 
      * @summary Cập nhật tài khoản
-     * @param {AccountsApiUpdate5Request} requestParameters Request parameters.
+     * @param {AccountsApiUpdate4Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public update5(requestParameters: AccountsApiUpdate5Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).update5(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public update4(requestParameters: AccountsApiUpdate4Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).update4(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2261,9 +2323,9 @@ export const BankAccountsApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create4: async (createBankAccountRequest: CreateBankAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create3: async (createBankAccountRequest: CreateBankAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createBankAccountRequest' is not null or undefined
-            assertParamExists('create4', 'createBankAccountRequest', createBankAccountRequest)
+            assertParamExists('create3', 'createBankAccountRequest', createBankAccountRequest)
             const localVarPath = `/v1/finance/bank-accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2368,9 +2430,9 @@ export const BankAccountsApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list4: async (companyId: string, type?: string, search?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list3: async (companyId: string, type?: string, search?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list4', 'companyId', companyId)
+            assertParamExists('list3', 'companyId', companyId)
             const localVarPath = `/v1/finance/bank-accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2456,11 +2518,11 @@ export const BankAccountsApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update3: async (id: string, createBankAccountRequest: CreateBankAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        update2: async (id: string, createBankAccountRequest: CreateBankAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('update3', 'id', id)
+            assertParamExists('update2', 'id', id)
             // verify required parameter 'createBankAccountRequest' is not null or undefined
-            assertParamExists('update3', 'createBankAccountRequest', createBankAccountRequest)
+            assertParamExists('update2', 'createBankAccountRequest', createBankAccountRequest)
             const localVarPath = `/v1/finance/bank-accounts/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -2503,10 +2565,10 @@ export const BankAccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create4(createBankAccountRequest: CreateBankAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create4(createBankAccountRequest, options);
+        async create3(createBankAccountRequest: CreateBankAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create3(createBankAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.create4']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.create3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2546,10 +2608,10 @@ export const BankAccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list4(companyId: string, type?: string, search?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list4(companyId, type, search, page, size, options);
+        async list3(companyId: string, type?: string, search?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list3(companyId, type, search, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.list4']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.list3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2573,10 +2635,10 @@ export const BankAccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update3(id: string, createBankAccountRequest: CreateBankAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update3(id, createBankAccountRequest, options);
+        async update2(id: string, createBankAccountRequest: CreateBankAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.update2(id, createBankAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.update3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.update2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2591,12 +2653,12 @@ export const BankAccountsApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Tạo tài khoản ngân hàng
-         * @param {BankAccountsApiCreate4Request} requestParameters Request parameters.
+         * @param {BankAccountsApiCreate3Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create4(requestParameters: BankAccountsApiCreate4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
-            return localVarFp.create4(requestParameters.createBankAccountRequest, options).then((request) => request(axios, basePath));
+        create3(requestParameters: BankAccountsApiCreate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
+            return localVarFp.create3(requestParameters.createBankAccountRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2621,12 +2683,12 @@ export const BankAccountsApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Danh sách tài khoản ngân hàng
-         * @param {BankAccountsApiList4Request} requestParameters Request parameters.
+         * @param {BankAccountsApiList3Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list4(requestParameters: BankAccountsApiList4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankAccountResponse> {
-            return localVarFp.list4(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        list3(requestParameters: BankAccountsApiList3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankAccountResponse> {
+            return localVarFp.list3(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2641,20 +2703,20 @@ export const BankAccountsApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Cập nhật tài khoản ngân hàng
-         * @param {BankAccountsApiUpdate3Request} requestParameters Request parameters.
+         * @param {BankAccountsApiUpdate2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update3(requestParameters: BankAccountsApiUpdate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
-            return localVarFp.update3(requestParameters.id, requestParameters.createBankAccountRequest, options).then((request) => request(axios, basePath));
+        update2(requestParameters: BankAccountsApiUpdate2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
+            return localVarFp.update2(requestParameters.id, requestParameters.createBankAccountRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for create4 operation in BankAccountsApi.
+ * Request parameters for create3 operation in BankAccountsApi.
  */
-export interface BankAccountsApiCreate4Request {
+export interface BankAccountsApiCreate3Request {
     readonly createBankAccountRequest: CreateBankAccountRequest
 }
 
@@ -2673,9 +2735,9 @@ export interface BankAccountsApiGetById2Request {
 }
 
 /**
- * Request parameters for list4 operation in BankAccountsApi.
+ * Request parameters for list3 operation in BankAccountsApi.
  */
-export interface BankAccountsApiList4Request {
+export interface BankAccountsApiList3Request {
     readonly companyId: string
 
     /**
@@ -2701,9 +2763,9 @@ export interface BankAccountsApiToggleActive1Request {
 }
 
 /**
- * Request parameters for update3 operation in BankAccountsApi.
+ * Request parameters for update2 operation in BankAccountsApi.
  */
-export interface BankAccountsApiUpdate3Request {
+export interface BankAccountsApiUpdate2Request {
     readonly id: string
 
     readonly createBankAccountRequest: CreateBankAccountRequest
@@ -2716,12 +2778,12 @@ export class BankAccountsApi extends BaseAPI {
     /**
      * 
      * @summary Tạo tài khoản ngân hàng
-     * @param {BankAccountsApiCreate4Request} requestParameters Request parameters.
+     * @param {BankAccountsApiCreate3Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create4(requestParameters: BankAccountsApiCreate4Request, options?: RawAxiosRequestConfig) {
-        return BankAccountsApiFp(this.configuration).create4(requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public create3(requestParameters: BankAccountsApiCreate3Request, options?: RawAxiosRequestConfig) {
+        return BankAccountsApiFp(this.configuration).create3(requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2749,12 +2811,12 @@ export class BankAccountsApi extends BaseAPI {
     /**
      * 
      * @summary Danh sách tài khoản ngân hàng
-     * @param {BankAccountsApiList4Request} requestParameters Request parameters.
+     * @param {BankAccountsApiList3Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list4(requestParameters: BankAccountsApiList4Request, options?: RawAxiosRequestConfig) {
-        return BankAccountsApiFp(this.configuration).list4(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public list3(requestParameters: BankAccountsApiList3Request, options?: RawAxiosRequestConfig) {
+        return BankAccountsApiFp(this.configuration).list3(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2771,12 +2833,12 @@ export class BankAccountsApi extends BaseAPI {
     /**
      * 
      * @summary Cập nhật tài khoản ngân hàng
-     * @param {BankAccountsApiUpdate3Request} requestParameters Request parameters.
+     * @param {BankAccountsApiUpdate2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public update3(requestParameters: BankAccountsApiUpdate3Request, options?: RawAxiosRequestConfig) {
-        return BankAccountsApiFp(this.configuration).update3(requestParameters.id, requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public update2(requestParameters: BankAccountsApiUpdate2Request, options?: RawAxiosRequestConfig) {
+        return BankAccountsApiFp(this.configuration).update2(requestParameters.id, requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3212,9 +3274,9 @@ export const BankTransactionsApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create3: async (createBankTransactionRequest: CreateBankTransactionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create2: async (createBankTransactionRequest: CreateBankTransactionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createBankTransactionRequest' is not null or undefined
-            assertParamExists('create3', 'createBankTransactionRequest', createBankTransactionRequest)
+            assertParamExists('create2', 'createBankTransactionRequest', createBankTransactionRequest)
             const localVarPath = `/v1/finance/bank-transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3247,9 +3309,9 @@ export const BankTransactionsApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        delete1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('delete2', 'id', id)
+            assertParamExists('delete1', 'id', id)
             const localVarPath = `/v1/finance/bank-transactions/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3352,9 +3414,9 @@ export const BankTransactionsApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list3: async (companyId: string, bankAccountId?: string, type?: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list2: async (companyId: string, bankAccountId?: string, type?: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list3', 'companyId', companyId)
+            assertParamExists('list2', 'companyId', companyId)
             const localVarPath = `/v1/finance/bank-transactions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3430,10 +3492,10 @@ export const BankTransactionsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create3(createBankTransactionRequest: CreateBankTransactionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create3(createBankTransactionRequest, options);
+        async create2(createBankTransactionRequest: CreateBankTransactionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankTransactionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create2(createBankTransactionRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.create3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.create2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3443,10 +3505,10 @@ export const BankTransactionsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async delete2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete2(id, options);
+        async delete1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.delete1(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.delete2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.delete1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3488,10 +3550,10 @@ export const BankTransactionsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list3(companyId: string, bankAccountId?: string, type?: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list3(companyId, bankAccountId, type, status, fromDate, toDate, page, size, options);
+        async list2(companyId: string, bankAccountId?: string, type?: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankTransactionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list2(companyId, bankAccountId, type, status, fromDate, toDate, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.list3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.list2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -3506,22 +3568,22 @@ export const BankTransactionsApiFactory = function (configuration?: Configuratio
         /**
          * 
          * @summary Tạo một giao dịch thủ công trên hệ thống
-         * @param {BankTransactionsApiCreate3Request} requestParameters Request parameters.
+         * @param {BankTransactionsApiCreate2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create3(requestParameters: BankTransactionsApiCreate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankTransactionResponse> {
-            return localVarFp.create3(requestParameters.createBankTransactionRequest, options).then((request) => request(axios, basePath));
+        create2(requestParameters: BankTransactionsApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankTransactionResponse> {
+            return localVarFp.create2(requestParameters.createBankTransactionRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)
-         * @param {BankTransactionsApiDelete2Request} requestParameters Request parameters.
+         * @param {BankTransactionsApiDelete1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete2(requestParameters: BankTransactionsApiDelete2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
-            return localVarFp.delete2(requestParameters.id, options).then((request) => request(axios, basePath));
+        delete1(requestParameters: BankTransactionsApiDelete1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
+            return localVarFp.delete1(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3545,27 +3607,27 @@ export const BankTransactionsApiFactory = function (configuration?: Configuratio
         /**
          * 
          * @summary Danh sách giao dịch ngân hàng
-         * @param {BankTransactionsApiList3Request} requestParameters Request parameters.
+         * @param {BankTransactionsApiList2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list3(requestParameters: BankTransactionsApiList3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankTransactionResponse> {
-            return localVarFp.list3(requestParameters.companyId, requestParameters.bankAccountId, requestParameters.type, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        list2(requestParameters: BankTransactionsApiList2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankTransactionResponse> {
+            return localVarFp.list2(requestParameters.companyId, requestParameters.bankAccountId, requestParameters.type, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for create3 operation in BankTransactionsApi.
+ * Request parameters for create2 operation in BankTransactionsApi.
  */
-export interface BankTransactionsApiCreate3Request {
+export interface BankTransactionsApiCreate2Request {
     readonly createBankTransactionRequest: CreateBankTransactionRequest
 }
 
 /**
- * Request parameters for delete2 operation in BankTransactionsApi.
+ * Request parameters for delete1 operation in BankTransactionsApi.
  */
-export interface BankTransactionsApiDelete2Request {
+export interface BankTransactionsApiDelete1Request {
     readonly id: string
 }
 
@@ -3577,9 +3639,9 @@ export interface BankTransactionsApiGetById1Request {
 }
 
 /**
- * Request parameters for list3 operation in BankTransactionsApi.
+ * Request parameters for list2 operation in BankTransactionsApi.
  */
-export interface BankTransactionsApiList3Request {
+export interface BankTransactionsApiList2Request {
     readonly companyId: string
 
     readonly bankAccountId?: string
@@ -3604,23 +3666,23 @@ export class BankTransactionsApi extends BaseAPI {
     /**
      * 
      * @summary Tạo một giao dịch thủ công trên hệ thống
-     * @param {BankTransactionsApiCreate3Request} requestParameters Request parameters.
+     * @param {BankTransactionsApiCreate2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create3(requestParameters: BankTransactionsApiCreate3Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).create3(requestParameters.createBankTransactionRequest, options).then((request) => request(this.axios, this.basePath));
+    public create2(requestParameters: BankTransactionsApiCreate2Request, options?: RawAxiosRequestConfig) {
+        return BankTransactionsApiFp(this.configuration).create2(requestParameters.createBankTransactionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)
-     * @param {BankTransactionsApiDelete2Request} requestParameters Request parameters.
+     * @param {BankTransactionsApiDelete1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public delete2(requestParameters: BankTransactionsApiDelete2Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).delete2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public delete1(requestParameters: BankTransactionsApiDelete1Request, options?: RawAxiosRequestConfig) {
+        return BankTransactionsApiFp(this.configuration).delete1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3647,12 +3709,12 @@ export class BankTransactionsApi extends BaseAPI {
     /**
      * 
      * @summary Danh sách giao dịch ngân hàng
-     * @param {BankTransactionsApiList3Request} requestParameters Request parameters.
+     * @param {BankTransactionsApiList2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list3(requestParameters: BankTransactionsApiList3Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).list3(requestParameters.companyId, requestParameters.bankAccountId, requestParameters.type, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public list2(requestParameters: BankTransactionsApiList2Request, options?: RawAxiosRequestConfig) {
+        return BankTransactionsApiFp(this.configuration).list2(requestParameters.companyId, requestParameters.bankAccountId, requestParameters.type, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3704,9 +3766,9 @@ export const FiscalPeriodsApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create6: async (createFiscalPeriodRequest: CreateFiscalPeriodRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create5: async (createFiscalPeriodRequest: CreateFiscalPeriodRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createFiscalPeriodRequest' is not null or undefined
-            assertParamExists('create6', 'createFiscalPeriodRequest', createFiscalPeriodRequest)
+            assertParamExists('create5', 'createFiscalPeriodRequest', createFiscalPeriodRequest)
             const localVarPath = `/v1/accounting/fiscal-periods`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3739,9 +3801,9 @@ export const FiscalPeriodsApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list6: async (companyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list5: async (companyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list6', 'companyId', companyId)
+            assertParamExists('list5', 'companyId', companyId)
             const localVarPath = `/v1/accounting/fiscal-periods`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3832,10 +3894,10 @@ export const FiscalPeriodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create6(createFiscalPeriodRequest: CreateFiscalPeriodRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseFiscalPeriodResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create6(createFiscalPeriodRequest, options);
+        async create5(createFiscalPeriodRequest: CreateFiscalPeriodRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseFiscalPeriodResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create5(createFiscalPeriodRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.create6']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.create5']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3845,10 +3907,10 @@ export const FiscalPeriodsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list6(companyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListFiscalPeriodResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list6(companyId, options);
+        async list5(companyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListFiscalPeriodResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list5(companyId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.list6']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.list5']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -3886,22 +3948,22 @@ export const FiscalPeriodsApiFactory = function (configuration?: Configuration, 
         /**
          * 
          * @summary Tạo kỳ kế toán mới
-         * @param {FiscalPeriodsApiCreate6Request} requestParameters Request parameters.
+         * @param {FiscalPeriodsApiCreate5Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create6(requestParameters: FiscalPeriodsApiCreate6Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseFiscalPeriodResponse> {
-            return localVarFp.create6(requestParameters.createFiscalPeriodRequest, options).then((request) => request(axios, basePath));
+        create5(requestParameters: FiscalPeriodsApiCreate5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseFiscalPeriodResponse> {
+            return localVarFp.create5(requestParameters.createFiscalPeriodRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Danh sách kỳ kế toán
-         * @param {FiscalPeriodsApiList6Request} requestParameters Request parameters.
+         * @param {FiscalPeriodsApiList5Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list6(requestParameters: FiscalPeriodsApiList6Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListFiscalPeriodResponse> {
-            return localVarFp.list6(requestParameters.companyId, options).then((request) => request(axios, basePath));
+        list5(requestParameters: FiscalPeriodsApiList5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListFiscalPeriodResponse> {
+            return localVarFp.list5(requestParameters.companyId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3927,16 +3989,16 @@ export interface FiscalPeriodsApiCloseRequest {
 }
 
 /**
- * Request parameters for create6 operation in FiscalPeriodsApi.
+ * Request parameters for create5 operation in FiscalPeriodsApi.
  */
-export interface FiscalPeriodsApiCreate6Request {
+export interface FiscalPeriodsApiCreate5Request {
     readonly createFiscalPeriodRequest: CreateFiscalPeriodRequest
 }
 
 /**
- * Request parameters for list6 operation in FiscalPeriodsApi.
+ * Request parameters for list5 operation in FiscalPeriodsApi.
  */
-export interface FiscalPeriodsApiList6Request {
+export interface FiscalPeriodsApiList5Request {
     /**
      * UUID công ty
      */
@@ -3971,23 +4033,23 @@ export class FiscalPeriodsApi extends BaseAPI {
     /**
      * 
      * @summary Tạo kỳ kế toán mới
-     * @param {FiscalPeriodsApiCreate6Request} requestParameters Request parameters.
+     * @param {FiscalPeriodsApiCreate5Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create6(requestParameters: FiscalPeriodsApiCreate6Request, options?: RawAxiosRequestConfig) {
-        return FiscalPeriodsApiFp(this.configuration).create6(requestParameters.createFiscalPeriodRequest, options).then((request) => request(this.axios, this.basePath));
+    public create5(requestParameters: FiscalPeriodsApiCreate5Request, options?: RawAxiosRequestConfig) {
+        return FiscalPeriodsApiFp(this.configuration).create5(requestParameters.createFiscalPeriodRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Danh sách kỳ kế toán
-     * @param {FiscalPeriodsApiList6Request} requestParameters Request parameters.
+     * @param {FiscalPeriodsApiList5Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list6(requestParameters: FiscalPeriodsApiList6Request, options?: RawAxiosRequestConfig) {
-        return FiscalPeriodsApiFp(this.configuration).list6(requestParameters.companyId, options).then((request) => request(this.axios, this.basePath));
+    public list5(requestParameters: FiscalPeriodsApiList5Request, options?: RawAxiosRequestConfig) {
+        return FiscalPeriodsApiFp(this.configuration).list5(requestParameters.companyId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4200,9 +4262,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        approve: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        approveInvoice: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('approve', 'id', id)
+            assertParamExists('approveInvoice', 'id', id)
             const localVarPath = `/v1/invoices/{id}/approve`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4234,9 +4296,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        cancelInvoice: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('cancel', 'id', id)
+            assertParamExists('cancelInvoice', 'id', id)
             const localVarPath = `/v1/invoices/{id}/cancel`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4268,9 +4330,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        confirm: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        confirmInvoiceToProcess: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('confirm', 'id', id)
+            assertParamExists('confirmInvoiceToProcess', 'id', id)
             const localVarPath = `/v1/invoices/{id}/confirm`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4302,9 +4364,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create2: async (createInvoiceRequest: CreateInvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createDraftInvoice: async (createInvoiceRequest: CreateInvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createInvoiceRequest' is not null or undefined
-            assertParamExists('create2', 'createInvoiceRequest', createInvoiceRequest)
+            assertParamExists('createDraftInvoice', 'createInvoiceRequest', createInvoiceRequest)
             const localVarPath = `/v1/invoices`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4337,9 +4399,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteInvoice: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('delete1', 'id', id)
+            assertParamExists('deleteInvoice', 'id', id)
             const localVarPath = `/v1/invoices/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4370,7 +4432,7 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        exportList: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        exportInvoiceList: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/invoices/export`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4438,9 +4500,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDetail1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getInvoiceDetail: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getDetail1', 'id', id)
+            assertParamExists('getInvoiceDetail', 'id', id)
             const localVarPath = `/v1/invoices/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4472,9 +4534,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getOverdue: async (companyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getOverdueInvoices: async (companyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('getOverdue', 'companyId', companyId)
+            assertParamExists('getOverdueInvoices', 'companyId', companyId)
             const localVarPath = `/v1/invoices/overdue`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4514,9 +4576,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list2: async (companyId: string, invoiceType?: string, status?: string, partnerId?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listInvoices: async (companyId: string, invoiceType?: string, status?: string, partnerId?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list2', 'companyId', companyId)
+            assertParamExists('listInvoices', 'companyId', companyId)
             const localVarPath = `/v1/invoices`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4571,9 +4633,9 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        reject: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        rejectInvoice: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('reject', 'id', id)
+            assertParamExists('rejectInvoice', 'id', id)
             const localVarPath = `/v1/invoices/{id}/reject`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4602,15 +4664,15 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * 
          * @summary Cập nhật Hóa đơn (chỉ khi draft)
          * @param {string} id 
-         * @param {CreateInvoiceRequest} createInvoiceRequest 
+         * @param {UpdateInvoiceRequest} updateInvoiceRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update2: async (id: string, createInvoiceRequest: CreateInvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateDraftInvoice: async (id: string, updateInvoiceRequest: UpdateInvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('update2', 'id', id)
-            // verify required parameter 'createInvoiceRequest' is not null or undefined
-            assertParamExists('update2', 'createInvoiceRequest', createInvoiceRequest)
+            assertParamExists('updateDraftInvoice', 'id', id)
+            // verify required parameter 'updateInvoiceRequest' is not null or undefined
+            assertParamExists('updateDraftInvoice', 'updateInvoiceRequest', updateInvoiceRequest)
             const localVarPath = `/v1/invoices/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4630,7 +4692,7 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createInvoiceRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateInvoiceRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4653,10 +4715,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async approve(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.approve(id, options);
+        async approveInvoice(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.approveInvoice(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.approve']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.approveInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4666,10 +4728,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cancel(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.cancel(id, options);
+        async cancelInvoice(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cancelInvoice(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.cancel']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.cancelInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4679,10 +4741,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async confirm(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.confirm(id, options);
+        async confirmInvoiceToProcess(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.confirmInvoiceToProcess(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.confirm']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.confirmInvoiceToProcess']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4692,10 +4754,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create2(createInvoiceRequest: CreateInvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create2(createInvoiceRequest, options);
+        async createDraftInvoice(createInvoiceRequest: CreateInvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createDraftInvoice(createInvoiceRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.create2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.createDraftInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4705,10 +4767,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async delete1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete1(id, options);
+        async deleteInvoice(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteInvoice(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.delete1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.deleteInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4717,10 +4779,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async exportList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.exportList(options);
+        async exportInvoiceList(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.exportInvoiceList(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.exportList']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.exportInvoiceList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4743,10 +4805,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getDetail1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getDetail1(id, options);
+        async getInvoiceDetail(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getInvoiceDetail(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.getDetail1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.getInvoiceDetail']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4756,10 +4818,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getOverdue(companyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getOverdue(companyId, options);
+        async getOverdueInvoices(companyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getOverdueInvoices(companyId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.getOverdue']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.getOverdueInvoices']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4774,10 +4836,10 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list2(companyId: string, invoiceType?: string, status?: string, partnerId?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list2(companyId, invoiceType, status, partnerId, page, size, options);
+        async listInvoices(companyId: string, invoiceType?: string, status?: string, partnerId?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listInvoices(companyId, invoiceType, status, partnerId, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.list2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.listInvoices']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -4787,24 +4849,24 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async reject(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.reject(id, options);
+        async rejectInvoice(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.rejectInvoice(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.reject']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.rejectInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Cập nhật Hóa đơn (chỉ khi draft)
          * @param {string} id 
-         * @param {CreateInvoiceRequest} createInvoiceRequest 
+         * @param {UpdateInvoiceRequest} updateInvoiceRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update2(id: string, createInvoiceRequest: CreateInvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update2(id, createInvoiceRequest, options);
+        async updateDraftInvoice(id: string, updateInvoiceRequest: UpdateInvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateDraftInvoice(id, updateInvoiceRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.update2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoicesApi.updateDraftInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -4819,52 +4881,52 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve
-         * @param {InvoicesApiApproveRequest} requestParameters Request parameters.
+         * @param {InvoicesApiApproveInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        approve(requestParameters: InvoicesApiApproveRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.approve(requestParameters.id, options).then((request) => request(axios, basePath));
+        approveInvoice(requestParameters: InvoicesApiApproveInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.approveInvoice(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Huỷ hóa đơn
-         * @param {InvoicesApiCancelRequest} requestParameters Request parameters.
+         * @param {InvoicesApiCancelInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel(requestParameters: InvoicesApiCancelRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.cancel(requestParameters.id, options).then((request) => request(axios, basePath));
+        cancelInvoice(requestParameters: InvoicesApiCancelInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.cancelInvoice(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Xác nhận hóa đơn (draft → open)
-         * @param {InvoicesApiConfirmRequest} requestParameters Request parameters.
+         * @param {InvoicesApiConfirmInvoiceToProcessRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        confirm(requestParameters: InvoicesApiConfirmRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.confirm(requestParameters.id, options).then((request) => request(axios, basePath));
+        confirmInvoiceToProcess(requestParameters: InvoicesApiConfirmInvoiceToProcessRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.confirmInvoiceToProcess(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Tạo Hóa đơn (draft)
-         * @param {InvoicesApiCreate2Request} requestParameters Request parameters.
+         * @param {InvoicesApiCreateDraftInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create2(requestParameters: InvoicesApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.create2(requestParameters.createInvoiceRequest, options).then((request) => request(axios, basePath));
+        createDraftInvoice(requestParameters: InvoicesApiCreateDraftInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.createDraftInvoice(requestParameters.createInvoiceRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Xoá hoàn toàn hóa đơn (chỉ draft)
-         * @param {InvoicesApiDelete1Request} requestParameters Request parameters.
+         * @param {InvoicesApiDeleteInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete1(requestParameters: InvoicesApiDelete1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
-            return localVarFp.delete1(requestParameters.id, options).then((request) => request(axios, basePath));
+        deleteInvoice(requestParameters: InvoicesApiDeleteInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
+            return localVarFp.deleteInvoice(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4872,8 +4934,8 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        exportList(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.exportList(options).then((request) => request(axios, basePath));
+        exportInvoiceList(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
+            return localVarFp.exportInvoiceList(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4888,88 +4950,88 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Chi tiết hóa đơn kèm các dòng lines
-         * @param {InvoicesApiGetDetail1Request} requestParameters Request parameters.
+         * @param {InvoicesApiGetInvoiceDetailRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDetail1(requestParameters: InvoicesApiGetDetail1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.getDetail1(requestParameters.id, options).then((request) => request(axios, basePath));
+        getInvoiceDetail(requestParameters: InvoicesApiGetInvoiceDetailRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.getInvoiceDetail(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Lấy các hóa đơn quá hạn chưa thanh toán (AR/AP)
-         * @param {InvoicesApiGetOverdueRequest} requestParameters Request parameters.
+         * @param {InvoicesApiGetOverdueInvoicesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getOverdue(requestParameters: InvoicesApiGetOverdueRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListInvoiceResponse> {
-            return localVarFp.getOverdue(requestParameters.companyId, options).then((request) => request(axios, basePath));
+        getOverdueInvoices(requestParameters: InvoicesApiGetOverdueInvoicesRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListInvoiceResponse> {
+            return localVarFp.getOverdueInvoices(requestParameters.companyId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Danh sách hóa đơn (có phân trang và filter)
-         * @param {InvoicesApiList2Request} requestParameters Request parameters.
+         * @param {InvoicesApiListInvoicesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list2(requestParameters: InvoicesApiList2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseInvoiceResponse> {
-            return localVarFp.list2(requestParameters.companyId, requestParameters.invoiceType, requestParameters.status, requestParameters.partnerId, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        listInvoices(requestParameters: InvoicesApiListInvoicesRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseInvoiceResponse> {
+            return localVarFp.listInvoices(requestParameters.companyId, requestParameters.invoiceType, requestParameters.status, requestParameters.partnerId, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Từ chối duyệt hóa đơn (AP) — AP Reject
-         * @param {InvoicesApiRejectRequest} requestParameters Request parameters.
+         * @param {InvoicesApiRejectInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        reject(requestParameters: InvoicesApiRejectRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.reject(requestParameters.id, options).then((request) => request(axios, basePath));
+        rejectInvoice(requestParameters: InvoicesApiRejectInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.rejectInvoice(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Cập nhật Hóa đơn (chỉ khi draft)
-         * @param {InvoicesApiUpdate2Request} requestParameters Request parameters.
+         * @param {InvoicesApiUpdateDraftInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update2(requestParameters: InvoicesApiUpdate2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.update2(requestParameters.id, requestParameters.createInvoiceRequest, options).then((request) => request(axios, basePath));
+        updateDraftInvoice(requestParameters: InvoicesApiUpdateDraftInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.updateDraftInvoice(requestParameters.id, requestParameters.updateInvoiceRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for approve operation in InvoicesApi.
+ * Request parameters for approveInvoice operation in InvoicesApi.
  */
-export interface InvoicesApiApproveRequest {
+export interface InvoicesApiApproveInvoiceRequest {
     readonly id: string
 }
 
 /**
- * Request parameters for cancel operation in InvoicesApi.
+ * Request parameters for cancelInvoice operation in InvoicesApi.
  */
-export interface InvoicesApiCancelRequest {
+export interface InvoicesApiCancelInvoiceRequest {
     readonly id: string
 }
 
 /**
- * Request parameters for confirm operation in InvoicesApi.
+ * Request parameters for confirmInvoiceToProcess operation in InvoicesApi.
  */
-export interface InvoicesApiConfirmRequest {
+export interface InvoicesApiConfirmInvoiceToProcessRequest {
     readonly id: string
 }
 
 /**
- * Request parameters for create2 operation in InvoicesApi.
+ * Request parameters for createDraftInvoice operation in InvoicesApi.
  */
-export interface InvoicesApiCreate2Request {
+export interface InvoicesApiCreateDraftInvoiceRequest {
     readonly createInvoiceRequest: CreateInvoiceRequest
 }
 
 /**
- * Request parameters for delete1 operation in InvoicesApi.
+ * Request parameters for deleteInvoice operation in InvoicesApi.
  */
-export interface InvoicesApiDelete1Request {
+export interface InvoicesApiDeleteInvoiceRequest {
     readonly id: string
 }
 
@@ -4981,23 +5043,23 @@ export interface InvoicesApiGetAgingReportRequest {
 }
 
 /**
- * Request parameters for getDetail1 operation in InvoicesApi.
+ * Request parameters for getInvoiceDetail operation in InvoicesApi.
  */
-export interface InvoicesApiGetDetail1Request {
+export interface InvoicesApiGetInvoiceDetailRequest {
     readonly id: string
 }
 
 /**
- * Request parameters for getOverdue operation in InvoicesApi.
+ * Request parameters for getOverdueInvoices operation in InvoicesApi.
  */
-export interface InvoicesApiGetOverdueRequest {
+export interface InvoicesApiGetOverdueInvoicesRequest {
     readonly companyId: string
 }
 
 /**
- * Request parameters for list2 operation in InvoicesApi.
+ * Request parameters for listInvoices operation in InvoicesApi.
  */
-export interface InvoicesApiList2Request {
+export interface InvoicesApiListInvoicesRequest {
     readonly companyId: string
 
     readonly invoiceType?: string
@@ -5012,19 +5074,19 @@ export interface InvoicesApiList2Request {
 }
 
 /**
- * Request parameters for reject operation in InvoicesApi.
+ * Request parameters for rejectInvoice operation in InvoicesApi.
  */
-export interface InvoicesApiRejectRequest {
+export interface InvoicesApiRejectInvoiceRequest {
     readonly id: string
 }
 
 /**
- * Request parameters for update2 operation in InvoicesApi.
+ * Request parameters for updateDraftInvoice operation in InvoicesApi.
  */
-export interface InvoicesApiUpdate2Request {
+export interface InvoicesApiUpdateDraftInvoiceRequest {
     readonly id: string
 
-    readonly createInvoiceRequest: CreateInvoiceRequest
+    readonly updateInvoiceRequest: UpdateInvoiceRequest
 }
 
 /**
@@ -5034,56 +5096,56 @@ export class InvoicesApi extends BaseAPI {
     /**
      * 
      * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve
-     * @param {InvoicesApiApproveRequest} requestParameters Request parameters.
+     * @param {InvoicesApiApproveInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public approve(requestParameters: InvoicesApiApproveRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).approve(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public approveInvoice(requestParameters: InvoicesApiApproveInvoiceRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).approveInvoice(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Huỷ hóa đơn
-     * @param {InvoicesApiCancelRequest} requestParameters Request parameters.
+     * @param {InvoicesApiCancelInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public cancel(requestParameters: InvoicesApiCancelRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).cancel(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public cancelInvoice(requestParameters: InvoicesApiCancelInvoiceRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).cancelInvoice(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Xác nhận hóa đơn (draft → open)
-     * @param {InvoicesApiConfirmRequest} requestParameters Request parameters.
+     * @param {InvoicesApiConfirmInvoiceToProcessRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public confirm(requestParameters: InvoicesApiConfirmRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).confirm(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public confirmInvoiceToProcess(requestParameters: InvoicesApiConfirmInvoiceToProcessRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).confirmInvoiceToProcess(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Tạo Hóa đơn (draft)
-     * @param {InvoicesApiCreate2Request} requestParameters Request parameters.
+     * @param {InvoicesApiCreateDraftInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create2(requestParameters: InvoicesApiCreate2Request, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).create2(requestParameters.createInvoiceRequest, options).then((request) => request(this.axios, this.basePath));
+    public createDraftInvoice(requestParameters: InvoicesApiCreateDraftInvoiceRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).createDraftInvoice(requestParameters.createInvoiceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Xoá hoàn toàn hóa đơn (chỉ draft)
-     * @param {InvoicesApiDelete1Request} requestParameters Request parameters.
+     * @param {InvoicesApiDeleteInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public delete1(requestParameters: InvoicesApiDelete1Request, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).delete1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteInvoice(requestParameters: InvoicesApiDeleteInvoiceRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).deleteInvoice(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5092,8 +5154,8 @@ export class InvoicesApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public exportList(options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).exportList(options).then((request) => request(this.axios, this.basePath));
+    public exportInvoiceList(options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).exportInvoiceList(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5110,56 +5172,56 @@ export class InvoicesApi extends BaseAPI {
     /**
      * 
      * @summary Chi tiết hóa đơn kèm các dòng lines
-     * @param {InvoicesApiGetDetail1Request} requestParameters Request parameters.
+     * @param {InvoicesApiGetInvoiceDetailRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getDetail1(requestParameters: InvoicesApiGetDetail1Request, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).getDetail1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getInvoiceDetail(requestParameters: InvoicesApiGetInvoiceDetailRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).getInvoiceDetail(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Lấy các hóa đơn quá hạn chưa thanh toán (AR/AP)
-     * @param {InvoicesApiGetOverdueRequest} requestParameters Request parameters.
+     * @param {InvoicesApiGetOverdueInvoicesRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getOverdue(requestParameters: InvoicesApiGetOverdueRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).getOverdue(requestParameters.companyId, options).then((request) => request(this.axios, this.basePath));
+    public getOverdueInvoices(requestParameters: InvoicesApiGetOverdueInvoicesRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).getOverdueInvoices(requestParameters.companyId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Danh sách hóa đơn (có phân trang và filter)
-     * @param {InvoicesApiList2Request} requestParameters Request parameters.
+     * @param {InvoicesApiListInvoicesRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list2(requestParameters: InvoicesApiList2Request, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).list2(requestParameters.companyId, requestParameters.invoiceType, requestParameters.status, requestParameters.partnerId, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public listInvoices(requestParameters: InvoicesApiListInvoicesRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).listInvoices(requestParameters.companyId, requestParameters.invoiceType, requestParameters.status, requestParameters.partnerId, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Từ chối duyệt hóa đơn (AP) — AP Reject
-     * @param {InvoicesApiRejectRequest} requestParameters Request parameters.
+     * @param {InvoicesApiRejectInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public reject(requestParameters: InvoicesApiRejectRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).reject(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public rejectInvoice(requestParameters: InvoicesApiRejectInvoiceRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).rejectInvoice(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Cập nhật Hóa đơn (chỉ khi draft)
-     * @param {InvoicesApiUpdate2Request} requestParameters Request parameters.
+     * @param {InvoicesApiUpdateDraftInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public update2(requestParameters: InvoicesApiUpdate2Request, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).update2(requestParameters.id, requestParameters.createInvoiceRequest, options).then((request) => request(this.axios, this.basePath));
+    public updateDraftInvoice(requestParameters: InvoicesApiUpdateDraftInvoiceRequest, options?: RawAxiosRequestConfig) {
+        return InvoicesApiFp(this.configuration).updateDraftInvoice(requestParameters.id, requestParameters.updateInvoiceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -5177,9 +5239,9 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        cancel: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('cancel1', 'id', id)
+            assertParamExists('cancel', 'id', id)
             const localVarPath = `/v1/accounting/journals/{id}/cancel`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5211,9 +5273,9 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create5: async (createJournalRequest: CreateJournalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create4: async (createJournalRequest: CreateJournalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createJournalRequest' is not null or undefined
-            assertParamExists('create5', 'createJournalRequest', createJournalRequest)
+            assertParamExists('create4', 'createJournalRequest', createJournalRequest)
             const localVarPath = `/v1/accounting/journals`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5246,9 +5308,9 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete3: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        delete2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('delete3', 'id', id)
+            assertParamExists('delete2', 'id', id)
             const localVarPath = `/v1/accounting/journals/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5280,9 +5342,9 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDetail2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getDetail1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getDetail2', 'id', id)
+            assertParamExists('getDetail1', 'id', id)
             const localVarPath = `/v1/accounting/journals/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5319,9 +5381,9 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list5: async (companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list4: async (companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list5', 'companyId', companyId)
+            assertParamExists('list4', 'companyId', companyId)
             const localVarPath = `/v1/accounting/journals`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5415,11 +5477,11 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update4: async (id: string, createJournalRequest: CreateJournalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        update3: async (id: string, createJournalRequest: CreateJournalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('update4', 'id', id)
+            assertParamExists('update3', 'id', id)
             // verify required parameter 'createJournalRequest' is not null or undefined
-            assertParamExists('update4', 'createJournalRequest', createJournalRequest)
+            assertParamExists('update3', 'createJournalRequest', createJournalRequest)
             const localVarPath = `/v1/accounting/journals/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5462,10 +5524,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cancel1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.cancel1(id, options);
+        async cancel(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cancel(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.cancel1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.cancel']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5475,10 +5537,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create5(createJournalRequest: CreateJournalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create5(createJournalRequest, options);
+        async create4(createJournalRequest: CreateJournalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create4(createJournalRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.create5']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.create4']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5488,10 +5550,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async delete3(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete3(id, options);
+        async delete2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.delete2(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.delete3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.delete2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5501,10 +5563,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getDetail2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getDetail2(id, options);
+        async getDetail1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDetail1(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.getDetail2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.getDetail1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5519,10 +5581,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list5(companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list5(companyId, status, fromDate, toDate, page, size, options);
+        async list4(companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseJournalEntryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list4(companyId, status, fromDate, toDate, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.list5']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.list4']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5546,10 +5608,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update4(id: string, createJournalRequest: CreateJournalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update4(id, createJournalRequest, options);
+        async update3(id: string, createJournalRequest: CreateJournalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.update3(id, createJournalRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.update4']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.update3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -5564,52 +5626,52 @@ export const JournalEntriesApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @summary Huỷ chứng từ
-         * @param {JournalEntriesApiCancel1Request} requestParameters Request parameters.
+         * @param {JournalEntriesApiCancelRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel1(requestParameters: JournalEntriesApiCancel1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.cancel1(requestParameters.id, options).then((request) => request(axios, basePath));
+        cancel(requestParameters: JournalEntriesApiCancelRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
+            return localVarFp.cancel(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Tổng Nợ phải bằng Tổng Có mới tạo được
          * @summary Tạo chứng từ mới (trạng thái draft)
-         * @param {JournalEntriesApiCreate5Request} requestParameters Request parameters.
+         * @param {JournalEntriesApiCreate4Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create5(requestParameters: JournalEntriesApiCreate5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.create5(requestParameters.createJournalRequest, options).then((request) => request(axios, basePath));
+        create4(requestParameters: JournalEntriesApiCreate4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
+            return localVarFp.create4(requestParameters.createJournalRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {JournalEntriesApiDelete3Request} requestParameters Request parameters.
+         * @param {JournalEntriesApiDelete2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        delete3(requestParameters: JournalEntriesApiDelete3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
-            return localVarFp.delete3(requestParameters.id, options).then((request) => request(axios, basePath));
+        delete2(requestParameters: JournalEntriesApiDelete2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
+            return localVarFp.delete2(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Chi tiết chứng từ kèm các dòng bút toán
-         * @param {JournalEntriesApiGetDetail2Request} requestParameters Request parameters.
+         * @param {JournalEntriesApiGetDetail1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDetail2(requestParameters: JournalEntriesApiGetDetail2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.getDetail2(requestParameters.id, options).then((request) => request(axios, basePath));
+        getDetail1(requestParameters: JournalEntriesApiGetDetail1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
+            return localVarFp.getDetail1(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)
-         * @param {JournalEntriesApiList5Request} requestParameters Request parameters.
+         * @param {JournalEntriesApiList4Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list5(requestParameters: JournalEntriesApiList5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseJournalEntryResponse> {
-            return localVarFp.list5(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        list4(requestParameters: JournalEntriesApiList4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseJournalEntryResponse> {
+            return localVarFp.list4(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -5624,20 +5686,20 @@ export const JournalEntriesApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @summary Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {JournalEntriesApiUpdate4Request} requestParameters Request parameters.
+         * @param {JournalEntriesApiUpdate3Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update4(requestParameters: JournalEntriesApiUpdate4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.update4(requestParameters.id, requestParameters.createJournalRequest, options).then((request) => request(axios, basePath));
+        update3(requestParameters: JournalEntriesApiUpdate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
+            return localVarFp.update3(requestParameters.id, requestParameters.createJournalRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for cancel1 operation in JournalEntriesApi.
+ * Request parameters for cancel operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiCancel1Request {
+export interface JournalEntriesApiCancelRequest {
     /**
      * UUID chứng từ
      */
@@ -5645,16 +5707,16 @@ export interface JournalEntriesApiCancel1Request {
 }
 
 /**
- * Request parameters for create5 operation in JournalEntriesApi.
+ * Request parameters for create4 operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiCreate5Request {
+export interface JournalEntriesApiCreate4Request {
     readonly createJournalRequest: CreateJournalRequest
 }
 
 /**
- * Request parameters for delete3 operation in JournalEntriesApi.
+ * Request parameters for delete2 operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiDelete3Request {
+export interface JournalEntriesApiDelete2Request {
     /**
      * UUID chứng từ
      */
@@ -5662,9 +5724,9 @@ export interface JournalEntriesApiDelete3Request {
 }
 
 /**
- * Request parameters for getDetail2 operation in JournalEntriesApi.
+ * Request parameters for getDetail1 operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiGetDetail2Request {
+export interface JournalEntriesApiGetDetail1Request {
     /**
      * UUID chứng từ
      */
@@ -5672,9 +5734,9 @@ export interface JournalEntriesApiGetDetail2Request {
 }
 
 /**
- * Request parameters for list5 operation in JournalEntriesApi.
+ * Request parameters for list4 operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiList5Request {
+export interface JournalEntriesApiList4Request {
     /**
      * UUID công ty
      */
@@ -5717,9 +5779,9 @@ export interface JournalEntriesApiPostRequest {
 }
 
 /**
- * Request parameters for update4 operation in JournalEntriesApi.
+ * Request parameters for update3 operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiUpdate4Request {
+export interface JournalEntriesApiUpdate3Request {
     /**
      * UUID chứng từ
      */
@@ -5735,56 +5797,56 @@ export class JournalEntriesApi extends BaseAPI {
     /**
      * 
      * @summary Huỷ chứng từ
-     * @param {JournalEntriesApiCancel1Request} requestParameters Request parameters.
+     * @param {JournalEntriesApiCancelRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public cancel1(requestParameters: JournalEntriesApiCancel1Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).cancel1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public cancel(requestParameters: JournalEntriesApiCancelRequest, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).cancel(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Tổng Nợ phải bằng Tổng Có mới tạo được
      * @summary Tạo chứng từ mới (trạng thái draft)
-     * @param {JournalEntriesApiCreate5Request} requestParameters Request parameters.
+     * @param {JournalEntriesApiCreate4Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create5(requestParameters: JournalEntriesApiCreate5Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).create5(requestParameters.createJournalRequest, options).then((request) => request(this.axios, this.basePath));
+    public create4(requestParameters: JournalEntriesApiCreate4Request, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).create4(requestParameters.createJournalRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)
-     * @param {JournalEntriesApiDelete3Request} requestParameters Request parameters.
+     * @param {JournalEntriesApiDelete2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public delete3(requestParameters: JournalEntriesApiDelete3Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).delete3(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public delete2(requestParameters: JournalEntriesApiDelete2Request, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).delete2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Chi tiết chứng từ kèm các dòng bút toán
-     * @param {JournalEntriesApiGetDetail2Request} requestParameters Request parameters.
+     * @param {JournalEntriesApiGetDetail1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getDetail2(requestParameters: JournalEntriesApiGetDetail2Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).getDetail2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getDetail1(requestParameters: JournalEntriesApiGetDetail1Request, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).getDetail1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)
-     * @param {JournalEntriesApiList5Request} requestParameters Request parameters.
+     * @param {JournalEntriesApiList4Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list5(requestParameters: JournalEntriesApiList5Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).list5(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public list4(requestParameters: JournalEntriesApiList4Request, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).list4(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5801,12 +5863,12 @@ export class JournalEntriesApi extends BaseAPI {
     /**
      * 
      * @summary Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)
-     * @param {JournalEntriesApiUpdate4Request} requestParameters Request parameters.
+     * @param {JournalEntriesApiUpdate3Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public update4(requestParameters: JournalEntriesApiUpdate4Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).update4(requestParameters.id, requestParameters.createJournalRequest, options).then((request) => request(this.axios, this.basePath));
+    public update3(requestParameters: JournalEntriesApiUpdate3Request, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).update3(requestParameters.id, requestParameters.createJournalRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

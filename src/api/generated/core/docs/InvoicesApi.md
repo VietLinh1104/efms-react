@@ -4,21 +4,21 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**approve**](#approve) | **POST** /v1/invoices/{id}/approve | Duyệt hóa đơn mua hàng (AP) — AP Approve|
-|[**cancel**](#cancel) | **POST** /v1/invoices/{id}/cancel | Huỷ hóa đơn|
-|[**confirm**](#confirm) | **POST** /v1/invoices/{id}/confirm | Xác nhận hóa đơn (draft → open)|
-|[**create2**](#create2) | **POST** /v1/invoices | Tạo Hóa đơn (draft)|
-|[**delete1**](#delete1) | **DELETE** /v1/invoices/{id} | Xoá hoàn toàn hóa đơn (chỉ draft)|
-|[**exportList**](#exportlist) | **GET** /v1/invoices/export | Xuất danh sách Hóa đơn|
+|[**approveInvoice**](#approveinvoice) | **POST** /v1/invoices/{id}/approve | Duyệt hóa đơn mua hàng (AP) — AP Approve|
+|[**cancelInvoice**](#cancelinvoice) | **POST** /v1/invoices/{id}/cancel | Huỷ hóa đơn|
+|[**confirmInvoiceToProcess**](#confirminvoicetoprocess) | **POST** /v1/invoices/{id}/confirm | Xác nhận hóa đơn (draft → open)|
+|[**createDraftInvoice**](#createdraftinvoice) | **POST** /v1/invoices | Tạo Hóa đơn (draft)|
+|[**deleteInvoice**](#deleteinvoice) | **DELETE** /v1/invoices/{id} | Xoá hoàn toàn hóa đơn (chỉ draft)|
+|[**exportInvoiceList**](#exportinvoicelist) | **GET** /v1/invoices/export | Xuất danh sách Hóa đơn|
 |[**getAgingReport**](#getagingreport) | **GET** /v1/invoices/aging | Lấy Báo cáo Tuổi nợ AR/AP|
-|[**getDetail1**](#getdetail1) | **GET** /v1/invoices/{id} | Chi tiết hóa đơn kèm các dòng lines|
-|[**getOverdue**](#getoverdue) | **GET** /v1/invoices/overdue | Lấy các hóa đơn quá hạn chưa thanh toán (AR/AP)|
-|[**list2**](#list2) | **GET** /v1/invoices | Danh sách hóa đơn (có phân trang và filter)|
-|[**reject**](#reject) | **POST** /v1/invoices/{id}/reject | Từ chối duyệt hóa đơn (AP) — AP Reject|
-|[**update2**](#update2) | **PUT** /v1/invoices/{id} | Cập nhật Hóa đơn (chỉ khi draft)|
+|[**getInvoiceDetail**](#getinvoicedetail) | **GET** /v1/invoices/{id} | Chi tiết hóa đơn kèm các dòng lines|
+|[**getOverdueInvoices**](#getoverdueinvoices) | **GET** /v1/invoices/overdue | Lấy các hóa đơn quá hạn chưa thanh toán (AR/AP)|
+|[**listInvoices**](#listinvoices) | **GET** /v1/invoices | Danh sách hóa đơn (có phân trang và filter)|
+|[**rejectInvoice**](#rejectinvoice) | **POST** /v1/invoices/{id}/reject | Từ chối duyệt hóa đơn (AP) — AP Reject|
+|[**updateDraftInvoice**](#updatedraftinvoice) | **PUT** /v1/invoices/{id} | Cập nhật Hóa đơn (chỉ khi draft)|
 
-# **approve**
-> ApiResponseInvoiceResponse approve()
+# **approveInvoice**
+> ApiResponseInvoiceResponse approveInvoice()
 
 
 ### Example
@@ -34,7 +34,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.approve(
+const { status, data } = await apiInstance.approveInvoice(
     id
 );
 ```
@@ -67,8 +67,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **cancel**
-> ApiResponseInvoiceResponse cancel()
+# **cancelInvoice**
+> ApiResponseInvoiceResponse cancelInvoice()
 
 
 ### Example
@@ -84,7 +84,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.cancel(
+const { status, data } = await apiInstance.cancelInvoice(
     id
 );
 ```
@@ -117,8 +117,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **confirm**
-> ApiResponseInvoiceResponse confirm()
+# **confirmInvoiceToProcess**
+> ApiResponseInvoiceResponse confirmInvoiceToProcess()
 
 
 ### Example
@@ -134,7 +134,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.confirm(
+const { status, data } = await apiInstance.confirmInvoiceToProcess(
     id
 );
 ```
@@ -167,8 +167,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **create2**
-> ApiResponseInvoiceResponse create2(createInvoiceRequest)
+# **createDraftInvoice**
+> ApiResponseInvoiceResponse createDraftInvoice(createInvoiceRequest)
 
 
 ### Example
@@ -185,7 +185,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let createInvoiceRequest: CreateInvoiceRequest; //
 
-const { status, data } = await apiInstance.create2(
+const { status, data } = await apiInstance.createDraftInvoice(
     createInvoiceRequest
 );
 ```
@@ -218,8 +218,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **delete1**
-> ApiResponseVoid delete1()
+# **deleteInvoice**
+> ApiResponseVoid deleteInvoice()
 
 
 ### Example
@@ -235,7 +235,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.delete1(
+const { status, data } = await apiInstance.deleteInvoice(
     id
 );
 ```
@@ -268,8 +268,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **exportList**
-> ApiResponseString exportList()
+# **exportInvoiceList**
+> ApiResponseString exportInvoiceList()
 
 
 ### Example
@@ -283,7 +283,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new InvoicesApi(configuration);
 
-const { status, data } = await apiInstance.exportList();
+const { status, data } = await apiInstance.exportInvoiceList();
 ```
 
 ### Parameters
@@ -361,8 +361,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getDetail1**
-> ApiResponseInvoiceResponse getDetail1()
+# **getInvoiceDetail**
+> ApiResponseInvoiceResponse getInvoiceDetail()
 
 
 ### Example
@@ -378,7 +378,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.getDetail1(
+const { status, data } = await apiInstance.getInvoiceDetail(
     id
 );
 ```
@@ -411,8 +411,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getOverdue**
-> ApiResponseListInvoiceResponse getOverdue()
+# **getOverdueInvoices**
+> ApiResponseListInvoiceResponse getOverdueInvoices()
 
 
 ### Example
@@ -428,7 +428,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let companyId: string; // (default to undefined)
 
-const { status, data } = await apiInstance.getOverdue(
+const { status, data } = await apiInstance.getOverdueInvoices(
     companyId
 );
 ```
@@ -461,8 +461,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list2**
-> ApiResponsePagedResponseInvoiceResponse list2()
+# **listInvoices**
+> ApiResponsePagedResponseInvoiceResponse listInvoices()
 
 
 ### Example
@@ -483,7 +483,7 @@ let partnerId: string; // (optional) (default to undefined)
 let page: number; // (optional) (default to 0)
 let size: number; // (optional) (default to 20)
 
-const { status, data } = await apiInstance.list2(
+const { status, data } = await apiInstance.listInvoices(
     companyId,
     invoiceType,
     status,
@@ -526,8 +526,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **reject**
-> ApiResponseInvoiceResponse reject()
+# **rejectInvoice**
+> ApiResponseInvoiceResponse rejectInvoice()
 
 
 ### Example
@@ -543,7 +543,7 @@ const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.reject(
+const { status, data } = await apiInstance.rejectInvoice(
     id
 );
 ```
@@ -576,8 +576,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **update2**
-> ApiResponseInvoiceResponse update2(createInvoiceRequest)
+# **updateDraftInvoice**
+> ApiResponseInvoiceResponse updateDraftInvoice(updateInvoiceRequest)
 
 
 ### Example
@@ -586,18 +586,18 @@ No authorization required
 import {
     InvoicesApi,
     Configuration,
-    CreateInvoiceRequest
+    UpdateInvoiceRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
-let createInvoiceRequest: CreateInvoiceRequest; //
+let updateInvoiceRequest: UpdateInvoiceRequest; //
 
-const { status, data } = await apiInstance.update2(
+const { status, data } = await apiInstance.updateDraftInvoice(
     id,
-    createInvoiceRequest
+    updateInvoiceRequest
 );
 ```
 
@@ -605,7 +605,7 @@ const { status, data } = await apiInstance.update2(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createInvoiceRequest** | **CreateInvoiceRequest**|  | |
+| **updateInvoiceRequest** | **UpdateInvoiceRequest**|  | |
 | **id** | [**string**] |  | defaults to undefined|
 
 

@@ -4,16 +4,16 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**create7**](#create7) | **POST** /v1/accounting/accounts | Tạo tài khoản mới|
+|[**create6**](#create6) | **POST** /v1/accounting/accounts | Tạo tài khoản mới|
 |[**getBalance2**](#getbalance2) | **GET** /v1/accounting/accounts/{id}/balance | Số dư tài khoản theo kỳ hoặc khoảng ngày|
 |[**getById3**](#getbyid3) | **GET** /v1/accounting/accounts/{id} | Chi tiết tài khoản|
-|[**list7**](#list7) | **GET** /v1/accounting/accounts | Danh sách tài khoản|
+|[**list6**](#list6) | **GET** /v1/accounting/accounts | Danh sách tài khoản|
 |[**listPage**](#listpage) | **GET** /v1/accounting/accounts/page | Danh sách tài khoản|
 |[**toggleActive2**](#toggleactive2) | **PATCH** /v1/accounting/accounts/{id}/toggle-active | Bật / tắt trạng thái tài khoản|
-|[**update5**](#update5) | **PUT** /v1/accounting/accounts/{id} | Cập nhật tài khoản|
+|[**update4**](#update4) | **PUT** /v1/accounting/accounts/{id} | Cập nhật tài khoản|
 
-# **create7**
-> ApiResponseAccountResponse create7(createAccountRequest)
+# **create6**
+> ApiResponseAccountResponse create6(createAccountRequest)
 
 
 ### Example
@@ -30,7 +30,7 @@ const apiInstance = new AccountsApi(configuration);
 
 let createAccountRequest: CreateAccountRequest; //
 
-const { status, data } = await apiInstance.create7(
+const { status, data } = await apiInstance.create6(
     createAccountRequest
 );
 ```
@@ -169,8 +169,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list7**
-> ApiResponseListAccountResponse list7()
+# **list6**
+> ApiResponseListAccountResponse list6()
 
 Lấy danh sách tài khoản theo công ty. Truyền tree=true để lấy dạng cây.
 
@@ -188,7 +188,7 @@ const apiInstance = new AccountsApi(configuration);
 let companyId: string; //UUID công ty (default to undefined)
 let tree: boolean; //Trả về dạng cây nếu true (optional) (default to false)
 
-const { status, data } = await apiInstance.list7(
+const { status, data } = await apiInstance.list6(
     companyId,
     tree
 );
@@ -330,8 +330,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **update5**
-> ApiResponseAccountResponse update5(createAccountRequest)
+# **update4**
+> ApiResponseAccountResponse update4(createAccountRequest)
 
 
 ### Example
@@ -349,7 +349,7 @@ const apiInstance = new AccountsApi(configuration);
 let id: string; //UUID tài khoản (default to undefined)
 let createAccountRequest: CreateAccountRequest; //
 
-const { status, data } = await apiInstance.update5(
+const { status, data } = await apiInstance.update4(
     id,
     createAccountRequest
 );

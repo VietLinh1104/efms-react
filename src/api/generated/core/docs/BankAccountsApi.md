@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**create4**](#create4) | **POST** /v1/finance/bank-accounts | Tạo tài khoản ngân hàng|
+|[**create3**](#create3) | **POST** /v1/finance/bank-accounts | Tạo tài khoản ngân hàng|
 |[**getBalance1**](#getbalance1) | **GET** /v1/finance/bank-accounts/{id}/balance | Lấy Số dư tài khoản hiện tại|
 |[**getById2**](#getbyid2) | **GET** /v1/finance/bank-accounts/{id} | Chi tiết tài khoản ngân hàng|
-|[**list4**](#list4) | **GET** /v1/finance/bank-accounts | Danh sách tài khoản ngân hàng|
+|[**list3**](#list3) | **GET** /v1/finance/bank-accounts | Danh sách tài khoản ngân hàng|
 |[**toggleActive1**](#toggleactive1) | **PATCH** /v1/finance/bank-accounts/{id}/toggle-active | Bật/Tắt trạng thái hoạt động tài khoản|
-|[**update3**](#update3) | **PUT** /v1/finance/bank-accounts/{id} | Cập nhật tài khoản ngân hàng|
+|[**update2**](#update2) | **PUT** /v1/finance/bank-accounts/{id} | Cập nhật tài khoản ngân hàng|
 
-# **create4**
-> ApiResponseBankAccountResponse create4(createBankAccountRequest)
+# **create3**
+> ApiResponseBankAccountResponse create3(createBankAccountRequest)
 
 
 ### Example
@@ -29,7 +29,7 @@ const apiInstance = new BankAccountsApi(configuration);
 
 let createBankAccountRequest: CreateBankAccountRequest; //
 
-const { status, data } = await apiInstance.create4(
+const { status, data } = await apiInstance.create3(
     createBankAccountRequest
 );
 ```
@@ -162,8 +162,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list4**
-> ApiResponsePagedResponseBankAccountResponse list4()
+# **list3**
+> ApiResponsePagedResponseBankAccountResponse list3()
 
 
 ### Example
@@ -183,7 +183,7 @@ let search: string; //Từ khoá (optional) (default to undefined)
 let page: number; // (optional) (default to 0)
 let size: number; // (optional) (default to 20)
 
-const { status, data } = await apiInstance.list4(
+const { status, data } = await apiInstance.list3(
     companyId,
     type,
     search,
@@ -274,8 +274,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **update3**
-> ApiResponseBankAccountResponse update3(createBankAccountRequest)
+# **update2**
+> ApiResponseBankAccountResponse update2(createBankAccountRequest)
 
 
 ### Example
@@ -293,7 +293,7 @@ const apiInstance = new BankAccountsApi(configuration);
 let id: string; // (default to undefined)
 let createBankAccountRequest: CreateBankAccountRequest; //
 
-const { status, data } = await apiInstance.update3(
+const { status, data } = await apiInstance.update2(
     id,
     createBankAccountRequest
 );

@@ -4,7 +4,10 @@ import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search, CheckSquare } from "lucide-react";
 import { coreInvoicesApi,coreInvoiceApprovalControllerApi } from "@/api";
-import type { InvoiceResponse, InvoicesApiList2Request ,InvoiceApprovalControllerApiGetAllTasksRequest} from "@/api/generated/core";
+import type {
+    InvoiceResponse, InvoiceApprovalControllerApiGetAllTasksRequest,
+    InvoicesApiListInvoicesRequest
+} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
@@ -34,7 +37,7 @@ const InvoicesListing: React.FC = () => {
     const fetchInvoices = useCallback(async () => {
         setIsLoading(true);
         try {
-            const reqUrl: InvoicesApiList2Request = {
+            const reqUrl:  InvoicesApiListInvoicesRequest = {
                 companyId: companyId ?? "",
                 invoiceType: undefined,
                 status: undefined,
@@ -42,7 +45,7 @@ const InvoicesListing: React.FC = () => {
                 size: 100,
                 partnerId: undefined,
             }
-            const response = await coreInvoicesApi.list2(reqUrl);
+            const response = await coreInvoicesApi.listInvoices(reqUrl);
             const invoices = response.data.data?.content || [];
             setData(invoices);
         } catch (err) {
@@ -142,7 +145,7 @@ const InvoicesListing: React.FC = () => {
             accessorKey: "status",
             header: "Trạng thái",
             cell: ({ row }) => {
-                const status = (row.original as any)?.approvalStatus || "pending";
+                const status = (row.original)?.approvalStatus || "pending";
                 return <Badge className="uppercase" variant="secondary">{status}</Badge>;
             }
         },

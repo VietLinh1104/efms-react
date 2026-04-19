@@ -38,7 +38,7 @@ import type {
     AccountResponse,
     PartnerResponse,
     CreateInvoiceRequest,
-    AccountsApiList7Request,
+    AccountsApiList6Request,
     PartnersApiList1Request,
     InvoiceResponse
 } from "@/api/generated/core";
@@ -136,7 +136,7 @@ const InvoiceFormPage: React.FC = () => {
         if (!id) return;
         setIsLoading(true);
         try {
-            const res = await coreInvoicesApi.getDetail1({ id });
+            const res = await coreInvoicesApi.getInvoiceDetail({ id });
             const data = ((res.data).data || res.data) as ExtendedInvoiceResponse;
             setInvoice(data);
 
@@ -168,7 +168,7 @@ const InvoiceFormPage: React.FC = () => {
 
     useEffect(() => {
         const fetchCommon = async () => {
-            const AccountsApiList7Request: AccountsApiList7Request = {
+            const AccountsApiList7Request: AccountsApiList6Request = {
                 companyId: companyId ?? "",
             }
             const PartnersApiList1Request: PartnersApiList1Request = {
@@ -180,7 +180,7 @@ const InvoiceFormPage: React.FC = () => {
             }
             try {
                 const [acc, part] = await Promise.all([
-                    coreAccountsApi.list7(AccountsApiList7Request),
+                    coreAccountsApi.list6(AccountsApiList7Request),
                     corePartnersApi.list1(PartnersApiList1Request),
                 ]);
                 setAccounts(acc.data.data || []);
@@ -202,7 +202,7 @@ const InvoiceFormPage: React.FC = () => {
         setIsConfirmLoading(true);
         if (!id) return;
         try {
-            await coreInvoicesApi.confirm({ id });
+            await coreInvoicesApi.confirmInvoiceToProcess({ id });
             success("Xác nhận hóa đơn thành công!");
             fetchDetail();
         } catch (err) {
@@ -217,7 +217,7 @@ const InvoiceFormPage: React.FC = () => {
         if (!id) return;
         setIsApproveLoading(true);
         try {
-            await coreInvoicesApi.approve({ id });
+            await coreInvoicesApi.approveInvoice({ id });
             success("Đã duyệt hóa đơn AP!");
             fetchDetail();
         } catch (err) {
@@ -232,7 +232,7 @@ const InvoiceFormPage: React.FC = () => {
         if (!id) return;
         setIsRejectLoading(true);
         try {
-            await coreInvoicesApi.reject({ id });
+            await coreInvoicesApi.rejectInvoice({ id });
             success("Đã từ chối hóa đơn!");
             fetchDetail();
         } catch (err) {
@@ -295,11 +295,10 @@ const InvoiceFormPage: React.FC = () => {
         try {
             const requestPayload: CreateInvoiceRequest = {
                 ...values,
-                companyId: companyId ?? "",
+                companyId: companyId,
                 lines: values.lines.map((l) => ({
                     ...l,
                     taxRate: l.taxRate ?? 0,
-                    // Server thường sẽ tính toán lại, nhưng gửi đi để đảm bảo
                     amount: l.quantity * l.unitPrice,
                     taxAmount: (l.quantity * l.unitPrice * (l.taxRate ?? 0)) / 100,
                 }))
@@ -310,35 +309,19 @@ const InvoiceFormPage: React.FC = () => {
                     createInvoiceRequest: requestPayload,
                     id: id
                 });
-                const res = await coreInvoicesApi.update2({
-                    createInvoiceRequest: requestPayload,
+                const res = await coreInvoicesApi.updateDraftInvoice({
+                    updateInvoiceRequest: requestPayload,
                     id: id
                 });
 
-                success("Cập nhật hóa đơn thành công");
 
-                // QUAN TRỌNG: Cập nhật lại form với dữ liệu mới nhất từ server
-                // Điều này giúp lấy được các ID mới của lines nếu có
-                if (res.data?.data) {
-                    const updatedData = res.data.data;
-                    setInvoice(updatedData);
-                    form.reset({
-                        ...values,
-                        // Map lại lines từ server để lấy ID chính xác
-                        lines: updatedData.lines?.map(l => ({
-                            ...l,
-                            description: l.description || "",
-                            accountId: l.accountId || "",
-                            quantity: l.quantity || 0,
-                            unitPrice: l.unitPrice || 0,
-                            taxRate: l.taxRate || 0,
-                            taxAmount: l.taxAmount || 0,
-                            amount: l.amount || 0,
-                        })) || []
-                    });
+                if (res.data?.data && res.data?.status == 200) {
+                    success("Cập nhật hóa đơn thành công");
+                }else{
+                    error("Đã xảy ra lỗi khi cập nhật");
                 }
             } else {
-                const res = await coreInvoicesApi.create2({ createInvoiceRequest: requestPayload });
+                const res = await coreInvoicesApi.createDraftInvoice({ createInvoiceRequest: requestPayload });
                 success("Tạo hóa đơn thành công");
                 navigate(`/invoices/${res.data.data?.id}`);
             }

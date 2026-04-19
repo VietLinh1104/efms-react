@@ -4,14 +4,14 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**create3**](#create3) | **POST** /v1/finance/bank-transactions | Tạo một giao dịch thủ công trên hệ thống|
-|[**delete2**](#delete2) | **DELETE** /v1/finance/bank-transactions/{id} | Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)|
+|[**create2**](#create2) | **POST** /v1/finance/bank-transactions | Tạo một giao dịch thủ công trên hệ thống|
+|[**delete1**](#delete1) | **DELETE** /v1/finance/bank-transactions/{id} | Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)|
 |[**getById1**](#getbyid1) | **GET** /v1/finance/bank-transactions/{id} | Chi tiết một giao dịch ngân hàng|
 |[**importData**](#importdata) | **POST** /v1/finance/bank-transactions/import | Import bản sao kê (Bank Statement) từ file CSV/Excel|
-|[**list3**](#list3) | **GET** /v1/finance/bank-transactions | Danh sách giao dịch ngân hàng|
+|[**list2**](#list2) | **GET** /v1/finance/bank-transactions | Danh sách giao dịch ngân hàng|
 
-# **create3**
-> ApiResponseBankTransactionResponse create3(createBankTransactionRequest)
+# **create2**
+> ApiResponseBankTransactionResponse create2(createBankTransactionRequest)
 
 
 ### Example
@@ -28,7 +28,7 @@ const apiInstance = new BankTransactionsApi(configuration);
 
 let createBankTransactionRequest: CreateBankTransactionRequest; //
 
-const { status, data } = await apiInstance.create3(
+const { status, data } = await apiInstance.create2(
     createBankTransactionRequest
 );
 ```
@@ -61,8 +61,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **delete2**
-> ApiResponseVoid delete2()
+# **delete1**
+> ApiResponseVoid delete1()
 
 
 ### Example
@@ -78,7 +78,7 @@ const apiInstance = new BankTransactionsApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.delete2(
+const { status, data } = await apiInstance.delete1(
     id
 );
 ```
@@ -205,8 +205,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list3**
-> ApiResponsePagedResponseBankTransactionResponse list3()
+# **list2**
+> ApiResponsePagedResponseBankTransactionResponse list2()
 
 
 ### Example
@@ -229,7 +229,7 @@ let toDate: string; // (optional) (default to undefined)
 let page: number; // (optional) (default to 0)
 let size: number; // (optional) (default to 20)
 
-const { status, data } = await apiInstance.list3(
+const { status, data } = await apiInstance.list2(
     companyId,
     bankAccountId,
     type,

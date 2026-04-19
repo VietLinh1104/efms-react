@@ -84,5 +84,7 @@ docs/ReportsApi.md
 docs/TrialBalanceApi.md
 docs/TrialBalanceLineResponse.md
 docs/TrialBalanceResponse.md
+docs/UpdateInvoiceLineRequest.md
+docs/UpdateInvoiceRequest.md
 git_push.sh
 index.ts
