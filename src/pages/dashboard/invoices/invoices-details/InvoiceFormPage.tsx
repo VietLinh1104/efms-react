@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -40,7 +40,6 @@ import type {
     CreateInvoiceRequest,
     AccountsApiList7Request,
     PartnersApiList1Request,
-    InvoicesApiCreate2Request,
     InvoiceResponse
 } from "@/api/generated/core";
 
@@ -52,6 +51,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger
 } from "@components/ui/dropdown-menu.tsx";
+import {ButtonSpin} from "@components/common/ButtonSpin.tsx";
 
 /* ================= SCHEMA ================= */
 
@@ -92,9 +92,13 @@ const InvoiceFormPage: React.FC = () => {
 
     const [accounts, setAccounts] = useState<AccountResponse[]>([]);
     const [partners, setPartners] = useState<PartnerResponse[]>([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [invoice, setInvoice] = useState<ExtendedInvoiceResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isApproveLoading, setIsApproveLoading] = useState(false);
+    const [isRejectLoading, setIsRejectLoading] = useState(false);
+    const [isConfirmLoading, setIsConfirmLoading] = useState(false);
 
     const isEditMode = !!id;
     const isFinanceOrAdmin = true; // Temporary allow everyone
@@ -195,6 +199,7 @@ const InvoiceFormPage: React.FC = () => {
     /* ================= ACTIONS ================= */
 
     const handleConfirm = async () => {
+        setIsConfirmLoading(true);
         if (!id) return;
         try {
             await coreInvoicesApi.confirm({ id });
@@ -203,11 +208,14 @@ const InvoiceFormPage: React.FC = () => {
         } catch (err) {
             console.error("Confirm fail", err);
             error("Xác nhận thất bại.");
+        } finally {
+            setIsConfirmLoading(false);
         }
     };
 
     const handleApprove = async () => {
         if (!id) return;
+        setIsApproveLoading(true);
         try {
             await coreInvoicesApi.approve({ id });
             success("Đã duyệt hóa đơn AP!");
@@ -215,11 +223,14 @@ const InvoiceFormPage: React.FC = () => {
         } catch (err) {
             console.error("Approve fail", err);
             error("Duyệt hóa đơn thất bại.");
+        } finally {
+            setIsApproveLoading(false);
         }
     };
 
     const handleReject = async () => {
         if (!id) return;
+        setIsRejectLoading(true);
         try {
             await coreInvoicesApi.reject({ id });
             success("Đã từ chối hóa đơn!");
@@ -227,17 +238,26 @@ const InvoiceFormPage: React.FC = () => {
         } catch (err) {
             console.error("Reject fail", err);
             error("Từ chối thất bại.");
+        } finally {
+            setIsApproveLoading(false);
         }
     };
 
     /* ================= CALC ================= */
 
-    const lines = form.watch("lines");
+    const lines = useWatch({
+        control: form.control,
+        name: "lines",
+    });
 
     const calculatedLines = useMemo(() => {
-        return lines.map((l) => {
-            const amount = (l.quantity || 0) * (l.unitPrice || 0);
-            const taxAmount = amount * ((l.taxRate || 0) / 100);
+        return (lines || []).map((l) => {
+            const quantity = Number(l?.quantity) || 0;
+            const unitPrice = Number(l?.unitPrice) || 0;
+            const taxRate = Number(l?.taxRate) || 0;
+
+            const amount = quantity * unitPrice;
+            const taxAmount = amount * (taxRate / 100);
             return { ...l, amount, taxAmount };
         });
     }, [lines]);
@@ -256,38 +276,75 @@ const InvoiceFormPage: React.FC = () => {
 
     useEffect(() => {
         calculatedLines.forEach((l, i) => {
-            form.setValue(`lines.${i}.amount`, l.amount);
-            form.setValue(`lines.${i}.taxAmount`, l.taxAmount || 0);
+            const currentAmount = form.getValues(`lines.${i}.amount`);
+            const currentTaxAmount = form.getValues(`lines.${i}.taxAmount`);
+
+            if (currentAmount !== l.amount) {
+                form.setValue(`lines.${i}.amount`, l.amount);
+            }
+            if (currentTaxAmount !== l.taxAmount) {
+                form.setValue(`lines.${i}.taxAmount`, l.taxAmount || 0);
+            }
         });
-    }, [calculatedLines]);
+    }, [calculatedLines, form]);
 
     /* ================= SUBMIT ================= */
 
     const onSubmit: SubmitHandler<InvoiceFormValues> = async (values) => {
         setIsSubmitting(true);
         try {
-            const request: CreateInvoiceRequest = {
+            const requestPayload: CreateInvoiceRequest = {
                 ...values,
                 companyId: companyId ?? "",
                 lines: values.lines.map((l) => ({
                     ...l,
                     taxRate: l.taxRate ?? 0,
+                    // Server thường sẽ tính toán lại, nhưng gửi đi để đảm bảo
                     amount: l.quantity * l.unitPrice,
-                    taxAmount:
-                        (l.quantity * l.unitPrice * (l.taxRate ?? 0)) / 100,
+                    taxAmount: (l.quantity * l.unitPrice * (l.taxRate ?? 0)) / 100,
                 }))
             };
 
-            const InvoicesApiCreate2Request: InvoicesApiCreate2Request = {
-                createInvoiceRequest: request
-            };
+            if (isEditMode) {
+                console.log("req body:",{
+                    createInvoiceRequest: requestPayload,
+                    id: id
+                });
+                const res = await coreInvoicesApi.update2({
+                    createInvoiceRequest: requestPayload,
+                    id: id
+                });
 
-            await coreInvoicesApi.create2(InvoicesApiCreate2Request);
-            success("Tạo hóa đơn thành công");
-            form.reset();
+                success("Cập nhật hóa đơn thành công");
+
+                // QUAN TRỌNG: Cập nhật lại form với dữ liệu mới nhất từ server
+                // Điều này giúp lấy được các ID mới của lines nếu có
+                if (res.data?.data) {
+                    const updatedData = res.data.data;
+                    setInvoice(updatedData);
+                    form.reset({
+                        ...values,
+                        // Map lại lines từ server để lấy ID chính xác
+                        lines: updatedData.lines?.map(l => ({
+                            ...l,
+                            description: l.description || "",
+                            accountId: l.accountId || "",
+                            quantity: l.quantity || 0,
+                            unitPrice: l.unitPrice || 0,
+                            taxRate: l.taxRate || 0,
+                            taxAmount: l.taxAmount || 0,
+                            amount: l.amount || 0,
+                        })) || []
+                    });
+                }
+            } else {
+                const res = await coreInvoicesApi.create2({ createInvoiceRequest: requestPayload });
+                success("Tạo hóa đơn thành công");
+                navigate(`/invoices/${res.data.data?.id}`);
+            }
         } catch (e) {
             console.error(e);
-            error("Tạo thất bại");
+            error(isEditMode ? "Cập nhật thất bại" : "Tạo thất bại");
         } finally {
             setIsSubmitting(false);
         }
@@ -317,12 +374,10 @@ const InvoiceFormPage: React.FC = () => {
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-2">
-                {isEditMode && (
-                    <Button variant="ghost" size="icon" onClick={() => navigate("/invoices")}>
-                        <ArrowLeft className="w-5 h-5" />
-                    </Button>
-                )}
-                <h2 className="text-2xl font-bold">
+                <Button variant="ghost" size="icon" onClick={() => navigate("/invoices")}>
+                    <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <h2 className="text-xl font-semibold">
                     {isEditMode ? `Hóa đơn: ${invoice?.invoiceNumber || "N/A"}` : "Tạo hóa đơn"}
                 </h2>
             </div>
@@ -408,7 +463,6 @@ const InvoiceFormPage: React.FC = () => {
                                 />
                             </CardContent>
                         </Card>
-
                         {/* TABLE */}
                         <Card>
                             <CardHeader>
@@ -573,33 +627,30 @@ const InvoiceFormPage: React.FC = () => {
 
                             </CardContent>
                             <CardFooter className={"flex flex-col gap-4 pt-0"}>
-                                {(!isEditMode || currentStatus.toLowerCase() === 'draft') && (
-                                    <Button type="submit" variant={"secondary"} className={"w-full"} disabled={isSubmitting}>
+                                {(currentStatus.toLowerCase() === 'draft') && (
+                                    <ButtonSpin isLoading={isSubmitting} loadingText="Đang lưu..." onClick={()=>{}} variant={"secondary"} className={"w-full"} disabled={isSubmitting}>
                                         {isEditMode ? "Cập nhật" : "Lưu"}
-                                    </Button>
+                                    </ButtonSpin>
                                 )}
                                 {isEditMode && (currentStatus.toLowerCase() === 'draft') && (
-                                    <Button type="button" onClick={handleConfirm} className="w-full">
+                                    <ButtonSpin isLoading={isConfirmLoading} variant={"default"} type="button" onClick={handleConfirm} className="w-full">
                                         Xác nhận
-                                    </Button>
+                                    </ButtonSpin>
                                 )}
 
                                 {isAP && (currentApprovalStatus.toLowerCase() === 'pending') && isFinanceOrAdmin && (
                                     <>
-                                        <Button type="button" onClick={handleApprove} className="bg-green-600 hover:bg-green-700 text-white w-full">
+                                        <ButtonSpin variant={"default"} isLoading={isApproveLoading} type="button" onClick={handleApprove} className="  w-full">
                                             Duyệt
-                                        </Button>
-                                        <Button type="button" onClick={handleReject} variant="destructive" className="w-full">
+                                        </ButtonSpin>
+                                        <ButtonSpin variant={"outline"} isLoading={isRejectLoading} type="button" onClick={handleReject} className="w-full">
                                             Từ chối
-                                        </Button>
+                                        </ButtonSpin>
                                     </>
                                 )}
                             </CardFooter>
                         </Card>
-
                     </div>
-
-
                 </form >
             </Form >
         </div >
