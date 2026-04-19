@@ -14,7 +14,13 @@ import {
 import { RefreshCcw, Filter, X, Plus } from "lucide-react";
 
 import { coreBankTransactionsApi, coreBankAccountsApi } from "@/api";
-import type { BankTransactionResponse, BankAccountResponse, BankAccountsApiList4Request, BankTransactionsApiList3Request, BankTransactionsApiDelete2Request } from "@/api/generated/core";
+import type {
+    BankTransactionResponse,
+    BankAccountResponse,
+    BankAccountsApiList3Request,
+    BankTransactionsApiList2Request,
+    BankTransactionsApiDelete1Request
+} from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { BankTransactionDialog } from "./BankTransactionDialog.tsx";
 import { useAuth } from "@/hooks/useAuth";
@@ -50,14 +56,14 @@ const TransactionsListing: React.FC = () => {
 
     /* ── fetch bank accounts for filter dropdown ── */
     useEffect(() => {
-        const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+        const BankAccountsApiList3Request: BankAccountsApiList3Request = {
             companyId: companyId ?? "",
             type: undefined,
             search: "",
             page: 0,
             size: 200,
         };
-        coreBankAccountsApi.list4(bankAccountsApiList4Request)
+        coreBankAccountsApi.list3(BankAccountsApiList3Request)
             .then(r => setBankAccounts(r.data.data?.content || []))
             .catch(console.error);
     }, []);
@@ -66,7 +72,7 @@ const TransactionsListing: React.FC = () => {
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
-            const BankTransactionsApiList3Request: BankTransactionsApiList3Request = {
+            const BankTransactionsApiList2Request: BankTransactionsApiList2Request = {
                 companyId: companyId ?? "",
                 bankAccountId: filterAccount !== "all" ? filterAccount : undefined,
                 type: filterType !== "all" ? filterType : undefined,
@@ -77,8 +83,8 @@ const TransactionsListing: React.FC = () => {
                 size: 200,
             }
 
-            const res = await coreBankTransactionsApi.list3(
-                BankTransactionsApiList3Request
+            const res = await coreBankTransactionsApi.list2(
+                BankTransactionsApiList2Request
             );
             setData(res.data.data?.content || []);
         } catch (e) {
@@ -98,10 +104,10 @@ const TransactionsListing: React.FC = () => {
         if (!tx.id || tx.isReconciled) return;
         if (!window.confirm("Xóa giao dịch này? Hành động không thể hoàn tác.")) return;
         try {
-            const BankTransactionsApiDelete3Request: BankTransactionsApiDelete2Request = {
+            const BankTransactionsApiDelete3Request: BankTransactionsApiDelete1Request = {
                 id: tx.id,
             }
-            await coreBankTransactionsApi.delete2(BankTransactionsApiDelete3Request);
+            await coreBankTransactionsApi.delete1(BankTransactionsApiDelete3Request);
             success("Đã xóa giao dịch.");
             fetchData();
         } catch (e) {

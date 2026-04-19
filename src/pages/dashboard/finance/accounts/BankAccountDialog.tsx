@@ -34,9 +34,9 @@ import type {
     BankAccountResponse,
     CreateBankAccountRequest,
     AccountResponse,
-    AccountsApiList7Request,
-    BankAccountsApiUpdate3Request,
-    BankAccountsApiCreate4Request,
+    AccountsApiList6Request,
+    BankAccountsApiUpdate2Request,
+    BankAccountsApiCreate3Request,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { coreAccountsApi, coreBankAccountsApi } from "@/api";
@@ -103,10 +103,10 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
 
         const fetchGlAccounts = async () => {
             try {
-                const accountsApiList7Request: AccountsApiList7Request = {
+                const AccountsApiList6Request: AccountsApiList6Request = {
                     companyId: companyId ?? "",
                 };
-                const res = await coreAccountsApi.list7(accountsApiList7Request);
+                const res = await coreAccountsApi.list6(AccountsApiList6Request);
                 setGlAccounts(res.data.data || []);
             } catch (e) {
                 console.error(e);
@@ -148,17 +148,17 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
             };
 
             if (initialData?.id) {
-                const bankAccountsApiUpdate3Request: BankAccountsApiUpdate3Request = {
+                const BankAccountsApiUpdate2Request: BankAccountsApiUpdate2Request = {
                     id: initialData.id,
                     createBankAccountRequest: payload,
                 };
-                await coreBankAccountsApi.update3(bankAccountsApiUpdate3Request);
+                await coreBankAccountsApi.update2(BankAccountsApiUpdate2Request);
                 success("Cập nhật tài khoản thành công!");
             } else {
-                const bankAccountsApiCreate4Request: BankAccountsApiCreate4Request = {
+                const BankAccountsApiCreate3Request: BankAccountsApiCreate3Request = {
                     createBankAccountRequest: payload,
                 };
-                await coreBankAccountsApi.create4(bankAccountsApiCreate4Request);
+                await coreBankAccountsApi.create3(BankAccountsApiCreate3Request);
                 success("Tạo tài khoản thành công!");
             }
             onSuccess();

@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button.tsx";
 import { Input } from "@components/ui/input.tsx";
 import { Plus, RefreshCcw, Search } from "lucide-react";
 
-import type { BankAccountResponse, BankAccountsApiList4Request, BankAccountsApiToggleActive1Request } from "@/api/generated/core";
+import type { BankAccountResponse, BankAccountsApiList3Request, BankAccountsApiToggleActive1Request } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { BankAccountDialog } from "./BankAccountDialog.tsx";
 import { coreBankAccountsApi } from "@/api";
@@ -23,14 +23,14 @@ const BankAccountsListing: React.FC = () => {
     const fetchAccounts = useCallback(async (q?: string) => {
         setIsLoading(true);
         try {
-            const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+            const BankAccountsApiList3Request: BankAccountsApiList3Request = {
                 companyId: companyId ?? "",
                 type: undefined,
                 search: q || "",
                 page: 0,
                 size: 100,
             };
-            const res = await coreBankAccountsApi.list4(bankAccountsApiList4Request);
+            const res = await coreBankAccountsApi.list3(BankAccountsApiList3Request);
             setData(res.data.data?.content || []);
         } catch (e) {
             console.error(e);

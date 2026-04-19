@@ -25,10 +25,10 @@ import {
 } from "@/api";
 import type {
     BankAccountResponse,
-    BankAccountsApiList4Request,
+    BankAccountsApiList3Request,
     BankTransactionResponse,
     ReconciliationSummaryResponse,
-    BankTransactionsApiList3Request,
+    BankTransactionsApiList2Request,
     BankReconciliationApiGetSummaryRequest,
     BankReconciliationApiUnmatchRequest,
     BankReconciliationApiAutoMatchRequest
@@ -57,14 +57,14 @@ const ReconciliationListing: React.FC = () => {
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
-                const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+                const BankAccountsApiList3Request: BankAccountsApiList3Request = {
                     companyId: companyId ?? "",
                     type: undefined,
                     search: "",
                     page: 0,
                     size: 100,
                 };
-                const res = await coreBankAccountsApi.list4(bankAccountsApiList4Request);
+                const res = await coreBankAccountsApi.list3(BankAccountsApiList3Request);
                 const content = res.data.data?.content || [];
                 setBankAccounts(content);
                 // Set first account if exists
@@ -83,7 +83,7 @@ const ReconciliationListing: React.FC = () => {
         if (!selectedBankId) return;
         setIsLoading(true);
         try {
-            const bankTransactionsApiList3Request: BankTransactionsApiList3Request = {
+            const BankTransactionsApiList2Request: BankTransactionsApiList2Request = {
                 companyId: companyId ?? "",
                 bankAccountId: selectedBankId,
                 type: undefined,
@@ -97,7 +97,7 @@ const ReconciliationListing: React.FC = () => {
                 bankAccountId: selectedBankId,
             };
             const [txRes, summaryRes] = await Promise.all([
-                coreBankTransactionsApi.list3(bankTransactionsApiList3Request),
+                coreBankTransactionsApi.list2(BankTransactionsApiList2Request),
                 coreBankReconciliationApi.getSummary(bankReconciliationApiGetSummaryRequest),
             ]);
             setData(txRes.data.data?.content || []);

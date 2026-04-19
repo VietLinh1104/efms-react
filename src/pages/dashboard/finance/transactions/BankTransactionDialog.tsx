@@ -35,8 +35,8 @@ import { cn } from "@/lib/utils.ts";
 import { coreBankTransactionsApi, coreBankAccountsApi } from "@/api";
 import type {
     BankAccountResponse,
-    BankAccountsApiList4Request,
-    BankTransactionsApiCreate3Request,
+    BankAccountsApiList3Request,
+    BankTransactionsApiCreate2Request,
     CreateBankTransactionRequest,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
@@ -98,7 +98,7 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
     useEffect(() => {
         if (!open) return;
 
-        const bankAccountsApiList4Request: BankAccountsApiList4Request = {
+        const BankAccountsApiList3Request: BankAccountsApiList3Request = {
             companyId: companyId ?? "",
             type: undefined,
             search: "",
@@ -107,7 +107,7 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
         };
 
         coreBankAccountsApi
-            .list4(bankAccountsApiList4Request)
+            .list3(BankAccountsApiList3Request)
             .then((r) => setBankAccounts(r.data.data?.content || []))
             .catch(console.error);
 
@@ -134,11 +134,11 @@ export const BankTransactionDialog: React.FC<BankTransactionDialogProps> = ({
                 reference: values.reference || undefined,
             };
 
-            const bankTransactionsApiCreate3Request: BankTransactionsApiCreate3Request = {
+            const BankTransactionsApiCreate2Request: BankTransactionsApiCreate2Request = {
                 createBankTransactionRequest: payload
             };
 
-            await coreBankTransactionsApi.create3(bankTransactionsApiCreate3Request);
+            await coreBankTransactionsApi.create2(BankTransactionsApiCreate2Request);
             success("Tạo giao dịch thành công!");
             onSuccess();
             onOpenChange(false);
