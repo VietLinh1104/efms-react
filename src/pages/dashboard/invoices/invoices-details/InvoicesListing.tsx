@@ -6,7 +6,7 @@ import { Plus, RefreshCcw, Search, CheckSquare } from "lucide-react";
 import { coreInvoicesApi,coreInvoiceApprovalControllerApi } from "@/api";
 import type {
     InvoiceResponse, InvoiceApprovalControllerApiGetAllTasksRequest,
-    InvoicesApiListInvoicesRequest
+    InvoicesApiListInvoicesRequest, InvoicesApiDeleteInvoiceRequest
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
@@ -87,16 +87,35 @@ const InvoicesListing: React.FC = () => {
 
     const handleDelete = useCallback(async (invoice: InvoiceResponse) => {
         if (!invoice.id) return;
+
         const confirmDelete = window.confirm(`Bạn có chắc chắn muốn hủy/xóa hóa đơn ${invoice.invoiceNumber}?`);
         if (!confirmDelete) return;
 
+        const reqDelete: InvoicesApiDeleteInvoiceRequest = {
+            id: invoice.id
+        };
+
+        // Bật loading
+        setIsLoading(true);
+
         try {
-            success(`Tính năng xóa hóa đơn đang được cập nhật.`);
+            const res = await coreInvoicesApi.deleteInvoice(reqDelete);
+
+            // Kiểm tra success ngay trong block try
+            if (res.data.status === 200) {
+                success("Xóa hóa đơn thành công");
+                fetchInvoices(); // Làm mới danh sách
+            } else {
+                error("Đã xảy ra lỗi khi xóa hóa đơn");
+            }
         } catch (err) {
             console.error("Lỗi khi xóa hóa đơn:", err);
             error("Không thể xóa hóa đơn này.");
+        } finally {
+            // Luôn tắt loading dù thành công hay thất bại (ĐÂY LÀ CHUẨN NHẤT)
+            setIsLoading(false);
         }
-    }, [success, error]);
+    }, [success, error, fetchInvoices, setIsLoading]); // Đã bổ sung đầy đủ dependencies
 
     const columns = useMemo(() =>
         getColumns(handleView, handleEdit, handleDelete),
