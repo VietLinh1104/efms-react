@@ -66,7 +66,7 @@ export const getColumns = (
                 // Based on typical system type design: in -> receipt, out -> expenditure
                 const isReceipt = type?.toLowerCase() === "in";
                 return (
-                    <Badge variant={isReceipt ? "default" : "secondary"} className={`font-medium ${isReceipt ? "bg-green-600 hover:bg-green-700" : ""}`}>
+                    <Badge variant={isReceipt ? "default" : "secondary"} className={`font-medium`}>
                         {isReceipt ? "Thu (In)" : "Chi (Out)"}
                     </Badge>
                 );
@@ -82,7 +82,7 @@ export const getColumns = (
             header: () => <div className="text-right">Số tiền</div>,
             cell: ({ row }) => {
                 const amount = parseFloat(row.getValue("amount"));
-                return <div className="text-right font-semibold">{formatCurrency(amount, row.original.currencyCode)}</div>;
+                return <div className="text-right">{formatCurrency(amount, row.original.currencyCode)}</div>;
             },
         },
         {

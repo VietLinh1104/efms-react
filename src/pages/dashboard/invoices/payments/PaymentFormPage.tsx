@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Save, ArrowLeft, AlertCircle } from "lucide-react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@components/ui/button.tsx";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@components/ui/card.tsx";
 import {
     Form,
     FormControl,
@@ -23,19 +31,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@components/ui/select.tsx";
-import { Separator } from "@components/ui/separator.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert.tsx";
+import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 
 import { corePaymentsApi, corePartnersApi, coreBankAccountsApi } from "@/api";
 import type {
     PartnerResponse,
     BankAccountResponse,
     CreatePaymentRequest,
-    BankAccountsApiList4Request,
+    BankAccountsApiList3Request,
     PartnersApiList1Request,
     PaymentsApiGetDetailRequest,
     PaymentsApiUpdateRequest,
-    PaymentsApiCreateRequest
+    PaymentsApiCreateRequest,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useAuth } from "@/hooks/useAuth";
@@ -55,8 +63,7 @@ const paymentSchema = z
         reference: z.string().optional(),
     })
     .refine(
-        (data) =>
-            data.paymentMethod !== "bank_transfer" || !!data.bankAccountId,
+        (data) => data.paymentMethod !== "bank_transfer" || !!data.bankAccountId,
         {
             message: "Phải chọn tài khoản ngân hàng khi phương thức là Chuyển khoản",
             path: ["bankAccountId"],
@@ -66,7 +73,6 @@ const paymentSchema = z
 type PaymentFormValues = z.infer<typeof paymentSchema>;
 
 /* ================= COMPONENT ================= */
-
 
 const PaymentFormPage: React.FC = () => {
     const { id } = useParams<{ id?: string }>();
@@ -103,84 +109,72 @@ const PaymentFormPage: React.FC = () => {
 
     /* ================= FETCH ================= */
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            try {
-                const params: PartnersApiList1Request = {
-                    companyId: companyId ?? "",
-                    page: 0,
-                    size: 200,
-                };
-
-                const params2: BankAccountsApiList4Request = {
-                    companyId: companyId ?? "",
-                    page: 0,
-                    size: 100,
-                };
-
-                const [partRes, bankRes] = await Promise.all([
-                    corePartnersApi.list1(params),
-                    coreBankAccountsApi.list4(params2),
-                ]);
-                setPartners(partRes.data.data?.content || []);
-                setBankAccounts(bankRes.data.data?.content || []);
-            } catch (e) {
-                console.error(e);
-                error("Không thể tải dữ liệu khởi tạo.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [error]);
-
-    // Load existing payment data in edit mode
-    useEffect(() => {
-        if (!isEditMode || !id) return;
-
-        const fetchPayment = async () => {
-            setIsLoading(true);
-
-            const params: PaymentsApiGetDetailRequest = {
-                id: id,
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const partnersReq: PartnersApiList1Request = {
+                companyId,
+                page: 0,
+                size: 200,
             };
+            const bankReq: BankAccountsApiList3Request = {
+                companyId,
+                page: 0,
+                size: 100,
+            };
+            const [partRes, bankRes] = await Promise.all([
+                corePartnersApi.list1(partnersReq),
+                coreBankAccountsApi.list3(bankReq),
+            ]);
+            setPartners(partRes.data.data?.content || []);
+            setBankAccounts(bankRes.data.data?.content || []);
+        } catch (e) {
+            console.error(e);
+            error("Không thể tải dữ liệu khởi tạo.");
+        } finally {
+            setIsLoading(false);
+        }
+    }, [companyId, error]);
 
-            try {
-                const res = await corePaymentsApi.getDetail(params);
-                const p = res.data.data;
-                if (!p) return;
+    const fetchDetail = useCallback(async () => {
+        if (!isEditMode || !id) return;
+        setIsLoading(true);
+        try {
+            const params: PaymentsApiGetDetailRequest = { id };
+            const res = await corePaymentsApi.getDetail(params);
+            const p = res.data.data;
+            if (!p) return;
 
-                setIsPosted(!!p.journalEntryId);
-                const hasAllocations = (p.allocations?.length || 0) > 0;
-                setIsAllocated(hasAllocations);
+            setIsPosted(!!p.journalEntryId);
+            const hasAllocations = (p.allocations?.length || 0) > 0;
+            setIsAllocated(hasAllocations);
 
-                if (hasAllocations) {
-                    console.warn(`Payment ${id} is already allocated to invoices. Updates might fail at backend if it executes a delete logic.`, p.allocations);
-                }
-
-                form.reset({
-                    paymentType: p.paymentType || "in",
-                    partnerId: p.partnerId || "",
-                    paymentDate: p.paymentDate || new Date().toISOString().split("T")[0],
-                    amount: p.amount || 0,
-                    currencyCode: p.currencyCode || "VND",
-                    exchangeRate: 1,
-                    paymentMethod: p.paymentMethod || "cash",
-                    bankAccountId: "",
-                    reference: p.reference || "",
-                });
-            } catch (e) {
-                console.error(e);
-                error("Không thể tải thông tin thanh toán.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchPayment();
+            form.reset({
+                paymentType: p.paymentType || "in",
+                partnerId: p.partnerId || "",
+                paymentDate: p.paymentDate || new Date().toISOString().split("T")[0],
+                amount: p.amount || 0,
+                currencyCode: p.currencyCode || "VND",
+                exchangeRate: 1,
+                paymentMethod: p.paymentMethod || "cash",
+                bankAccountId: "",
+                reference: p.reference || "",
+            });
+        } catch (e) {
+            console.error(e);
+            error("Không thể tải thông tin thanh toán.");
+        } finally {
+            setIsLoading(false);
+        }
     }, [id, isEditMode, error, form]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    useEffect(() => {
+        fetchDetail();
+    }, [fetchDetail]);
 
     /* ================= SUBMIT ================= */
 
@@ -195,17 +189,15 @@ const PaymentFormPage: React.FC = () => {
 
             if (isEditMode && id) {
                 const params: PaymentsApiUpdateRequest = {
-                    id: id,
-                    createPaymentRequest: request
+                    id,
+                    createPaymentRequest: request,
                 };
-
                 await corePaymentsApi.update(params);
                 success("Cập nhật phiếu thanh toán thành công!");
             } else {
                 const params: PaymentsApiCreateRequest = {
-                    createPaymentRequest: request
+                    createPaymentRequest: request,
                 };
-
                 await corePaymentsApi.create(params);
                 success("Tạo phiếu thanh toán thành công!");
                 form.reset();
@@ -221,237 +213,98 @@ const PaymentFormPage: React.FC = () => {
 
     /* ================= UI ================= */
 
+    if (isLoading && !form.formState.isDirty) {
+        return <div className="p-8 text-center text-muted-foreground">Đang tải...</div>;
+    }
+
+    const currentStatus = isPosted ? "ĐÃ GHI SỔ" : isAllocated ? "ĐÃ PHÂN BỔ" : "NHÁP";
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "ĐÃ GHI SỔ": return "bg-green-500";
+            case "ĐÃ PHÂN BỔ": return "bg-blue-500";
+            default: return "bg-amber-300";
+        }
+    };
+
     return (
         <div className="space-y-6">
-            {/* Page header */}
-            <div className="flex items-center gap-4">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => navigate("/payments")}
-                    title="Quay lại"
-                >
-                    <ArrowLeft className="h-4 w-4" />
+            {/* PAGE HEADER */}
+            <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate("/payments")}>
+                    <ArrowLeft className="w-5 h-5" />
                 </Button>
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight">
-                        {isEditMode ? "Chỉnh sửa phiếu thu/chi" : "Tạo phiếu thu/chi mới"}
-                    </h2>
-                    <p className="text-muted-foreground text-sm">
-                        {isEditMode
-                            ? "Cập nhật thông tin phiếu thanh toán"
-                            : "Nhập thông tin để tạo phiếu thu hoặc phiếu chi"}
-                    </p>
-                </div>
+                <h2 className="text-xl font-semibold">
+                    {isEditMode ? "Chỉnh sửa phiếu thu/chi" : "Tạo phiếu thu/chi mới"}
+                </h2>
             </div>
 
+            {/* ALERT – chỉ hiện khi có cảnh báo */}
             {(isPosted || isAllocated) && (
-                <Alert variant="destructive" className="    ">
-                    <AlertCircle className="h-4 w-4 stroke-orange-800" />
+                <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Lưu ý quan trọng</AlertTitle>
                     <AlertDescription>
-                        {isPosted ? (
-                            "Phiếu này đã được ghi sổ kế toán. Không thể chỉnh sửa hoặc xóa."
-                        ) : (
-                            "Phiếu này đang được liên kết (phân bổ) với hóa đơn. Việc cập nhật có thể thất bại do ràng buộc cơ sở dữ liệu (lỗi backend: PUT triggers DELETE)."
-                        )}
+                        {isPosted
+                            ? "Phiếu này đã được ghi sổ kế toán. Không thể chỉnh sửa hoặc xóa."
+                            : "Phiếu này đang được liên kết (phân bổ) với hóa đơn. Việc cập nhật có thể thất bại."}
                     </AlertDescription>
                 </Alert>
             )}
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-10 gap-6">
 
-                    {/* ── SECTION: Thông tin chính ── */}
-                    <div className="rounded-xl border p-6 space-y-4">
-                        <h3 className="font-semibold text-base">Thông tin chính</h3>
-                        <Separator />
+                    {/* MAIN CONTENT – 8 cols */}
+                    <div className="space-y-6 col-span-8">
 
-                        <div className="grid md:grid-cols-3 gap-4">
-
-                            {/* Loại thanh toán */}
-                            <FormField
-                                name="paymentType"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Loại <span className="text-destructive">*</span></FormLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger id="payment-type" className="w-full">
-                                                    <SelectValue placeholder="Chọn loại" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="in">Thu (Receive)</SelectItem>
-                                                <SelectItem value="out">Chi (Pay)</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Đối tác */}
-                            <FormField
-                                name="partnerId"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Đối tác <span className="text-destructive">*</span></FormLabel>
-                                        <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
-                                            <FormControl>
-                                                <SelectTrigger id="partner" className="w-full">
-                                                    <SelectValue placeholder="Chọn đối tác" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {partners.map((p) => (
-                                                    <SelectItem key={p.id} value={p.id!}>
-                                                        {p.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Ngày thanh toán */}
-                            <FormField
-                                name="paymentDate"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Ngày thanh toán <span className="text-destructive">*</span></FormLabel>
-                                        <FormControl>
-                                            <Input id="payment-date" type="date" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Số tiền */}
-                            <FormField
-                                name="amount"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Số tiền <span className="text-destructive">*</span></FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="amount"
-                                                type="number"
-                                                min={0}
-                                                step="any"
-                                                {...field}
-                                                onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Tiền tệ */}
-                            <FormField
-                                name="currencyCode"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Tiền tệ <span className="text-destructive">*</span></FormLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger id="currency" className="w-full">
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="VND">VND</SelectItem>
-                                                <SelectItem value="USD">USD</SelectItem>
-                                                <SelectItem value="EUR">EUR</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Tỷ giá */}
-                            <FormField
-                                name="exchangeRate"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Tỷ giá</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="exchange-rate"
-                                                type="number"
-                                                min={0}
-                                                step="any"
-                                                {...field}
-                                                onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    </div>
-
-                    {/* ── SECTION: Phương thức & Tham chiếu ── */}
-                    <div className="rounded-xl border p-6 space-y-4">
-                        <h3 className="font-semibold text-base">Phương thức thanh toán</h3>
-                        <Separator />
-
-                        <div className="grid md:grid-cols-3 gap-4">
-
-                            {/* Phương thức */}
-                            <FormField
-                                name="paymentMethod"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Phương thức <span className="text-destructive">*</span></FormLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger id="payment-method" className="w-full">
-                                                    <SelectValue placeholder="Chọn phương thức" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="cash">Tiền mặt (Cash)</SelectItem>
-                                                <SelectItem value="bank_transfer">Chuyển khoản (Bank Transfer)</SelectItem>
-                                                <SelectItem value="check">Séc (Check)</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Tài khoản ngân hàng — chỉ hiện khi phương thức là bank_transfer */}
-                            {isBankTransfer && (
+                        {/* CARD: Thông tin chính */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Thông tin chính</CardTitle>
+                                <CardDescription>Nhập thông tin cơ bản của phiếu thu/chi</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid md:grid-cols-3 gap-4">
+                                {/* Loại thanh toán */}
                                 <FormField
-                                    name="bankAccountId"
+                                    name="paymentType"
                                     control={form.control}
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>TK Ngân hàng <span className="text-destructive">*</span></FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
+                                            <FormLabel>Loại </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isPosted}>
                                                 <FormControl>
-                                                    <SelectTrigger id="bank-account" className="w-full">
-                                                        <SelectValue placeholder="Chọn tài khoản" />
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Chọn loại" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {bankAccounts.map((b) => (
-                                                        <SelectItem key={b.id} value={b.id!}>
-                                                            {b.name} — {b.accountNumber}
+                                                    <SelectItem value="in">Thu (Receive)</SelectItem>
+                                                    <SelectItem value="out">Chi (Pay)</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Đối tác */}
+                                <FormField
+                                    name="partnerId"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Đối tác </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isLoading || isPosted}>
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Chọn đối tác" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {partners.map((p) => (
+                                                        <SelectItem key={p.id} value={p.id!}>
+                                                            {p.name}
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>
@@ -460,38 +313,207 @@ const PaymentFormPage: React.FC = () => {
                                         </FormItem>
                                     )}
                                 />
-                            )}
 
-                            {/* Tham chiếu */}
-                            <FormField
-                                name="reference"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Tham chiếu</FormLabel>
-                                        <FormControl>
-                                            <Input id="reference" placeholder="Số tham chiếu, lý do…" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
+                                {/* Ngày thanh toán */}
+                                <FormField
+                                    name="paymentDate"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Ngày thanh toán </FormLabel>
+                                            <FormControl>
+                                                <Input type="date" {...field} readOnly={isPosted} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Số tiền */}
+                                <FormField
+                                    name="amount"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Số tiền </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    min={0}
+                                                    step="any"
+                                                    {...field}
+                                                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                                    readOnly={isPosted}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Tiền tệ */}
+                                <FormField
+                                    name="currencyCode"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Tiền tệ </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isPosted}>
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="VND">VND</SelectItem>
+                                                    <SelectItem value="USD">USD</SelectItem>
+                                                    <SelectItem value="EUR">EUR</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Tỷ giá */}
+                                <FormField
+                                    name="exchangeRate"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Tỷ giá</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    min={0}
+                                                    step="any"
+                                                    {...field}
+                                                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                                    readOnly={isPosted}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+                        </Card>
+
+                        {/* CARD: Phương thức thanh toán */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Phương thức thanh toán</CardTitle>
+                                <CardDescription>Chọn phương thức và thông tin tham chiếu</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid md:grid-cols-3 gap-4">
+                                {/* Phương thức */}
+                                <FormField
+                                    name="paymentMethod"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Phương thức </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isPosted}>
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Chọn phương thức" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="cash">Tiền mặt (Cash)</SelectItem>
+                                                    <SelectItem value="bank_transfer">Chuyển khoản (Bank Transfer)</SelectItem>
+                                                    <SelectItem value="check">Séc (Check)</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* TK Ngân hàng – chỉ hiện khi bank_transfer */}
+                                {isBankTransfer && (
+                                    <FormField
+                                        name="bankAccountId"
+                                        control={form.control}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>TK Ngân hàng </FormLabel>
+                                                <Select onValueChange={field.onChange} value={field.value} disabled={isLoading || isPosted}>
+                                                    <FormControl>
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Chọn tài khoản" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {bankAccounts.map((b) => (
+                                                            <SelectItem key={b.id} value={b.id!}>
+                                                                {b.name} — {b.accountNumber}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 )}
-                            />
-                        </div>
+
+                                {/* Tham chiếu */}
+                                <FormField
+                                    name="reference"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Tham chiếu</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Số tham chiếu, lý do…" {...field} readOnly={isPosted} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+                        </Card>
                     </div>
 
-                    {/* ── Actions ── */}
-                    <div className="flex justify-end gap-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => navigate("/payments")}
-                        >
-                            Hủy
-                        </Button>
-                        <Button type="submit" disabled={isSubmitting || isLoading || isPosted}>
-                            <Save className="w-4 h-4 mr-2" />
-                            {isSubmitting ? "Đang lưu…" : isEditMode ? "Cập nhật" : "Tạo mới"}
-                        </Button>
+                    {/* SIDEBAR – 2 cols */}
+                    <div className="action col-span-2">
+                        <Card className="mx-auto w-full">
+                            <CardHeader>
+                                <CardTitle>Trạng thái</CardTitle>
+                                <CardDescription>Trạng thái của phiếu</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="relative w-full">
+                                    <span
+                                        className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentStatus)}`}
+                                    />
+                                    <Input className="pl-8 uppercase" value={currentStatus} readOnly />
+                                </div>
+                            </CardContent>
+                            <CardFooter className="flex flex-col gap-4 pt-0">
+                                <ButtonSpin
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full"
+                                    isLoading={false}
+                                    onClick={() => navigate("/payments")}
+                                    disabled={isSubmitting}
+                                >
+                                    Hủy
+                                </ButtonSpin>
+                                <ButtonSpin
+                                    type="submit"
+                                    variant="default"
+                                    className="w-full"
+                                    isLoading={isSubmitting}
+                                    loadingText="Đang lưu..."
+                                    disabled={isSubmitting || isLoading || isPosted}
+                                >
+                                    {isEditMode ? "Cập nhật" : "Tạo mới"}
+                                </ButtonSpin>
+                            </CardFooter>
+                        </Card>
                     </div>
 
                 </form>
