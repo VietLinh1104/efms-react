@@ -51,7 +51,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger
 } from "@components/ui/dropdown-menu.tsx";
-import {ButtonSpin} from "@components/common/ButtonSpin.tsx";
+import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
+import {AttachmentSection} from "@components/common/AttachmentSection.tsx";
 
 /* ================= SCHEMA ================= */
 
@@ -305,7 +306,7 @@ const InvoiceFormPage: React.FC = () => {
             };
 
             if (isEditMode) {
-                console.log("req body:",{
+                console.log("req body:", {
                     createInvoiceRequest: requestPayload,
                     id: id
                 });
@@ -317,7 +318,7 @@ const InvoiceFormPage: React.FC = () => {
 
                 if (res.data?.data && res.data?.status == 200) {
                     success("Cập nhật hóa đơn thành công");
-                }else{
+                } else {
                     error("Đã xảy ra lỗi khi cập nhật");
                 }
             } else {
@@ -369,6 +370,7 @@ const InvoiceFormPage: React.FC = () => {
 
                     {/* HEADER */}
                     <div className="space-y-6 col-span-8">
+                        {/*MainInfo*/}
                         <Card>
                             <CardHeader>
                                 <CardTitle>Thông tin chính</CardTitle>
@@ -446,6 +448,7 @@ const InvoiceFormPage: React.FC = () => {
                                 />
                             </CardContent>
                         </Card>
+
                         {/* TABLE */}
                         <Card>
                             <CardHeader>
@@ -580,6 +583,9 @@ const InvoiceFormPage: React.FC = () => {
                             </CardContent>
 
                         </Card>
+
+                        {/*Attachment*/}
+                        <AttachmentSection isReadOnly={isReadOnly} referenceId={""} referenceType={"invoice"}/>
                     </div>
                     <div className="action col-span-2">
                         <Card className="mx-auto w-full ">
@@ -609,29 +615,31 @@ const InvoiceFormPage: React.FC = () => {
 
 
                             </CardContent>
-                            <CardFooter className={"flex flex-col gap-4 pt-0"}>
-                                {(currentStatus.toLowerCase() === 'draft') && (
-                                    <ButtonSpin isLoading={isSubmitting} loadingText="Đang lưu..." onClick={()=>{}} variant={"secondary"} className={"w-full"} disabled={isSubmitting}>
-                                        {isEditMode ? "Cập nhật" : "Lưu"}
-                                    </ButtonSpin>
-                                )}
-                                {isEditMode && (currentStatus.toLowerCase() === 'draft') && (
-                                    <ButtonSpin isLoading={isConfirmLoading} variant={"default"} type="button" onClick={handleConfirm} className="w-full">
-                                        Xác nhận
-                                    </ButtonSpin>
-                                )}
+                            {((currentStatus.toLowerCase() === 'draft') || (isAP && (currentApprovalStatus.toLowerCase() === 'pending') && isFinanceOrAdmin)) && (
+                                <CardFooter className={"flex flex-col gap-4 pt-0"}>
+                                    {(currentStatus.toLowerCase() === 'draft') && (
+                                        <ButtonSpin isLoading={isSubmitting} loadingText="Đang lưu..." onClick={() => { }} variant={"secondary"} className={"w-full"} disabled={isSubmitting}>
+                                            {isEditMode ? "Cập nhật" : "Lưu"}
+                                        </ButtonSpin>
+                                    )}
+                                    {isEditMode && (currentStatus.toLowerCase() === 'draft') && (
+                                        <ButtonSpin isLoading={isConfirmLoading} variant={"default"} type="button" onClick={handleConfirm} className="w-full">
+                                            Xác nhận
+                                        </ButtonSpin>
+                                    )}
 
-                                {isAP && (currentApprovalStatus.toLowerCase() === 'pending') && isFinanceOrAdmin && (
-                                    <>
-                                        <ButtonSpin variant={"default"} isLoading={isApproveLoading} type="button" onClick={handleApprove} className="  w-full">
-                                            Duyệt
-                                        </ButtonSpin>
-                                        <ButtonSpin variant={"outline"} isLoading={isRejectLoading} type="button" onClick={handleReject} className="w-full">
-                                            Từ chối
-                                        </ButtonSpin>
-                                    </>
-                                )}
-                            </CardFooter>
+                                    {isAP && (currentApprovalStatus.toLowerCase() === 'pending') && isFinanceOrAdmin && (
+                                        <>
+                                            <ButtonSpin variant={"default"} isLoading={isApproveLoading} type="button" onClick={handleApprove} className="  w-full">
+                                                Duyệt
+                                            </ButtonSpin>
+                                            <ButtonSpin variant={"outline"} isLoading={isRejectLoading} type="button" onClick={handleReject} className="w-full">
+                                                Từ chối
+                                            </ButtonSpin>
+                                        </>
+                                    )}
+                                </CardFooter>
+                            )}
                         </Card>
                     </div>
                 </form >
