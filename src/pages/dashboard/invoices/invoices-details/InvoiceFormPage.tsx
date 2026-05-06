@@ -52,7 +52,7 @@ import {
     DropdownMenuTrigger
 } from "@components/ui/dropdown-menu.tsx";
 import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
-import {AttachmentSection} from "@components/common/AttachmentSection.tsx";
+import { AttachmentSection } from "@components/common/AttachmentSection.tsx";
 
 /* ================= SCHEMA ================= */
 
@@ -585,8 +585,9 @@ const InvoiceFormPage: React.FC = () => {
                         </Card>
 
                         {/*Attachment*/}
-                        <AttachmentSection isReadOnly={isReadOnly} referenceId={""} referenceType={"invoice"}/>
+                        <AttachmentSection isReadOnly={isReadOnly} referenceId={""} referenceType={"invoice"} />
                     </div>
+
                     <div className="action col-span-2">
                         <Card className="mx-auto w-full ">
                             <CardHeader>

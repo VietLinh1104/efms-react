@@ -30,8 +30,8 @@ export function AppSidebar() {
             label: "Kế toán (Accounting)",
             items: [
                 { label: "Hệ thống tài khoản", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
-                { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
-                { label: "Bảng cân đối thử", href: "/accounting/trial-balance", icon: <Scale className="w-4 h-4" /> },
+                // { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
+                // { label: "Bảng cân đối thử", href: "/accounting/trial-balance", icon: <Scale className="w-4 h-4" /> },
             ],
         },
         {
@@ -46,8 +46,8 @@ export function AppSidebar() {
             label: "Tiền mặt & Ngân hàng",
             items: [
                 { label: "Tài khoản ngân hàng", href: "/finance/accounts", icon: <Landmark className="w-4 h-4" /> },
-                { label: "Lịch sử giao dịch", href: "/finance/transactions", icon: <History className="w-4 h-4" /> },
-                { label: "Đối soát", href: "/finance/reconciliation", icon: <ShieldCheck className="w-4 h-4" /> },
+                // { label: "Lịch sử giao dịch", href: "/finance/transactions", icon: <History className="w-4 h-4" /> },
+                // { label: "Đối soát", href: "/finance/reconciliation", icon: <ShieldCheck className="w-4 h-4" /> },
             ],
         },
         {
@@ -55,7 +55,7 @@ export function AppSidebar() {
             items: [
                 { label: "Thông tin công ty", href: "/settings/company", icon: <Building2 className="w-4 h-4" /> },
                 { label: "Người dùng & Phân quyền", href: "/settings/users", icon: <UserRoundPlus className="w-4 h-4" /> },
-                { label: "Kỳ kế toán", href: "/settings/periods", icon: <CalendarDays className="w-4 h-4" /> },
+                // { label: "Kỳ kế toán", href: "/settings/periods", icon: <CalendarDays className="w-4 h-4" /> },
             ],
         },
     ];

@@ -30,8 +30,9 @@ import {
 } from "@components/ui/select.tsx";
 import { Switch } from "@components/ui/switch.tsx";
 import { coreAccountsApi } from "@/api";
-import type { AccountResponse, CreateAccountRequest, AccountsApiList7Request, AccountsApiUpdate5Request, AccountsApiToggleActive2Request, AccountsApiCreate7Request } from "@/api/generated/core";
+import type { AccountResponse, CreateAccountRequest, AccountsApiList6Request, AccountsApiUpdate4Request, AccountsApiToggleActive2Request, AccountsApiCreate6Request } from "@/api/generated/core";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const accountSchema = z.object({
     code: z.string().min(1, "Mã tài khoản là bắt buộc"),
@@ -70,10 +71,11 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
     initialData,
     onSuccess,
 }) => {
+    const { companyId } = useAuth();
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [parentAccounts, setParentAccounts] = React.useState<AccountResponse[]>([]);
-    const [accountsListRequest, setAccountsListRequest] = React.useState<AccountsApiList7Request>({
-        companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
+    const [accountsListRequest, setAccountsListRequest] = React.useState<AccountsApiList6Request>({
+        companyId: companyId || '',
     });
 
     const form = useForm<AccountFormValues>({
@@ -93,7 +95,10 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
             // Fetch potential parent accounts
             const fetchParents = async () => {
                 try {
-                    const response = await coreAccountsApi.list7(accountsListRequest);
+                    const response = await coreAccountsApi.list6({
+                        ...accountsListRequest,
+                        companyId: companyId || ''
+                    });
                     setParentAccounts(response.data.data || []);
                 } catch (error) {
                     console.error("Error fetching parent accounts:", error);
@@ -121,7 +126,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
                 });
             }
         }
-    }, [open, initialData, form]);
+    }, [open, initialData, form, companyId, accountsListRequest]);
 
     const onSubmit: SubmitHandler<AccountFormValues> = async (values) => {
         setIsSubmitting(true);
@@ -132,10 +137,10 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
                 type: values.type,
                 balanceType: values.balanceType,
                 parentId: (values.parentId === "none" || !values.parentId) ? undefined : values.parentId,
-                companyId: 'a5fbb4a1-e8bd-4749-aa6d-c422ded28107',
+                companyId: companyId || '',
             };
 
-            const accountsUpdateRequest: AccountsApiUpdate5Request = {
+            const accountsUpdateRequest: AccountsApiUpdate4Request = {
                 id: initialData?.id as string,
                 createAccountRequest: requestData,
             };
@@ -145,15 +150,15 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
             };
 
             if (initialData?.id) {
-                await coreAccountsApi.update5(accountsUpdateRequest);
+                await coreAccountsApi.update4(accountsUpdateRequest);
                 if (initialData.isActive !== values.isActive) {
                     await coreAccountsApi.toggleActive2(accountsToggleActive2Request);
                 }
             } else {
-                const accountsCreate7Request: AccountsApiCreate7Request = {
+                const accountsCreate6Request: AccountsApiCreate6Request = {
                     createAccountRequest: requestData,
                 };
-                await coreAccountsApi.create7(accountsCreate7Request);
+                await coreAccountsApi.create6(accountsCreate6Request);
             }
 
             onSuccess();
