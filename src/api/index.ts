@@ -1,6 +1,6 @@
 // src/api/index.ts
 import axiosInstance from "@/lib/axios";
-import { apiConfigCore, apiConfigIdentity } from "./config";
+import { apiConfigCommon, apiConfigCore, apiConfigIdentity } from "./config";
 
 import {
     AccountsApi,
@@ -129,6 +129,24 @@ export const identityRoleControllerApi = new RoleControllerApi(
 
 export const identityUserControllerApi = new UserControllerApi(
     apiConfigIdentity,
+    undefined,
+    axiosInstance
+);
+
+
+import {
+    CommentApi,
+    AttachmentApi
+} from "@/api/generated/common/api";
+
+export const commonCommentApi = new CommentApi(
+    apiConfigCommon,
+    undefined,
+    axiosInstance
+);
+
+export const commonAttachmentApi = new AttachmentApi(
+    apiConfigCommon,
     undefined,
     axiosInstance
 );
