@@ -69,7 +69,7 @@ export interface AttachmentRequest {
     /**
      * Kiểu entity (ví dụ: \'invoice\', \'payment\')
      */
-    'referenceType': AttachmentRequestReferenceTypeEnum;
+    'referenceType': string;
     /**
      * Tên file gốc
      */
@@ -87,25 +87,6 @@ export interface AttachmentRequest {
      */
     'fileUrl': string;
 }
-
-export const AttachmentRequestReferenceTypeEnum = {
-    Account: 'ACCOUNT',
-    BankAccount: 'BANK_ACCOUNT',
-    BankTransaction: 'BANK_TRANSACTION',
-    FiscalPeriod: 'FISCAL_PERIOD',
-    Invoice: 'INVOICE',
-    InvoiceLine: 'INVOICE_LINE',
-    InvoicePayment: 'INVOICE_PAYMENT',
-    JournalEntry: 'JOURNAL_ENTRY',
-    JournalLine: 'JOURNAL_LINE',
-    Partner: 'PARTNER',
-    Payment: 'PAYMENT',
-    Comment: 'COMMENT',
-    Attachment: 'ATTACHMENT'
-} as const;
-
-export type AttachmentRequestReferenceTypeEnum = typeof AttachmentRequestReferenceTypeEnum[keyof typeof AttachmentRequestReferenceTypeEnum];
-
 /**
  * Thông tin chi tiết của một attachment
  */
@@ -158,31 +139,12 @@ export interface CommentRequest {
     /**
      * Kiểu entity (ví dụ: \'invoice\', \'payment\')
      */
-    'referenceType': CommentRequestReferenceTypeEnum;
+    'referenceType': string;
     /**
      * Nội dung comment
      */
     'content': string;
 }
-
-export const CommentRequestReferenceTypeEnum = {
-    Account: 'ACCOUNT',
-    BankAccount: 'BANK_ACCOUNT',
-    BankTransaction: 'BANK_TRANSACTION',
-    FiscalPeriod: 'FISCAL_PERIOD',
-    Invoice: 'INVOICE',
-    InvoiceLine: 'INVOICE_LINE',
-    InvoicePayment: 'INVOICE_PAYMENT',
-    JournalEntry: 'JOURNAL_ENTRY',
-    JournalLine: 'JOURNAL_LINE',
-    Partner: 'PARTNER',
-    Payment: 'PAYMENT',
-    Comment: 'COMMENT',
-    Attachment: 'ATTACHMENT'
-} as const;
-
-export type CommentRequestReferenceTypeEnum = typeof CommentRequestReferenceTypeEnum[keyof typeof CommentRequestReferenceTypeEnum];
-
 /**
  * Thông tin chi tiết của một comment
  */

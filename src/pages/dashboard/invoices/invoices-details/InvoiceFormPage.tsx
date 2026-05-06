@@ -585,7 +585,7 @@ const InvoiceFormPage: React.FC = () => {
                         </Card>
 
                         {/*Attachment*/}
-                        <AttachmentSection isReadOnly={isReadOnly} referenceId={""} referenceType={"invoice"} />
+                        <AttachmentSection companyId={companyId} isReadOnly={isReadOnly} referenceId={"de93aa56-241e-45fa-a598-e4efc6b2b24e"} referenceType={"invoices"} />
                     </div>
 
                     <div className="action col-span-2">

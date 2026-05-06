@@ -1,6 +1,6 @@
 # AttachmentApi
 
-All URIs are relative to *http://localhost:8083*
+All URIs are relative to *http://localhost:8080/api/common*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
