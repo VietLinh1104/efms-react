@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { commonAttachmentApi } from "@/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useToastApp } from "@/hooks/use-toast-app";
+import { r2Service } from "@/services/r2Service";
 import type {
     AttachmentApiGetAttachmentsByReferenceRequest,
     AttachmentApiCreateAttachmentRequest,
@@ -98,16 +99,16 @@ export function AttachmentSection({
         setUploadingFiles((prev) => new Set(prev).add(fileKey));
 
         try {
-            // TODO: Nếu backend yêu cầu upload lên storage trước (S3/MinIO),
-            //       thực hiện bước đó ở đây và lấy `fileUrl` từ response.
-            //       Hiện tại giả định backend nhận metadata và tự xử lý storage.
+            // Upload file lên Cloudflare R2 thông qua r2Service
+            const fileUrl = await r2Service.uploadFile(file, `attachments/${referenceType}/${referenceId}`);
+
             const attachmentRequest: AttachmentRequest = {
                 referenceId,
                 referenceType,
                 fileName: file.name,
                 fileType: file.type || file.name.split(".").pop() || "",
                 fileSize: file.size,
-                fileUrl: "dfsafas", // Sẽ được điền sau khi upload lên storage
+                fileUrl: fileUrl,
             };
 
             const request: AttachmentApiCreateAttachmentRequest = {
@@ -146,6 +147,12 @@ export function AttachmentSection({
                 id: attachment.id,
             };
             await commonAttachmentApi.deleteAttachment(request);
+            
+            // Nếu có fileUrl, tiến hành xóa file trên R2
+            if (attachment.fileUrl) {
+                await r2Service.deleteFile(attachment.fileUrl);
+            }
+
             setAttachments((prev) => prev.filter((a) => a.id !== attachment.id));
             success(`Đã xóa "${attachment.fileName}".`);
         } catch (err) {
