@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@components/ui/card.tsx";
-import { MessageSquare, Send, Trash2, X } from "lucide-react";
+import { MessageSquare, Trash2, X } from "lucide-react";
 import { Button } from "@components/ui/button.tsx";
 import TextareaAutosize from "react-textarea-autosize";
 import {
