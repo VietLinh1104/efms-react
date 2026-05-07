@@ -16,12 +16,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title }) => {
       {/* sidebar */}
       <SidebarProvider>
         <AppSidebar />
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col h-screen overflow-hidden">
           <NavbarApp>
             <SidebarTrigger />
             <h1 className="text-sm font-semibold">{title}</h1>
           </NavbarApp>
-          <main className="w-full p-10">
+          <main className="w-full flex-1 overflow-y-auto p-10">
             <Outlet />
           </main>
         </div>
