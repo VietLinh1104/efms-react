@@ -1,7 +1,14 @@
+"use client";
+
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@components/ui/card.tsx";
 import { MessageSquare, Send, Trash2, X } from "lucide-react";
 import { Button } from "@components/ui/button.tsx";
-import { Textarea } from "@components/ui/textarea.tsx";
+import TextareaAutosize from "react-textarea-autosize";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+} from "@/components/ui/input-group";
 import { useCallback, useEffect, useState } from "react";
 import { commonCommentApi } from "@/api";
 import { useAuth } from "@/hooks/useAuth";
@@ -188,27 +195,35 @@ export function CommentSection({
             <CardContent className="space-y-4">
                 {/* ─── Ô nhập bình luận ─── */}
                 {!isReadOnly && (
-                    <div className="flex flex-col gap-2">
-                        <Textarea
-                            placeholder="Viết bình luận... (Ctrl + Enter để gửi)"
-                            value={newContent}
-                            onChange={(e) => setNewContent(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            rows={3}
-                            disabled={isSubmitting}
-                            className="resize-none text-sm"
-                        />
-                        <div className="flex justify-end">
-                            <Button
-                                type="button"
-                                size="sm"
-                                disabled={isSubmitting || !newContent.trim()}
-                                onClick={handleSubmit}
-                            >
-                                <Send className="w-4 h-4 mr-2" />
-                                {isSubmitting ? "Đang gửi..." : "Gửi"}
-                            </Button>
-                        </div>
+                    <div className="flex flex-col gap-2 w-full">
+                        <InputGroup className="w-full focus-within:ring-1 focus-within:ring-ring">
+                            <TextareaAutosize
+                                data-slot="input-group-control"
+                                className="flex field-sizing-content min-h-12 w-full resize-none rounded-md bg-transparent px-3 py-2.5 text-base transition-[color,box-shadow] outline-none md:text-sm"
+                                placeholder="Viết bình luận... (Ctrl + Enter để gửi)"
+                                value={newContent}
+                                onChange={(e) => setNewContent(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                disabled={isSubmitting}
+                            />
+                            <InputGroupAddon align="block-end" className="p-1">
+                                <InputGroupButton
+                                    className="ml-auto"
+                                    size="sm"
+                                    variant="default"
+                                    disabled={isSubmitting || !newContent.trim()}
+                                    onClick={handleSubmit}
+                                >
+                                    {isSubmitting ? (
+                                        "Đang gửi..."
+                                    ) : (
+                                        <>
+                                            Gửi
+                                        </>
+                                    )}
+                                </InputGroupButton>
+                            </InputGroupAddon>
+                        </InputGroup>
                     </div>
                 )}
 

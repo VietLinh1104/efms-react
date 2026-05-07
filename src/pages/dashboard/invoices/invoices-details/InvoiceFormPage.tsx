@@ -592,7 +592,7 @@ const InvoiceFormPage: React.FC = () => {
 
                         {/*Comments*/}
                         {isEditMode && id && (
-                            <CommentSection companyId={companyId} isReadOnly={isReadOnly} referenceId={id} referenceType={"invoices"} />
+                            <CommentSection companyId={companyId} isReadOnly={false} referenceId={id} referenceType={"invoices"} />
                         )}
                     </div>
 
