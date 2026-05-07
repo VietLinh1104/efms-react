@@ -53,6 +53,7 @@ import {
 } from "@components/ui/dropdown-menu.tsx";
 import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 import { AttachmentSection } from "@components/common/AttachmentSection.tsx";
+import { CommentSection } from "@components/common/CommentSection.tsx";
 
 /* ================= SCHEMA ================= */
 
@@ -585,7 +586,14 @@ const InvoiceFormPage: React.FC = () => {
                         </Card>
 
                         {/*Attachment*/}
-                        <AttachmentSection companyId={companyId} isReadOnly={isReadOnly} referenceId={"de93aa56-241e-45fa-a598-e4efc6b2b24e"} referenceType={"invoices"} />
+                        {isEditMode && id && (
+                            <AttachmentSection companyId={companyId} isReadOnly={isReadOnly} referenceId={id} referenceType={"invoices"} />
+                        )}
+
+                        {/*Comments*/}
+                        {isEditMode && id && (
+                            <CommentSection companyId={companyId} isReadOnly={isReadOnly} referenceId={id} referenceType={"invoices"} />
+                        )}
                     </div>
 
                     <div className="action col-span-2">

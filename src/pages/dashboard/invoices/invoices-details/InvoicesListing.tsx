@@ -3,7 +3,7 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search, CheckSquare } from "lucide-react";
-import { coreInvoicesApi,coreInvoiceApprovalControllerApi } from "@/api";
+import { coreInvoicesApi, coreInvoiceApprovalControllerApi } from "@/api";
 import type {
     InvoiceResponse, InvoiceApprovalControllerApiGetAllTasksRequest,
     InvoicesApiListInvoicesRequest, InvoicesApiDeleteInvoiceRequest
@@ -37,7 +37,7 @@ const InvoicesListing: React.FC = () => {
     const fetchInvoices = useCallback(async () => {
         setIsLoading(true);
         try {
-            const reqUrl:  InvoicesApiListInvoicesRequest = {
+            const reqUrl: InvoicesApiListInvoicesRequest = {
                 companyId: companyId ?? "",
                 invoiceType: undefined,
                 status: undefined,
@@ -197,7 +197,7 @@ const InvoicesListing: React.FC = () => {
     return (
         <div className="space-y-4">
             <div className="flex flex-col gap-1">
-                <h2 className="text-2xl font-bold tracking-tight">Hóa đơn & Chấm duyệt</h2>
+                <h2 className="text-2xl font-bold tracking-tight">Hóa đơn & Chứng từ</h2>
                 <p className="text-muted-foreground">
                     Quản lý hóa đơn bán hàng (AR), hóa đơn mua hàng (AP) và phê duyệt từ Camunda 8.
                 </p>
@@ -222,44 +222,44 @@ const InvoicesListing: React.FC = () => {
 
             {/*<div className="">*/}
 
-                    <div className="p-0">
-                        <div className="flex mb-4 justify-between">
-                            <div className="relative max-w-sm w-full ">
-                                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="Tìm số hóa đơn, đối tác..." className="pl-8" />
+            <div className="p-0">
+                <div className="flex mb-4 justify-between">
+                    <div className="relative max-w-sm w-full ">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Tìm số hóa đơn, đối tác..." className="pl-8" />
 
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={refreshData}
-                                    disabled={isLoading || isTasksLoading}
-                                    title="Làm mới"
-                                >
-                                    <RefreshCcw className={`h-4 w-4 ${(isLoading || isTasksLoading) ? 'animate-spin' : ''}`} />
-                                </Button>
-                                <Button
-                                    onClick={() => navigate("/invoices/create")}
-                                >
-                                    <Plus className="mr-2 h-4 w-4" /> Thêm hóa đơn
-                                </Button>
-                            </div>
-                        </div>
-                        {activeTab === "all" ? (
-                            <DataTable
-                                columns={columns}
-                                data={data}
-                                isLoading={isLoading}
-                            />
-                        ) : (
-                            <DataTable
-                                columns={tasksColumns}
-                                data={tasksData}
-                                isLoading={isTasksLoading}
-                            />
-                        )}
                     </div>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={refreshData}
+                            disabled={isLoading || isTasksLoading}
+                            title="Làm mới"
+                        >
+                            <RefreshCcw className={`h-4 w-4 ${(isLoading || isTasksLoading) ? 'animate-spin' : ''}`} />
+                        </Button>
+                        <Button
+                            onClick={() => navigate("/invoices/create")}
+                        >
+                            <Plus className="mr-2 h-4 w-4" /> Thêm hóa đơn
+                        </Button>
+                    </div>
+                </div>
+                {activeTab === "all" ? (
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        isLoading={isLoading}
+                    />
+                ) : (
+                    <DataTable
+                        columns={tasksColumns}
+                        data={tasksData}
+                        isLoading={isTasksLoading}
+                    />
+                )}
+            </div>
         </div>
     );
 };
