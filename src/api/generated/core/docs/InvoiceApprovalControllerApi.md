@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**getAllTasks**](#getalltasks) | **GET** /api/core/invoices/tasks | |
-|[**getInvoiceByTaskId**](#getinvoicebytaskid) | **GET** /api/core/invoices/tasks/{taskId}/invoice | |
+|[**getAllTasks**](#getalltasks) | **GET** /v1/invoice-tasks/tasks | |
+|[**getInvoiceByTaskId**](#getinvoicebytaskid) | **GET** /v1/invoice-tasks/tasks/{taskId}/invoice | |
 
 # **getAllTasks**
 > ApiResponsePagedResponseInvoiceResponse getAllTasks()

@@ -37,10 +37,11 @@ import { coreAccountsApi, corePartnersApi, coreInvoicesApi } from "@/api";
 import type {
     AccountResponse,
     PartnerResponse,
-    CreateInvoiceRequest,
+    InvoicesApiCreateDraftInvoiceRequest,
     AccountsApiList6Request,
     PartnersApiList1Request,
-    InvoiceResponse
+    InvoiceResponse,
+    InvoiceRequest
 } from "@/api/generated/core";
 
 import { useToastApp } from "@hooks/use-toast-app.ts";
@@ -58,6 +59,7 @@ import { CommentSection } from "@components/common/CommentSection.tsx";
 /* ================= SCHEMA ================= */
 
 const invoiceLineSchema = z.object({
+    id: z.string().optional(),
     description: z.string().min(1, "Bắt buộc"),
     accountId: z.string().min(1, "Bắt buộc"),
     quantity: z.number().min(0),
@@ -295,25 +297,33 @@ const InvoiceFormPage: React.FC = () => {
     const onSubmit: SubmitHandler<InvoiceFormValues> = async (values) => {
         setIsSubmitting(true);
         try {
-            const requestPayload: CreateInvoiceRequest = {
-                ...values,
-                companyId: companyId,
-                lines: values.lines.map((l) => ({
-                    ...l,
-                    taxRate: l.taxRate ?? 0,
-                    amount: l.quantity * l.unitPrice,
-                    taxAmount: (l.quantity * l.unitPrice * (l.taxRate ?? 0)) / 100,
-                }))
+            const requestPayload: InvoiceRequest = {
+                companyId: companyId ?? undefined,
+                invoiceType: values.invoiceType,
+                partnerId: values.partnerId,
+                invoiceNumber: values.invoiceNumber || undefined,
+                invoiceDate: values.invoiceDate
+                    ? new Date(values.invoiceDate).toISOString().split("T")[0]
+                    : new Date().toISOString().split("T")[0],
+                dueDate: values.dueDate
+                    ? new Date(values.dueDate).toISOString().split("T")[0]
+                    : undefined,
+                currencyCode: values.currencyCode || "VND",
+                exchangeRate: values.exchangeRate || 1,
+                lines: (values.lines || []).map((l) => ({
+                    id: l.id || undefined,
+                    description: l.description || "",
+                    accountId: l.accountId || "",
+                    quantity: l.quantity || 0,
+                    unitPrice: l.unitPrice || 0,
+                    taxRate: l.taxRate || 0,
+                })),
             };
 
             if (isEditMode) {
-                console.log("req body:", {
-                    createInvoiceRequest: requestPayload,
-                    id: id
-                });
                 const res = await coreInvoicesApi.updateDraftInvoice({
-                    updateInvoiceRequest: requestPayload,
-                    id: id
+                    id: id,
+                    invoiceRequest: requestPayload
                 });
 
 
@@ -323,7 +333,7 @@ const InvoiceFormPage: React.FC = () => {
                     error("Đã xảy ra lỗi khi cập nhật");
                 }
             } else {
-                const res = await coreInvoicesApi.createDraftInvoice({ createInvoiceRequest: requestPayload });
+                const res = await coreInvoicesApi.createDraftInvoice({ invoiceRequest: requestPayload });
                 success("Tạo hóa đơn thành công");
                 navigate(`/invoices/${res.data.data?.id}`);
             }
@@ -363,7 +373,8 @@ const InvoiceFormPage: React.FC = () => {
                     <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <h2 className="text-xl font-semibold">
-                    {isEditMode ? `Hóa đơn: ${invoice?.invoiceNumber || "N/A"}` : "Tạo hóa đơn"}
+                    {isEditMode ? `Hóa đơn: ${invoice?.invoiceNumber || "N/A"
+                        }` : "Tạo hóa đơn"}
                 </h2>
             </div>
             <Form {...form}>
@@ -608,7 +619,7 @@ const InvoiceFormPage: React.FC = () => {
                             <CardContent className={""}>
                                 <div className="">
                                     <div className="relative w-full ">
-                                        <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentStatus)}`} />
+                                        <span className={`absolute left - 3 top - 1 / 2 - translate - y - 1 / 2 h - 2 w - 2 rounded - full ${getStatusColor(currentStatus)} `} />
                                         <Input className="pl-8 uppercase" value={currentStatus} readOnly={true} />
                                     </div>
                                 </div>
@@ -616,7 +627,7 @@ const InvoiceFormPage: React.FC = () => {
                                 {isAP && isEditMode && (
                                     <div className="mt-2">
                                         <div className="relative w-full ">
-                                            <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentApprovalStatus)}`} />
+                                            <span className={`absolute left - 3 top - 1 / 2 - translate - y - 1 / 2 h - 2 w - 2 rounded - full ${getStatusColor(currentApprovalStatus)} `} />
                                             <Input className="pl-8 uppercase" value={currentApprovalStatus} readOnly={true} />
                                         </div>
                                     </div>

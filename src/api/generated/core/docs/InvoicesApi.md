@@ -168,7 +168,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createDraftInvoice**
-> ApiResponseInvoiceResponse createDraftInvoice(createInvoiceRequest)
+> ApiResponseInvoiceResponse createDraftInvoice(invoiceRequest)
 
 
 ### Example
@@ -177,16 +177,16 @@ No authorization required
 import {
     InvoicesApi,
     Configuration,
-    CreateInvoiceRequest
+    InvoiceRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new InvoicesApi(configuration);
 
-let createInvoiceRequest: CreateInvoiceRequest; //
+let invoiceRequest: InvoiceRequest; //
 
 const { status, data } = await apiInstance.createDraftInvoice(
-    createInvoiceRequest
+    invoiceRequest
 );
 ```
 
@@ -194,7 +194,7 @@ const { status, data } = await apiInstance.createDraftInvoice(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **createInvoiceRequest** | **CreateInvoiceRequest**|  | |
+| **invoiceRequest** | **InvoiceRequest**|  | |
 
 
 ### Return type
@@ -577,7 +577,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateDraftInvoice**
-> ApiResponseInvoiceResponse updateDraftInvoice(updateInvoiceRequest)
+> ApiResponseInvoiceResponse updateDraftInvoice(invoiceRequest)
 
 
 ### Example
@@ -586,18 +586,18 @@ No authorization required
 import {
     InvoicesApi,
     Configuration,
-    UpdateInvoiceRequest
+    InvoiceRequest
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
-let updateInvoiceRequest: UpdateInvoiceRequest; //
+let invoiceRequest: InvoiceRequest; //
 
 const { status, data } = await apiInstance.updateDraftInvoice(
     id,
-    updateInvoiceRequest
+    invoiceRequest
 );
 ```
 
@@ -605,7 +605,7 @@ const { status, data } = await apiInstance.updateDraftInvoice(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **updateInvoiceRequest** | **UpdateInvoiceRequest**|  | |
+| **invoiceRequest** | **InvoiceRequest**|  | |
 | **id** | [**string**] |  | defaults to undefined|
 
 

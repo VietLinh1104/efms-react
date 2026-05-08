@@ -6,6 +6,7 @@ Payload dòng hóa đơn
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**id** | **string** | UUID dòng hóa đơn (null &#x3D; tạo mới, có giá trị &#x3D; cập nhật) | [optional] [default to undefined]
 **accountId** | **string** | UUID tài khoản doanh thu (AR) hoặc chi phí (AP) | [default to undefined]
 **description** | **string** | Mô tả mặt hàng / dịch vụ | [default to undefined]
 **quantity** | **number** | Số lượng | [default to undefined]
@@ -18,6 +19,7 @@ Name | Type | Description | Notes
 import { InvoiceLineRequest } from './api';
 
 const instance: InvoiceLineRequest = {
+    id,
     accountId,
     description,
     quantity,

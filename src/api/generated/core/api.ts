@@ -564,47 +564,6 @@ export interface CreateFiscalPeriodRequest {
     'companyId'?: string;
 }
 /**
- * Payload tạo/cập nhật hóa đơn
- */
-export interface CreateInvoiceRequest {
-    /**
-     * Loại hóa đơn (AR: thu, AP: chi)
-     */
-    'invoiceType': string;
-    /**
-     * UUID đối tác
-     */
-    'partnerId': string;
-    /**
-     * Số hóa đơn (nếu có)
-     */
-    'invoiceNumber'?: string;
-    /**
-     * Ngày phát hành
-     */
-    'invoiceDate': string;
-    /**
-     * Ngày đến hạn
-     */
-    'dueDate'?: string;
-    /**
-     * Loại tiền tệ
-     */
-    'currencyCode'?: string;
-    /**
-     * Tỷ giá quy đổi (mặc định 1)
-     */
-    'exchangeRate'?: number;
-    /**
-     * UUID công ty sở hữu
-     */
-    'companyId'?: string;
-    /**
-     * Danh sách dòng hóa đơn
-     */
-    'lines': Array<InvoiceLineRequest>;
-}
-/**
  * Payload tạo chứng từ kế toán
  */
 export interface CreateJournalRequest {
@@ -761,6 +720,10 @@ export interface FiscalPeriodResponse {
  */
 export interface InvoiceLineRequest {
     /**
+     * UUID dòng hóa đơn (null = tạo mới, có giá trị = cập nhật)
+     */
+    'id'?: string;
+    /**
      * UUID tài khoản doanh thu (AR) hoặc chi phí (AP)
      */
     'accountId': string;
@@ -858,6 +821,47 @@ export interface InvoicePaymentResponse {
      * Thời gian phân bổ
      */
     'createdAt'?: string;
+}
+/**
+ * Payload tạo / cập nhật hóa đơn
+ */
+export interface InvoiceRequest {
+    /**
+     * Loại hóa đơn (AR: thu, AP: chi) — bắt buộc khi tạo mới
+     */
+    'invoiceType': string;
+    /**
+     * UUID công ty — bắt buộc khi tạo mới
+     */
+    'companyId'?: string;
+    /**
+     * UUID đối tác
+     */
+    'partnerId': string;
+    /**
+     * Số hóa đơn (tùy chọn)
+     */
+    'invoiceNumber'?: string;
+    /**
+     * Ngày phát hành
+     */
+    'invoiceDate': string;
+    /**
+     * Ngày đến hạn
+     */
+    'dueDate'?: string;
+    /**
+     * Loại tiền tệ
+     */
+    'currencyCode'?: string;
+    /**
+     * Tỷ giá quy đổi (mặc định 1)
+     */
+    'exchangeRate'?: number;
+    /**
+     * Danh sách dòng hóa đơn — id == null: tạo mới, id != null: cập nhật dòng đó
+     */
+    'lines': Array<InvoiceLineRequest>;
 }
 /**
  * Thông tin hóa đơn
@@ -1599,68 +1603,6 @@ export interface TrialBalanceResponse {
      * Danh sách các dòng tài khoản
      */
     'lines'?: Array<TrialBalanceLineResponse>;
-}
-/**
- * Payload cập nhật dòng hóa đơn
- */
-export interface UpdateInvoiceLineRequest {
-    /**
-     * UUID dòng hóa đơn hiện tại (null = tạo mới, có giá trị = cập nhật)
-     */
-    'id'?: string;
-    /**
-     * UUID tài khoản doanh thu (AR) hoặc chi phí (AP)
-     */
-    'accountId': string;
-    /**
-     * Mô tả mặt hàng / dịch vụ
-     */
-    'description': string;
-    /**
-     * Số lượng
-     */
-    'quantity': number;
-    /**
-     * Đơn giá
-     */
-    'unitPrice': number;
-    /**
-     * Tỷ lệ thuế (%)
-     */
-    'taxRate': number;
-}
-/**
- * Payload cập nhật hóa đơn (chỉ cho phép ở trạng thái draft)
- */
-export interface UpdateInvoiceRequest {
-    /**
-     * UUID đối tác
-     */
-    'partnerId': string;
-    /**
-     * Số hóa đơn
-     */
-    'invoiceNumber'?: string;
-    /**
-     * Ngày phát hành
-     */
-    'invoiceDate': string;
-    /**
-     * Ngày đến hạn
-     */
-    'dueDate'?: string;
-    /**
-     * Loại tiền tệ
-     */
-    'currencyCode'?: string;
-    /**
-     * Tỷ giá quy đổi
-     */
-    'exchangeRate'?: number;
-    /**
-     * Danh sách dòng hóa đơn – nếu id != null thì update dòng đó, id == null thì tạo mới
-     */
-    'lines': Array<UpdateInvoiceLineRequest>;
 }
 
 /**
@@ -4079,7 +4021,7 @@ export const InvoiceApprovalControllerApiAxiosParamCreator = function (configura
          * @throws {RequiredError}
          */
         getAllTasks: async (page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/core/invoices/tasks`;
+            const localVarPath = `/v1/invoice-tasks/tasks`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4119,7 +4061,7 @@ export const InvoiceApprovalControllerApiAxiosParamCreator = function (configura
         getInvoiceByTaskId: async (taskId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'taskId' is not null or undefined
             assertParamExists('getInvoiceByTaskId', 'taskId', taskId)
-            const localVarPath = `/api/core/invoices/tasks/{taskId}/invoice`
+            const localVarPath = `/v1/invoice-tasks/tasks/{taskId}/invoice`
                 .replace(`{${"taskId"}}`, encodeURIComponent(String(taskId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4360,13 +4302,13 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @summary Tạo Hóa đơn (draft)
-         * @param {CreateInvoiceRequest} createInvoiceRequest 
+         * @param {InvoiceRequest} invoiceRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createDraftInvoice: async (createInvoiceRequest: CreateInvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createInvoiceRequest' is not null or undefined
-            assertParamExists('createDraftInvoice', 'createInvoiceRequest', createInvoiceRequest)
+        createDraftInvoice: async (invoiceRequest: InvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'invoiceRequest' is not null or undefined
+            assertParamExists('createDraftInvoice', 'invoiceRequest', invoiceRequest)
             const localVarPath = `/v1/invoices`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4385,7 +4327,7 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createInvoiceRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(invoiceRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4664,15 +4606,15 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
          * 
          * @summary Cập nhật Hóa đơn (chỉ khi draft)
          * @param {string} id 
-         * @param {UpdateInvoiceRequest} updateInvoiceRequest 
+         * @param {InvoiceRequest} invoiceRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateDraftInvoice: async (id: string, updateInvoiceRequest: UpdateInvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateDraftInvoice: async (id: string, invoiceRequest: InvoiceRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('updateDraftInvoice', 'id', id)
-            // verify required parameter 'updateInvoiceRequest' is not null or undefined
-            assertParamExists('updateDraftInvoice', 'updateInvoiceRequest', updateInvoiceRequest)
+            // verify required parameter 'invoiceRequest' is not null or undefined
+            assertParamExists('updateDraftInvoice', 'invoiceRequest', invoiceRequest)
             const localVarPath = `/v1/invoices/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4692,7 +4634,7 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateInvoiceRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(invoiceRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4750,12 +4692,12 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Tạo Hóa đơn (draft)
-         * @param {CreateInvoiceRequest} createInvoiceRequest 
+         * @param {InvoiceRequest} invoiceRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createDraftInvoice(createInvoiceRequest: CreateInvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createDraftInvoice(createInvoiceRequest, options);
+        async createDraftInvoice(invoiceRequest: InvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createDraftInvoice(invoiceRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['InvoicesApi.createDraftInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4859,12 +4801,12 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
          * 
          * @summary Cập nhật Hóa đơn (chỉ khi draft)
          * @param {string} id 
-         * @param {UpdateInvoiceRequest} updateInvoiceRequest 
+         * @param {InvoiceRequest} invoiceRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateDraftInvoice(id: string, updateInvoiceRequest: UpdateInvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateDraftInvoice(id, updateInvoiceRequest, options);
+        async updateDraftInvoice(id: string, invoiceRequest: InvoiceRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateDraftInvoice(id, invoiceRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['InvoicesApi.updateDraftInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4916,7 +4858,7 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         createDraftInvoice(requestParameters: InvoicesApiCreateDraftInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.createDraftInvoice(requestParameters.createInvoiceRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createDraftInvoice(requestParameters.invoiceRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4995,7 +4937,7 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         updateDraftInvoice(requestParameters: InvoicesApiUpdateDraftInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.updateDraftInvoice(requestParameters.id, requestParameters.updateInvoiceRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.updateDraftInvoice(requestParameters.id, requestParameters.invoiceRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5025,7 +4967,7 @@ export interface InvoicesApiConfirmInvoiceToProcessRequest {
  * Request parameters for createDraftInvoice operation in InvoicesApi.
  */
 export interface InvoicesApiCreateDraftInvoiceRequest {
-    readonly createInvoiceRequest: CreateInvoiceRequest
+    readonly invoiceRequest: InvoiceRequest
 }
 
 /**
@@ -5086,7 +5028,7 @@ export interface InvoicesApiRejectInvoiceRequest {
 export interface InvoicesApiUpdateDraftInvoiceRequest {
     readonly id: string
 
-    readonly updateInvoiceRequest: UpdateInvoiceRequest
+    readonly invoiceRequest: InvoiceRequest
 }
 
 /**
@@ -5134,7 +5076,7 @@ export class InvoicesApi extends BaseAPI {
      * @throws {RequiredError}
      */
     public createDraftInvoice(requestParameters: InvoicesApiCreateDraftInvoiceRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).createDraftInvoice(requestParameters.createInvoiceRequest, options).then((request) => request(this.axios, this.basePath));
+        return InvoicesApiFp(this.configuration).createDraftInvoice(requestParameters.invoiceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5221,7 +5163,7 @@ export class InvoicesApi extends BaseAPI {
      * @throws {RequiredError}
      */
     public updateDraftInvoice(requestParameters: InvoicesApiUpdateDraftInvoiceRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).updateDraftInvoice(requestParameters.id, requestParameters.updateInvoiceRequest, options).then((request) => request(this.axios, this.basePath));
+        return InvoicesApiFp(this.configuration).updateDraftInvoice(requestParameters.id, requestParameters.invoiceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

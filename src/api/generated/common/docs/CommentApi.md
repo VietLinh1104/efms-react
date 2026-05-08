@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost:8080/api/common*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**createComment**](#createcomment) | **POST** /api/common/comments | Viết bình luận mới|
-|[**deleteComment**](#deletecomment) | **DELETE** /api/common/comments/{id} | Xoá bình luận và huỷ liên kết|
-|[**getCommentById**](#getcommentbyid) | **GET** /api/common/comments/{id} | Lấy thông tin chi tiết một bình luận|
-|[**getCommentsByReference**](#getcommentsbyreference) | **GET** /api/common/comments/reference/{referenceType}/{referenceId} | Lấy danh sách bình luận của một entity (không phân trang)|
-|[**getPagedCommentsByReference**](#getpagedcommentsbyreference) | **GET** /api/common/comments/reference/{referenceType}/{referenceId}/paged | Lấy danh sách bình luận của một entity (có phân trang)|
+|[**createComment**](#createcomment) | **POST** /v1/comments | Viết bình luận mới|
+|[**deleteComment**](#deletecomment) | **DELETE** /v1/comments/{id} | Xoá bình luận và huỷ liên kết|
+|[**getCommentById**](#getcommentbyid) | **GET** /v1/comments/{id} | Lấy thông tin chi tiết một bình luận|
+|[**getCommentsByReference**](#getcommentsbyreference) | **GET** /v1/comments/reference/{referenceType}/{referenceId} | Lấy danh sách bình luận của một entity (không phân trang)|
+|[**getPagedCommentsByReference**](#getpagedcommentsbyreference) | **GET** /v1/comments/reference/{referenceType}/{referenceId}/paged | Lấy danh sách bình luận của một entity (có phân trang)|
 
 # **createComment**
 > ApiResponseCommentResponse createComment(commentRequest)

@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost:8080/api/common*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**createAttachment**](#createattachment) | **POST** /api/common/attachments | Tải lên/Tạo mới một file đính kèm|
-|[**deleteAttachment**](#deleteattachment) | **DELETE** /api/common/attachments/{id} | Xoá file đính kèm và huỷ liên kết|
-|[**getAllAttachments**](#getallattachments) | **GET** /api/common/attachments | Lấy danh sách tất cả file đính kèm của công ty (có phân trang)|
-|[**getAttachmentById**](#getattachmentbyid) | **GET** /api/common/attachments/{id} | Lấy thông tin chi tiết một file đính kèm|
-|[**getAttachmentsByReference**](#getattachmentsbyreference) | **GET** /api/common/attachments/reference/{referenceType}/{referenceId} | Lấy danh sách file đính kèm của một entity cụ thể|
+|[**createAttachment**](#createattachment) | **POST** /v1/attachments | Tải lên/Tạo mới một file đính kèm|
+|[**deleteAttachment**](#deleteattachment) | **DELETE** /v1/attachments/{id} | Xoá file đính kèm và huỷ liên kết|
+|[**getAllAttachments**](#getallattachments) | **GET** /v1/attachments | Lấy danh sách tất cả file đính kèm của công ty (có phân trang)|
+|[**getAttachmentById**](#getattachmentbyid) | **GET** /v1/attachments/{id} | Lấy thông tin chi tiết một file đính kèm|
+|[**getAttachmentsByReference**](#getattachmentsbyreference) | **GET** /v1/attachments/reference/{referenceType}/{referenceId} | Lấy danh sách file đính kèm của một entity cụ thể|
 
 # **createAttachment**
 > ApiResponseAttachmentResponse createAttachment(attachmentRequest)

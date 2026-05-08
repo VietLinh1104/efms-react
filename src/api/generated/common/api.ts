@@ -266,7 +266,7 @@ export const AttachmentApiAxiosParamCreator = function (configuration?: Configur
             assertParamExists('createAttachment', 'xUserId', xUserId)
             // verify required parameter 'attachmentRequest' is not null or undefined
             assertParamExists('createAttachment', 'attachmentRequest', attachmentRequest)
-            const localVarPath = `/api/common/attachments`;
+            const localVarPath = `/v1/attachments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -310,7 +310,7 @@ export const AttachmentApiAxiosParamCreator = function (configuration?: Configur
             assertParamExists('deleteAttachment', 'xCompanyId', xCompanyId)
             // verify required parameter 'id' is not null or undefined
             assertParamExists('deleteAttachment', 'id', id)
-            const localVarPath = `/api/common/attachments/{id}`
+            const localVarPath = `/v1/attachments/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -349,7 +349,7 @@ export const AttachmentApiAxiosParamCreator = function (configuration?: Configur
         getAllAttachments: async (xCompanyId: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'xCompanyId' is not null or undefined
             assertParamExists('getAllAttachments', 'xCompanyId', xCompanyId)
-            const localVarPath = `/api/common/attachments`;
+            const localVarPath = `/v1/attachments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -396,7 +396,7 @@ export const AttachmentApiAxiosParamCreator = function (configuration?: Configur
             assertParamExists('getAttachmentById', 'xCompanyId', xCompanyId)
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getAttachmentById', 'id', id)
-            const localVarPath = `/api/common/attachments/{id}`
+            const localVarPath = `/v1/attachments/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -439,7 +439,7 @@ export const AttachmentApiAxiosParamCreator = function (configuration?: Configur
             assertParamExists('getAttachmentsByReference', 'referenceType', referenceType)
             // verify required parameter 'referenceId' is not null or undefined
             assertParamExists('getAttachmentsByReference', 'referenceId', referenceId)
-            const localVarPath = `/api/common/attachments/reference/{referenceType}/{referenceId}`
+            const localVarPath = `/v1/attachments/reference/{referenceType}/{referenceId}`
                 .replace(`{${"referenceType"}}`, encodeURIComponent(String(referenceType)))
                 .replace(`{${"referenceId"}}`, encodeURIComponent(String(referenceId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -763,7 +763,7 @@ export const CommentApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('createComment', 'xUserId', xUserId)
             // verify required parameter 'commentRequest' is not null or undefined
             assertParamExists('createComment', 'commentRequest', commentRequest)
-            const localVarPath = `/api/common/comments`;
+            const localVarPath = `/v1/comments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -807,7 +807,7 @@ export const CommentApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('deleteComment', 'xCompanyId', xCompanyId)
             // verify required parameter 'id' is not null or undefined
             assertParamExists('deleteComment', 'id', id)
-            const localVarPath = `/api/common/comments/{id}`
+            const localVarPath = `/v1/comments/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -847,7 +847,7 @@ export const CommentApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('getCommentById', 'xCompanyId', xCompanyId)
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getCommentById', 'id', id)
-            const localVarPath = `/api/common/comments/{id}`
+            const localVarPath = `/v1/comments/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -890,7 +890,7 @@ export const CommentApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('getCommentsByReference', 'referenceType', referenceType)
             // verify required parameter 'referenceId' is not null or undefined
             assertParamExists('getCommentsByReference', 'referenceId', referenceId)
-            const localVarPath = `/api/common/comments/reference/{referenceType}/{referenceId}`
+            const localVarPath = `/v1/comments/reference/{referenceType}/{referenceId}`
                 .replace(`{${"referenceType"}}`, encodeURIComponent(String(referenceType)))
                 .replace(`{${"referenceId"}}`, encodeURIComponent(String(referenceId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -936,7 +936,7 @@ export const CommentApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('getPagedCommentsByReference', 'referenceType', referenceType)
             // verify required parameter 'referenceId' is not null or undefined
             assertParamExists('getPagedCommentsByReference', 'referenceId', referenceId)
-            const localVarPath = `/api/common/comments/reference/{referenceType}/{referenceId}/paged`
+            const localVarPath = `/v1/comments/reference/{referenceType}/{referenceId}/paged`
                 .replace(`{${"referenceType"}}`, encodeURIComponent(String(referenceType)))
                 .replace(`{${"referenceId"}}`, encodeURIComponent(String(referenceId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
