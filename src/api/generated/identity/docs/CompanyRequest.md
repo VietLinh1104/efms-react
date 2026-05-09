@@ -7,6 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **string** |  | [default to undefined]
 **currency** | **string** |  | [optional] [default to undefined]
+**taxCode** | **string** |  | [optional] [default to undefined]
+**address** | **string** |  | [optional] [default to undefined]
 **isActive** | **boolean** |  | [optional] [default to undefined]
 
 ## Example
@@ -17,6 +19,8 @@ import { CompanyRequest } from './api';
 const instance: CompanyRequest = {
     name,
     currency,
+    taxCode,
+    address,
     isActive,
 };
 ```

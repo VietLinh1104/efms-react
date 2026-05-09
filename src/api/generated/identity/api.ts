@@ -91,12 +91,16 @@ export interface AuditLogResponse {
 export interface CompanyRequest {
     'name': string;
     'currency'?: string;
+    'taxCode'?: string;
+    'address'?: string;
     'isActive'?: boolean;
 }
 export interface CompanyResponse {
     'id'?: string;
     'name'?: string;
     'currency'?: string;
+    'taxCode'?: string;
+    'address'?: string;
     'isActive'?: boolean;
     'createdAt'?: string;
 }
@@ -108,9 +112,9 @@ export interface PageAuditLogResponse {
     'totalPages'?: number;
     'totalElements'?: number;
     'pageable'?: PageableObject;
+    'numberOfElements'?: number;
     'first'?: boolean;
     'last'?: boolean;
-    'numberOfElements'?: number;
     'size'?: number;
     'content'?: Array<AuditLogResponse>;
     'number'?: number;
@@ -118,10 +122,10 @@ export interface PageAuditLogResponse {
     'empty'?: boolean;
 }
 export interface PageableObject {
+    'unpaged'?: boolean;
     'pageNumber'?: number;
     'paged'?: boolean;
     'pageSize'?: number;
-    'unpaged'?: boolean;
     'offset'?: number;
     'sort'?: Array<SortObject>;
 }
@@ -143,6 +147,8 @@ export interface RegisterRequest {
     'password': string;
     'otp': string;
     'companyName': string;
+    'taxCode'?: string;
+    'address'?: string;
 }
 export interface RoleRequest {
     'name': string;

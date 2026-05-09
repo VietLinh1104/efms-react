@@ -862,6 +862,12 @@
                     "currency": {
                         "type": "string"
                     },
+                    "taxCode": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
                     "isActive": {
                         "type": "boolean"
                     },
@@ -1043,6 +1049,12 @@
                         "minLength": 0,
                         "type": "string"
                     },
+                    "taxCode": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
                     "isActive": {
                         "type": "boolean"
                     }
@@ -1132,6 +1144,12 @@
                     "companyName": {
                         "maxLength": 255,
                         "minLength": 0,
+                        "type": "string"
+                    },
+                    "taxCode": {
+                        "type": "string"
+                    },
+                    "address": {
                         "type": "string"
                     }
                 }
@@ -1290,15 +1308,15 @@
                     "pageable": {
                         "$ref": "#/components/schemas/PageableObject"
                     },
+                    "numberOfElements": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "first": {
                         "type": "boolean"
                     },
                     "last": {
                         "type": "boolean"
-                    },
-                    "numberOfElements": {
-                        "type": "integer",
-                        "format": "int32"
                     },
                     "size": {
                         "type": "integer",
@@ -1328,6 +1346,9 @@
             "PageableObject": {
                 "type": "object",
                 "properties": {
+                    "unpaged": {
+                        "type": "boolean"
+                    },
                     "pageNumber": {
                         "type": "integer",
                         "format": "int32"
@@ -1338,9 +1359,6 @@
                     "pageSize": {
                         "type": "integer",
                         "format": "int32"
-                    },
-                    "unpaged": {
-                        "type": "boolean"
                     },
                     "offset": {
                         "type": "integer",

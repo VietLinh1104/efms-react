@@ -10,6 +10,8 @@ Name | Type | Description | Notes
 **password** | **string** |  | [default to undefined]
 **otp** | **string** |  | [default to undefined]
 **companyName** | **string** |  | [default to undefined]
+**taxCode** | **string** |  | [optional] [default to undefined]
+**address** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -22,6 +24,8 @@ const instance: RegisterRequest = {
     password,
     otp,
     companyName,
+    taxCode,
+    address,
 };
 ```
 

@@ -8,6 +8,8 @@ Name | Type | Description | Notes
 **id** | **string** |  | [optional] [default to undefined]
 **name** | **string** |  | [optional] [default to undefined]
 **currency** | **string** |  | [optional] [default to undefined]
+**taxCode** | **string** |  | [optional] [default to undefined]
+**address** | **string** |  | [optional] [default to undefined]
 **isActive** | **boolean** |  | [optional] [default to undefined]
 **createdAt** | **string** |  | [optional] [default to undefined]
 
@@ -20,6 +22,8 @@ const instance: CompanyResponse = {
     id,
     name,
     currency,
+    taxCode,
+    address,
     isActive,
     createdAt,
 };

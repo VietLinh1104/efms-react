@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import DashboardLayout from "@components/layout/dashboard/DashboardLayout";
 import HomePage from "@pages/dashboard/HomePage";
 import AuthLayout from "./components/layout/dashboard/AuthLayout";
-import AuthPage from "./pages/dashboard/AuthPage";
-import RegisterPage from "./pages/dashboard/RegisterPage";
+import AuthPage from "./pages/auth/AuthPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 import { ThemeProvider } from "@components/provider/ThemeProvider";
 import { ToastProvider } from "@components/provider/ToastProvider";
 import { AuthProvider } from "@/context/AuthContext";
@@ -22,6 +22,10 @@ import PaymentFormPage from "@pages/dashboard/invoices/payments/PaymentFormPage"
 import BankAccountsListing from "@pages/dashboard/finance/accounts/BankAccountsListing";
 import TransactionsListing from "@pages/dashboard/finance/transactions/TransactionsListing";
 import ReconciliationListing from "@pages/dashboard/finance/reconciliation/ReconciliationListing";
+import UserSettingsPage from "@pages/dashboard/settings/user/UserSettingsPage";
+import CompanySettingsPage from "@pages/dashboard/settings/company/CompanySettingsPage";
+import UserManagementPage from "@pages/admin/users/UserManagementPage";
+import RolesPermissionsPage from "@pages/admin/roles-permissions/RolesPermissionsPage";
 
 function App() {
   return (
@@ -61,6 +65,12 @@ function App() {
                 <Route path="/finance/accounts" element={<BankAccountsListing />} />
                 <Route path="/finance/transactions" element={<TransactionsListing />} />
                 <Route path="/finance/reconciliation" element={<ReconciliationListing />} />
+
+                <Route path="/settings/user" element={<UserSettingsPage />} />
+                <Route path="/settings/company" element={<CompanySettingsPage />} />
+
+                <Route path="/admin/users" element={<UserManagementPage />} />
+                <Route path="/admin/roles-permissions" element={<RolesPermissionsPage />} />
               </Route>
             </Route>
           </Routes>

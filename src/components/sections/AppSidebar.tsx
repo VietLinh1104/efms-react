@@ -36,7 +36,7 @@ export function AppSidebar() {
 
     const sidebarGroups: SidebarGroupComponentProps[] = [
         {
-            label: "Kế toán (Accounting)",
+            label: "Kế toán",
             items: [
                 { label: "Hệ thống tài khoản", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
                 // { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
@@ -44,7 +44,7 @@ export function AppSidebar() {
             ],
         },
         {
-            label: "Chứng từ (Invoices)",
+            label: "Chứng từ",
             items: [
                 { label: "Đối tác", href: "/partners", icon: <Users className="w-4 h-4" /> },
                 { label: "Hóa đơn & Chứng từ", href: "/invoices", icon: <Receipt className="w-4 h-4" /> },
@@ -60,11 +60,19 @@ export function AppSidebar() {
             ],
         },
         {
-            label: "Cấu hình (Settings)",
+            label: "Cấu hình",
             items: [
+                { label: "Cài đặt cá nhân", href: "/settings/user", icon: <User className="w-4 h-4" /> },
                 { label: "Thông tin công ty", href: "/settings/company", icon: <Building2 className="w-4 h-4" /> },
-                { label: "Người dùng & Phân quyền", href: "/settings/users", icon: <UserRoundPlus className="w-4 h-4" /> },
+                // { label: "Người dùng & Phân quyền", href: "/settings/users", icon: <UserRoundPlus className="w-4 h-4" /> },
                 // { label: "Kỳ kế toán", href: "/settings/periods", icon: <CalendarDays className="w-4 h-4" /> },
+            ],
+        },
+        {
+            label: "Quản trị hệ thống",
+            items: [
+                { label: "Người dùng", href: "/admin/users", icon: <User className="w-4 h-4" /> },
+                { label: "Vai trò & quyền người dùng", href: "/admin/roles-permissions", icon: <User className="w-4 h-4" /> },
             ],
         },
     ];
