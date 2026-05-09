@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "identity",
-        "description": "identity",
+        "title": "EFMS API",
+        "description": "Enterprise Financial Management System APIs",
         "version": "1.0.0"
     },
     "servers": [
@@ -552,6 +552,52 @@
                 }
             }
         },
+        "/internal/users/batch": {
+            "post": {
+                "tags": [
+                    "user-internal-controller"
+                ],
+                "operationId": "getUsersBatch",
+                "parameters": [
+                    {
+                        "name": "X-Company-Id",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "uniqueItems": true,
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseListUserInternalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/auth/register": {
             "post": {
                 "tags": [
@@ -568,6 +614,36 @@
                     },
                     "required": true
                 },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register/send-code/{email}": {
+            "post": {
+                "tags": [
+                    "auth-controller"
+                ],
+                "operationId": "sendRegistrationCode",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -987,11 +1063,48 @@
                     }
                 }
             },
+            "ApiResponseListUserInternalResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInternalResponse"
+                        }
+                    }
+                }
+            },
+            "UserInternalResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "fullName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "type": "string"
+                    }
+                }
+            },
             "RegisterRequest": {
                 "required": [
                     "companyName",
                     "email",
                     "name",
+                    "otp",
                     "password"
                 ],
                 "type": "object",
@@ -1008,6 +1121,11 @@
                     },
                     "password": {
                         "maxLength": 255,
+                        "minLength": 6,
+                        "type": "string"
+                    },
+                    "otp": {
+                        "maxLength": 6,
                         "minLength": 6,
                         "type": "string"
                     },
@@ -1169,6 +1287,19 @@
                         "type": "integer",
                         "format": "int64"
                     },
+                    "pageable": {
+                        "$ref": "#/components/schemas/PageableObject"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "numberOfElements": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "size": {
                         "type": "integer",
                         "format": "int32"
@@ -1189,19 +1320,6 @@
                             "$ref": "#/components/schemas/SortObject"
                         }
                     },
-                    "numberOfElements": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "first": {
-                        "type": "boolean"
-                    },
-                    "last": {
-                        "type": "boolean"
-                    },
-                    "pageable": {
-                        "$ref": "#/components/schemas/PageableObject"
-                    },
                     "empty": {
                         "type": "boolean"
                     }
@@ -1210,6 +1328,20 @@
             "PageableObject": {
                 "type": "object",
                 "properties": {
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "paged": {
+                        "type": "boolean"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "unpaged": {
+                        "type": "boolean"
+                    },
                     "offset": {
                         "type": "integer",
                         "format": "int64"
@@ -1219,20 +1351,6 @@
                         "items": {
                             "$ref": "#/components/schemas/SortObject"
                         }
-                    },
-                    "pageNumber": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "pageSize": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "paged": {
-                        "type": "boolean"
-                    },
-                    "unpaged": {
-                        "type": "boolean"
                     }
                 }
             },
