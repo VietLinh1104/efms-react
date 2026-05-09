@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * identity
- * identity
+ * EFMS API
+ * Enterprise Financial Management System APIs
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -42,6 +42,11 @@ export interface ApiResponseListRoleResponse {
     'status'?: number;
     'message'?: string;
     'data'?: Array<RoleResponse>;
+}
+export interface ApiResponseListUserInternalResponse {
+    'status'?: number;
+    'message'?: string;
+    'data'?: Array<UserInternalResponse>;
 }
 export interface ApiResponseListUserResponse {
     'status'?: number;
@@ -102,23 +107,23 @@ export interface LoginRequest {
 export interface PageAuditLogResponse {
     'totalPages'?: number;
     'totalElements'?: number;
+    'pageable'?: PageableObject;
+    'first'?: boolean;
+    'last'?: boolean;
+    'numberOfElements'?: number;
     'size'?: number;
     'content'?: Array<AuditLogResponse>;
     'number'?: number;
     'sort'?: Array<SortObject>;
-    'numberOfElements'?: number;
-    'first'?: boolean;
-    'last'?: boolean;
-    'pageable'?: PageableObject;
     'empty'?: boolean;
 }
 export interface PageableObject {
+    'pageNumber'?: number;
+    'paged'?: boolean;
+    'pageSize'?: number;
+    'unpaged'?: boolean;
     'offset'?: number;
     'sort'?: Array<SortObject>;
-    'pageNumber'?: number;
-    'pageSize'?: number;
-    'paged'?: boolean;
-    'unpaged'?: boolean;
 }
 export interface PermissionRequest {
     'resource': string;
@@ -136,6 +141,7 @@ export interface RegisterRequest {
     'name': string;
     'email': string;
     'password': string;
+    'otp': string;
     'companyName': string;
 }
 export interface RoleRequest {
@@ -158,6 +164,12 @@ export interface SortObject {
     'ascending'?: boolean;
     'property'?: string;
     'ignoreCase'?: boolean;
+}
+export interface UserInternalResponse {
+    'id'?: string;
+    'fullName'?: string;
+    'email'?: string;
+    'avatar'?: string;
 }
 export interface UserResponse {
     'id'?: string;
@@ -461,6 +473,39 @@ export const AuthControllerApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} email 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sendRegistrationCode: async (email: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'email' is not null or undefined
+            assertParamExists('sendRegistrationCode', 'email', email)
+            const localVarPath = `/auth/register/send-code/{email}`
+                .replace(`{${"email"}}`, encodeURIComponent(String(email)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -494,6 +539,18 @@ export const AuthControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AuthControllerApi.registerUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {string} email 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async sendRegistrationCode(email: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.sendRegistrationCode(email, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthControllerApi.sendRegistrationCode']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -521,6 +578,15 @@ export const AuthControllerApiFactory = function (configuration?: Configuration,
         registerUser(requestParameters: AuthControllerApiRegisterUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.registerUser(requestParameters.registerRequest, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {AuthControllerApiSendRegistrationCodeRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        sendRegistrationCode(requestParameters: AuthControllerApiSendRegistrationCodeRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.sendRegistrationCode(requestParameters.email, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -536,6 +602,13 @@ export interface AuthControllerApiAuthenticateUserRequest {
  */
 export interface AuthControllerApiRegisterUserRequest {
     readonly registerRequest: RegisterRequest
+}
+
+/**
+ * Request parameters for sendRegistrationCode operation in AuthControllerApi.
+ */
+export interface AuthControllerApiSendRegistrationCodeRequest {
+    readonly email: string
 }
 
 /**
@@ -560,6 +633,16 @@ export class AuthControllerApi extends BaseAPI {
      */
     public registerUser(requestParameters: AuthControllerApiRegisterUserRequest, options?: RawAxiosRequestConfig) {
         return AuthControllerApiFp(this.configuration).registerUser(requestParameters.registerRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {AuthControllerApiSendRegistrationCodeRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public sendRegistrationCode(requestParameters: AuthControllerApiSendRegistrationCodeRequest, options?: RawAxiosRequestConfig) {
+        return AuthControllerApiFp(this.configuration).sendRegistrationCode(requestParameters.email, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2020,6 +2103,120 @@ export class UserControllerApi extends BaseAPI {
      */
     public updateUser(requestParameters: UserControllerApiUpdateUserRequest, options?: RawAxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).updateUser(requestParameters.id, requestParameters.userUpdateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * UserInternalControllerApi - axios parameter creator
+ */
+export const UserInternalControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} xCompanyId 
+         * @param {Set<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersBatch: async (xCompanyId: string, requestBody: Set<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'xCompanyId' is not null or undefined
+            assertParamExists('getUsersBatch', 'xCompanyId', xCompanyId)
+            // verify required parameter 'requestBody' is not null or undefined
+            assertParamExists('getUsersBatch', 'requestBody', requestBody)
+            const localVarPath = `/internal/users/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            if (xCompanyId != null) {
+                localVarHeaderParameter['X-Company-Id'] = String(xCompanyId);
+            }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UserInternalControllerApi - functional programming interface
+ */
+export const UserInternalControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UserInternalControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {string} xCompanyId 
+         * @param {Set<string>} requestBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsersBatch(xCompanyId: string, requestBody: Set<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListUserInternalResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersBatch(xCompanyId, requestBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserInternalControllerApi.getUsersBatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * UserInternalControllerApi - factory interface
+ */
+export const UserInternalControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UserInternalControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {UserInternalControllerApiGetUsersBatchRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersBatch(requestParameters: UserInternalControllerApiGetUsersBatchRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListUserInternalResponse> {
+            return localVarFp.getUsersBatch(requestParameters.xCompanyId, requestParameters.requestBody, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for getUsersBatch operation in UserInternalControllerApi.
+ */
+export interface UserInternalControllerApiGetUsersBatchRequest {
+    readonly xCompanyId: string
+
+    readonly requestBody: Set<string>
+}
+
+/**
+ * UserInternalControllerApi - object-oriented interface
+ */
+export class UserInternalControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {UserInternalControllerApiGetUsersBatchRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getUsersBatch(requestParameters: UserInternalControllerApiGetUsersBatchRequest, options?: RawAxiosRequestConfig) {
+        return UserInternalControllerApiFp(this.configuration).getUsersBatch(requestParameters.xCompanyId, requestParameters.requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

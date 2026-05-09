@@ -4,6 +4,7 @@ import DashboardLayout from "@components/layout/dashboard/DashboardLayout";
 import HomePage from "@pages/dashboard/HomePage";
 import AuthLayout from "./components/layout/dashboard/AuthLayout";
 import AuthPage from "./pages/dashboard/AuthPage";
+import RegisterPage from "./pages/dashboard/RegisterPage";
 import { ThemeProvider } from "@components/provider/ThemeProvider";
 import { ToastProvider } from "@components/provider/ToastProvider";
 import { AuthProvider } from "@/context/AuthContext";
@@ -32,6 +33,9 @@ function App() {
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<AuthLayout />}>
                 <Route index element={<AuthPage />} />
+              </Route>
+              <Route path="/register" element={<AuthLayout />}>
+                <Route index element={<RegisterPage />} />
               </Route>
             </Route>
 

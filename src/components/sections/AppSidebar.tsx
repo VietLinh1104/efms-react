@@ -18,12 +18,21 @@ import {
     History,
     ShieldCheck,
     Building2,
-    CalendarDays
+    CalendarDays,
+    LogOut
 } from 'lucide-react';
+import { useAuth } from "@/hooks/useAuth";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import SidebarGroupComponent from "@components/common/SidebarGroupComponent";
 import type { SidebarGroupComponentProps } from "@components/common/SidebarGroupComponent";
 
 export function AppSidebar() {
+    const { user, logout } = useAuth();
 
     const sidebarGroups: SidebarGroupComponentProps[] = [
         {
@@ -74,15 +83,35 @@ export function AppSidebar() {
                 ))}
             </SidebarContent>
             <SidebarFooter>
-                <div className="flex items-center gap-2 hover:bg-sidebar-accent rounded-sm cursor-pointer px-3 py-3 h-full w-full">
-                    <div className="flex border justify-center items-center border-sidebar-border rounded-full w-7 h-7">
-                        <User className="w-4 h-4" />
-                    </div>
-                    <div className="flex flex-col">
-                        <h1 className="text-sm font-normal text-sidebar-foreground">Viet Linh</h1>
-                        <p className="text-[10px] text-muted-foreground leading-none">Quản trị viên</p>
-                    </div>
-                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <div className="flex items-center gap-2 hover:bg-sidebar-accent rounded-sm cursor-pointer px-3 py-3 h-full w-full">
+                            <div className="flex border justify-center items-center border-sidebar-border rounded-full w-7 h-7 overflow-hidden bg-sidebar-primary/10">
+                                {user?.name ? (
+                                    <span className="text-[10px] font-bold text-sidebar-primary">
+                                        {user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                                    </span>
+                                ) : (
+                                    <User className="w-4 h-4" />
+                                )}
+                            </div>
+                            <div className="flex flex-col flex-1 text-left">
+                                <h1 className="text-sm font-normal text-sidebar-foreground truncate">
+                                    {user?.name || 'Guest'}
+                                </h1>
+                                <p className="text-[10px] text-muted-foreground leading-none truncate">
+                                    {user?.role?.name || 'User'}
+                                </p>
+                            </div>
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="top" align="start" className="w-48">
+                        <DropdownMenuItem onClick={logout} className="text-destructive focus:text-destructive cursor-pointer">
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Đăng xuất</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </SidebarFooter>
         </Sidebar>
     )

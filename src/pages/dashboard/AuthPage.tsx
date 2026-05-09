@@ -160,7 +160,7 @@ const AuthPage: React.FC = () => {
         Sign in with Google
       </ButtonSpin>
 
-      <p className="text-sm text-muted-foreground">Don't have an account? <a href="#" className="text-primary">Sign up</a></p>
+      <p className="text-sm text-muted-foreground">Don't have an account? <span onClick={() => navigate("/register")} className="text-primary cursor-pointer hover:underline">Sign up</span></p>
     </div>
   );
 };

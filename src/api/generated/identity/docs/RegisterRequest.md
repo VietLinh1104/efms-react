@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **name** | **string** |  | [default to undefined]
 **email** | **string** |  | [default to undefined]
 **password** | **string** |  | [default to undefined]
+**otp** | **string** |  | [default to undefined]
 **companyName** | **string** |  | [default to undefined]
 
 ## Example
@@ -19,6 +20,7 @@ const instance: RegisterRequest = {
     name,
     email,
     password,
+    otp,
     companyName,
 };
 ```

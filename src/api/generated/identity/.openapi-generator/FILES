@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 api.ts
 base.ts
 common.ts
@@ -9,6 +8,7 @@ docs/ApiResponseCompanyResponse.md
 docs/ApiResponseListCompanyResponse.md
 docs/ApiResponseListPermissionResponse.md
 docs/ApiResponseListRoleResponse.md
+docs/ApiResponseListUserInternalResponse.md
 docs/ApiResponseListUserResponse.md
 docs/ApiResponsePageAuditLogResponse.md
 docs/ApiResponsePermissionResponse.md
@@ -33,6 +33,8 @@ docs/RoleRequest.md
 docs/RoleResponse.md
 docs/SortObject.md
 docs/UserControllerApi.md
+docs/UserInternalControllerApi.md
+docs/UserInternalResponse.md
 docs/UserResponse.md
 docs/UserUpdateRequest.md
 git_push.sh
