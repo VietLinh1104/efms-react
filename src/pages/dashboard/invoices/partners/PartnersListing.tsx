@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
 import { PartnerDialog } from "@pages/dashboard/invoices/partners/PartnerDialog.tsx";
 import { useAuth } from "@/hooks/useAuth";
+import { isForbidden } from "@/lib/utils";
 
 const PartnersListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +39,7 @@ const PartnersListing: React.FC = () => {
 
             setData(partners);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching partners:", err);
             error("Không thể tải danh sách đối tác.");
         } finally {
@@ -67,6 +69,7 @@ const PartnersListing: React.FC = () => {
             success(`Đã xóa đối tác ${partner.name} thành công.`);
             fetchPartners(); // Load lại danh sách
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Lỗi khi xóa đối tác:", err);
             error("Không thể xóa đối tác này.");
         }

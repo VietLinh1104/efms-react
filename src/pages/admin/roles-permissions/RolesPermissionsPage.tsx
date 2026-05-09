@@ -20,6 +20,7 @@ import { getRoleColumns } from "./role-columns";
 import { getPermissionColumns } from "./permission-columns";
 import RoleEditDialog from "./RoleEditDialog";
 import PermissionEditDialog from "./PermissionEditDialog";
+import { isForbidden } from "@/lib/utils";
 
 const RolesPermissionsPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState("roles");
@@ -54,6 +55,7 @@ const RolesPermissionsPage: React.FC = () => {
             const res = await identityRoleControllerApi.getAllRoles();
             setRoles(res.data.data || []);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error(err);
             error("Không thể tải danh sách vai trò.");
         } finally {
@@ -67,6 +69,7 @@ const RolesPermissionsPage: React.FC = () => {
             const res = await identityPermissionControllerApi.getAllPermissions();
             setPermissions(res.data.data || []);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error(err);
             error("Không thể tải danh sách quyền.");
         } finally {
@@ -115,6 +118,7 @@ const RolesPermissionsPage: React.FC = () => {
             setIsRoleDialogOpen(false);
             fetchRoles();
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error(err);
             error("Lưu vai trò thất bại.");
         } finally {
@@ -129,6 +133,7 @@ const RolesPermissionsPage: React.FC = () => {
             success("Đã xóa vai trò");
             fetchRoles();
         } catch (err) {
+            if (isForbidden(err)) return;
             error("Xóa vai trò thất bại");
         }
     }, [success, error, fetchRoles]);
@@ -181,6 +186,7 @@ const RolesPermissionsPage: React.FC = () => {
             setIsPermDialogOpen(false);
             fetchPermissions();
         } catch (err) {
+            if (isForbidden(err)) return;
             error("Lưu quyền thất bại.");
         } finally {
             setIsLoading(false);
@@ -194,6 +200,7 @@ const RolesPermissionsPage: React.FC = () => {
             success("Đã xóa quyền");
             fetchPermissions();
         } catch (err) {
+            if (isForbidden(err)) return;
             error("Xóa quyền thất bại");
         }
     }, [success, error, fetchPermissions]);

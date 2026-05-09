@@ -34,3 +34,7 @@ export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('vi-VN').format(value);
 }
 
+
+export function isForbidden(err: any) {
+  return err?.status === 403 || err?.response?.status === 403;
+}

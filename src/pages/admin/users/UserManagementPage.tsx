@@ -8,6 +8,7 @@ import { useToastApp } from "@hooks/use-toast-app.ts";
 import { Input } from "@components/ui/input.tsx";
 import { getColumns } from "./columns";
 import UserEditDialog from "./UserEditDialog";
+import { isForbidden } from "@/lib/utils";
 
 const UserManagementPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +33,7 @@ const UserManagementPage: React.FC = () => {
             const content = response.data.data?.content || response.data.data || [];
             setUsers(content);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching users:", err);
             error("Không thể tải danh sách người dùng.");
         } finally {
@@ -79,6 +81,7 @@ const UserManagementPage: React.FC = () => {
                 error("Cập nhật thất bại");
             }
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error updating user:", err);
             error("Đã xảy ra lỗi khi cập nhật.");
         } finally {
@@ -100,6 +103,7 @@ const UserManagementPage: React.FC = () => {
                 error("Xóa thất bại");
             }
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error deleting user:", err);
             error("Đã xảy ra lỗi khi xóa.");
         } finally {

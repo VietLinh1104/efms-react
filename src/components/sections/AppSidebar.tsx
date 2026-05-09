@@ -72,7 +72,7 @@ export function AppSidebar() {
             label: "Quản trị hệ thống",
             items: [
                 { label: "Người dùng", href: "/admin/users", icon: <User className="w-4 h-4" /> },
-                { label: "Vai trò & quyền người dùng", href: "/admin/roles-permissions", icon: <User className="w-4 h-4" /> },
+                { label: "Vai trò & Quyền người dùng", href: "/admin/roles-permissions", icon: <User className="w-4 h-4" /> },
             ],
         },
     ];

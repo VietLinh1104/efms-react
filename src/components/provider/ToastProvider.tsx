@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import type { Toast } from "@/hooks/use-toast-app"
 import { ToastContext } from "@/hooks/use-toast-app"
 import { AlertApp } from "@/components/common/AlertApp"
@@ -64,6 +64,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             ...options
         })
     }, [toast])
+
+    useEffect(() => {
+        const handleForbidden = () => {
+            info("Bạn không có quyền thực hiện hành động này", {
+                title: "Truy cập bị từ chối"
+            });
+        };
+
+        window.addEventListener('api-forbidden', handleForbidden);
+        return () => window.removeEventListener('api-forbidden', handleForbidden);
+    }, [info]);
 
     return (
         <ToastContext.Provider value={{ toasts, toast, success, error, info, warning, dismiss }}>

@@ -46,6 +46,7 @@ import type {
 
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useAuth } from "@/hooks/useAuth";
+import { isForbidden } from "@/lib/utils";
 import {
     DropdownMenu,
     DropdownMenuContent, DropdownMenuItem,
@@ -163,6 +164,7 @@ const InvoiceFormPage: React.FC = () => {
                 })) || [],
             });
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Fetch invoice detail failed:", err);
             error("Không thể tải chi tiết hóa đơn.");
         } finally {
@@ -210,6 +212,7 @@ const InvoiceFormPage: React.FC = () => {
             success("Xác nhận hóa đơn thành công!");
             fetchDetail();
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Confirm fail", err);
             error("Xác nhận thất bại.");
         } finally {
@@ -225,6 +228,7 @@ const InvoiceFormPage: React.FC = () => {
             success("Đã duyệt hóa đơn AP!");
             fetchDetail();
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Approve fail", err);
             error("Duyệt hóa đơn thất bại.");
         } finally {
@@ -240,6 +244,7 @@ const InvoiceFormPage: React.FC = () => {
             success("Đã từ chối hóa đơn!");
             fetchDetail();
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Reject fail", err);
             error("Từ chối thất bại.");
         } finally {
@@ -338,6 +343,7 @@ const InvoiceFormPage: React.FC = () => {
                 navigate(`/invoices/${res.data.data?.id}`);
             }
         } catch (e) {
+            if (isForbidden(e)) return;
             console.error(e);
             error(isEditMode ? "Cập nhật thất bại" : "Tạo thất bại");
         } finally {

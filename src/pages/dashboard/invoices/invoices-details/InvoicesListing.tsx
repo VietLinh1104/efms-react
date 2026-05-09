@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import type { ColumnDef } from "@tanstack/react-table";
+import { isForbidden } from "@/lib/utils";
 
 type TaskInvoiceResponse = InvoiceResponse & {
     taskId?: string;
@@ -49,6 +50,7 @@ const InvoicesListing: React.FC = () => {
             const invoices = response.data.data?.content || [];
             setData(invoices);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching invoices:", err);
             error("Không thể tải danh sách hóa đơn.");
         } finally {
@@ -70,6 +72,7 @@ const InvoicesListing: React.FC = () => {
                 setTasksData(content);
             }
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching tasks:", err);
             error("Không thể tải công việc cần xử lý.");
         } finally {
@@ -109,6 +112,7 @@ const InvoicesListing: React.FC = () => {
                 error("Đã xảy ra lỗi khi xóa hóa đơn");
             }
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Lỗi khi xóa hóa đơn:", err);
             error("Không thể xóa hóa đơn này.");
         } finally {

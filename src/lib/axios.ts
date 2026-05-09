@@ -30,6 +30,9 @@ axiosInstance.interceptors.response.use(
             }
             if (response.data.status >= 400) {
                 console.error(response.data.message);
+                if (response.data.status === 403) {
+                    window.dispatchEvent(new CustomEvent('api-forbidden'));
+                }
                 return Promise.reject(response.data);
             }
         }
@@ -44,6 +47,9 @@ axiosInstance.interceptors.response.use(
             if (window.location.pathname !== '/login') {
                 window.location.href = '/login';
             }
+        }
+        if (error.response && error.response.status === 403) {
+            window.dispatchEvent(new CustomEvent('api-forbidden'));
         }
         return Promise.reject(error);
     }

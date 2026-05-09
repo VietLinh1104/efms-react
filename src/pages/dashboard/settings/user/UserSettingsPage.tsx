@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 import { identityUserControllerApi } from "@/api";
 import type { UserResponse, UserUpdateRequest } from "@/api/generated/identity/api";
+import { isForbidden } from "@/lib/utils";
 
 const userSchema = z.object({
     name: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
@@ -54,6 +55,7 @@ const UserSettingsPage: React.FC = () => {
                 });
             }
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Fetch user detail failed:", err);
             error("Không thể tải thông tin người dùng.");
         } finally {
@@ -86,6 +88,7 @@ const UserSettingsPage: React.FC = () => {
                 error("Đã xảy ra lỗi khi cập nhật");
             }
         } catch (e) {
+            if (isForbidden(e)) return;
             console.error(e);
             error("Cập nhật thất bại");
         } finally {

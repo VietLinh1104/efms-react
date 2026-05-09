@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
 import { PaymentQuickViewDialog } from "./PaymentQuickViewDialog.tsx";
 import { useAuth } from "@/hooks/useAuth";
+import { isForbidden } from "@/lib/utils";
 
 const PaymentsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,7 @@ const PaymentsListing: React.FC = () => {
             const payments = response.data.data?.content || [];
             setData(payments);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching payments:", err);
             error("Không thể tải danh sách thanh toán.");
         } finally {
@@ -78,6 +80,7 @@ const PaymentsListing: React.FC = () => {
             success(`Đã xóa thanh toán thành công.`);
             fetchPayments();
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Lỗi khi xóa thanh toán:", err);
             error("Không thể xóa phiếu thanh toán này.");
         }

@@ -8,6 +8,7 @@ import type { JournalEntriesApiDelete2Request, JournalEntriesApiList4Request, Jo
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
+import { isForbidden } from "@/lib/utils";
 
 const JournalListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +29,7 @@ const JournalListing: React.FC = () => {
             const response = await coreJournalEntriesApi.list4(journalEntriesApiListRequest);
             setData(response.data.data?.content || []);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching journals:", err);
             error("Không thể tải danh sách chứng từ.");
         } finally {
@@ -52,6 +54,7 @@ const JournalListing: React.FC = () => {
             success("Đã xoá chứng từ thành công.");
             fetchJournals();
         } catch (err) {
+            if (isForbidden(err)) return;
             error("Lỗi khi xoá chứng từ.");
             console.log("Lỗi khi xoá chứng từ:", err);
         }
@@ -67,6 +70,7 @@ const JournalListing: React.FC = () => {
             success("Đã ghi sổ chứng từ thành công.");
             fetchJournals();
         } catch (err) {
+            if (isForbidden(err)) return;
             error("Lỗi khi ghi sổ.");
             console.log("Lỗi khi ghi sổ:", err);
         }

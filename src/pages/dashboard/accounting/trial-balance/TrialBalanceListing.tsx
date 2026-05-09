@@ -22,7 +22,7 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { TableFooter, TableRow, TableCell } from "@components/ui/table.tsx";
 import { Badge } from "@components/ui/badge.tsx";
 import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, isForbidden } from "@/lib/utils";
 
 import { useAuth } from "@/hooks/useAuth";
 import { coreFiscalPeriodsApi, coreTrialBalanceApi } from "@/api";
@@ -61,6 +61,7 @@ export default function TrialBalanceListing() {
                 const res = await coreFiscalPeriodsApi.list5(req);
                 setPeriods(res.data.data || []);
             } catch (err) {
+                if (isForbidden(err)) return;
                 console.error("Error fetching periods", err);
             }
         };
@@ -102,6 +103,7 @@ export default function TrialBalanceListing() {
             const totalCredit = lines.reduce((sum, line) => sum + (line.closingCredit || 0), 0);
             setIsBalanced(Math.abs(totalDebit - totalCredit) < 0.01);
         } catch (err) {
+            if (isForbidden(err)) return;
             console.error("Error fetching trial balance", err);
             error("Không thể lấy dữ liệu báo cáo", { title: "Lỗi" });
         } finally {
