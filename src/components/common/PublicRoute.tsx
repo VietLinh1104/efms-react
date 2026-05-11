@@ -1,6 +1,6 @@
 // src/components/common/PublicRoute.tsx
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useSearchParams } from "react-router-dom";
 import { useAuthContext } from "@/context/AuthContext";
 
 /**
@@ -11,6 +11,14 @@ import { useAuthContext } from "@/context/AuthContext";
  */
 const PublicRoute: React.FC = () => {
     const { isAuthenticated, isLoading } = useAuthContext();
+    const [searchParams] = useSearchParams();
+
+    // Check tất cả các OAuth param có thể có (identity service dùng prefix "oauth_")
+    const isOAuthRequest =
+        searchParams.has("oauth_redirect_uri") ||
+        searchParams.has("redirect_uri") ||
+        searchParams.has("oauth_client_id") ||
+        searchParams.has("client_id");
 
     if (isLoading) {
         return (
@@ -23,7 +31,9 @@ const PublicRoute: React.FC = () => {
         );
     }
 
-    if (isAuthenticated) {
+    // Nếu đã đăng nhập mà KHÔNG phải OAuth flow → redirect về home
+    // Nếu là OAuth flow → cho phép render AuthPage để hiện màn xác nhận
+    if (isAuthenticated && !isOAuthRequest) {
         return <Navigate to="/" replace />;
     }
 

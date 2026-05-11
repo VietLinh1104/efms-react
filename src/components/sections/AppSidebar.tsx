@@ -5,10 +5,11 @@ import {
     SidebarHeader
 } from "@/components/ui/sidebar"
 import {
+    Bot,
     Codepen,
     UserRoundPlus,
     User,
-    ListTree,           // Thay cho LayoutChartScatter (Phù hợp với Chart of Accounts)
+    ListTree,
     BookText,
     Scale,
     Users,
@@ -64,6 +65,7 @@ export function AppSidebar() {
             items: [
                 { label: "Cài đặt cá nhân", href: "/settings/user", icon: <User className="w-4 h-4" /> },
                 { label: "Thông tin công ty", href: "/settings/company", icon: <Building2 className="w-4 h-4" /> },
+                { label: "Kết nối AI (MCP)", href: "/settings/mcp", icon: <Bot className="w-4 h-4" /> },
                 // { label: "Người dùng & Phân quyền", href: "/settings/users", icon: <UserRoundPlus className="w-4 h-4" /> },
                 // { label: "Kỳ kế toán", href: "/settings/periods", icon: <CalendarDays className="w-4 h-4" /> },
             ],

@@ -24,6 +24,7 @@ import TransactionsListing from "@pages/dashboard/finance/transactions/Transacti
 import ReconciliationListing from "@pages/dashboard/finance/reconciliation/ReconciliationListing";
 import UserSettingsPage from "@pages/dashboard/settings/user/UserSettingsPage";
 import CompanySettingsPage from "@pages/dashboard/settings/company/CompanySettingsPage";
+import McpSettingsPage from "@pages/dashboard/settings/mcp/McpSettingsPage";
 import UserManagementPage from "@pages/admin/users/UserManagementPage";
 import RolesPermissionsPage from "@pages/admin/roles-permissions/RolesPermissionsPage";
 
@@ -68,6 +69,7 @@ function App() {
 
                 <Route path="/settings/user" element={<UserSettingsPage />} />
                 <Route path="/settings/company" element={<CompanySettingsPage />} />
+                <Route path="/settings/mcp" element={<McpSettingsPage />} />
 
                 <Route path="/admin/users" element={<UserManagementPage />} />
                 <Route path="/admin/roles-permissions" element={<RolesPermissionsPage />} />
