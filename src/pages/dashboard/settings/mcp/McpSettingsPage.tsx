@@ -30,8 +30,8 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Separator } from "@/components/ui/separator";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-const BASE_URL = "https://efms-api-gateway-production.up.railway.app/api/identity";
-const MCP_URL = "https://efms-mcp-server-sse-production.up.railway.app/mcp";
+const BASE_URL = "https://efms.hnhdecor.com";
+const MCP_URL = "https://mcp.hnhdecor.com/mcp";
 
 const CLAUDE_CONFIG = JSON.stringify(
   {
