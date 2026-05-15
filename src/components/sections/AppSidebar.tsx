@@ -40,7 +40,7 @@ export function AppSidebar() {
             label: "Kế toán",
             items: [
                 { label: "Hệ thống tài khoản", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
-                // { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
+                { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
                 // { label: "Bảng cân đối thử", href: "/accounting/trial-balance", icon: <Scale className="w-4 h-4" /> },
             ],
         },
