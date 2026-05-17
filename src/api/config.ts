@@ -3,13 +3,13 @@ import { Configuration as IdentityConfiguration } from "@/api/generated/identity
 import { Configuration as CommonConfiguration } from "@/api/generated/common/configuration";
 
 export const apiConfigCore = new CoreConfiguration({
-    basePath: import.meta.env.VITE_API_URL_CORE,
+    basePath: import.meta.env.VITE_PUBLIC_API_URL_CORE,
 });
 
 export const apiConfigIdentity = new IdentityConfiguration({
-    basePath: import.meta.env.VITE_API_URL_IDENTITY,
+    basePath: import.meta.env.VITE_PUBLIC_API_URL_IDENTITY,
 });
 
 export const apiConfigCommon = new CommonConfiguration({
-    basePath: import.meta.env.VITE_API_URL_COMMON,
+    basePath: import.meta.env.VITE_PUBLIC_API_URL_COMMON,
 });

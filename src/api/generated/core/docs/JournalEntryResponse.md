@@ -12,8 +12,7 @@ Name | Type | Description | Notes
 **description** | **string** | Mô tả chứng từ | [optional] [default to undefined]
 **status** | **string** | Trạng thái (draft / posted / cancelled) | [optional] [default to undefined]
 **source** | **string** | Nguồn tạo (manual, invoice, payment, ...) | [optional] [default to undefined]
-**periodId** | **string** | ID kỳ kế toán | [optional] [default to undefined]
-**periodName** | **string** | Tên kỳ kế toán | [optional] [default to undefined]
+**periodId** | **string** | ID kỳ kế toán (tham chiếu, không hiển thị trong UI) | [optional] [default to undefined]
 **createdBy** | **string** | Người tạo | [optional] [default to undefined]
 **postedBy** | **string** | Người post | [optional] [default to undefined]
 **postedAt** | **string** | Thời điểm post | [optional] [default to undefined]
@@ -33,7 +32,6 @@ const instance: JournalEntryResponse = {
     status,
     source,
     periodId,
-    periodName,
     createdBy,
     postedBy,
     postedAt,

@@ -60,7 +60,7 @@ const AuthPage: React.FC = () => {
 
     if (isRemoteOAuth) {
       // Remote Flow: Phải quay lại Identity Service để lấy code
-      const identityApiUrl = import.meta.env.VITE_API_URL_IDENTITY || "http://localhost:8080/api/identity";
+      const identityApiUrl = import.meta.env.VITE_PUBLIC_API_URL_IDENTITY || "http://localhost:8080/api/identity";
       const callbackUrl = new URL(`${identityApiUrl}/oauth/callback`);
       callbackUrl.searchParams.set("token", token);
       callbackUrl.searchParams.set("client_id", clientId || "claude-connector");

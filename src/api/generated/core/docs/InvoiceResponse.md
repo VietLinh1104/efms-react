@@ -20,13 +20,11 @@ Name | Type | Description | Notes
 **totalAmount** | **number** | Tổng giá trị hóa đơn (sau thuế) | [optional] [default to undefined]
 **paidAmount** | **number** | Số tiền đã thanh toán | [optional] [default to undefined]
 **status** | **string** | Trạng thái (draft, open, in_payment, paid, cancelled) | [optional] [default to undefined]
+**approvalStatus** | **string** | Trạng thái duyệt AP (pending, approved, rejected) | [optional] [default to undefined]
+**approvalComment** | **string** | Ghi chú phê duyệt / từ chối | [optional] [default to undefined]
 **createdBy** | **string** | Người lập | [optional] [default to undefined]
 **createdAt** | **string** | Thời điểm tạo | [optional] [default to undefined]
-**approvalStatus** | **string** | Trạng thái duyệt (pending, approved, rejected) | [optional] [default to undefined]
-**camundaProcessId** | **string** | ID xử lý BPMN Camunda | [optional] [default to undefined]
-**journalEntryId** | **string** | ID Bút toán liên kết (nếu đã confirm) | [optional] [default to undefined]
-**taskId** | **string** | ID Task duyệt (nếu có) | [optional] [default to undefined]
-**taskName** | **string** | Tên Task duyệt (nếu có) | [optional] [default to undefined]
+**journalEntryId** | **string** | ID Bút toán liên kết (nếu đã được duyệt và sinh sổ cái) | [optional] [default to undefined]
 **lines** | [**Array&lt;InvoiceLineResponse&gt;**](InvoiceLineResponse.md) | Chi tiết các dòng hóa đơn (chỉ có khi gọi detail) | [optional] [default to undefined]
 
 ## Example
@@ -49,13 +47,11 @@ const instance: InvoiceResponse = {
     totalAmount,
     paidAmount,
     status,
+    approvalStatus,
+    approvalComment,
     createdBy,
     createdAt,
-    approvalStatus,
-    camundaProcessId,
     journalEntryId,
-    taskId,
-    taskName,
     lines,
 };
 ```

@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button.tsx";
 import { RefreshCcw, BookText } from "lucide-react";
 import { coreJournalEntriesApi } from "@/api";
 import type {
-    JournalEntriesApiList4Request,
+    JournalEntriesApiList3Request,
     JournalEntryResponse,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
@@ -182,12 +182,12 @@ const JournalListing: React.FC = () => {
         if (!companyId) return;
         setIsLoading(true);
         try {
-            const request: JournalEntriesApiList4Request = {
+            const request: JournalEntriesApiList3Request = {
                 companyId,
                 page: 0,
                 size: 100,
             };
-            const response = await coreJournalEntriesApi.list4(request);
+            const response = await coreJournalEntriesApi.list3(request);
             setData(response.data.data?.content ?? []);
         } catch (err) {
             if (isForbidden(err)) return;

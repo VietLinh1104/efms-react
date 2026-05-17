@@ -39,7 +39,7 @@ import type {
     PartnerResponse,
     BankAccountResponse,
     CreatePaymentRequest,
-    BankAccountsApiList3Request,
+    BankAccountsApiList2Request,
     PartnersApiList1Request,
     PaymentsApiGetDetailRequest,
     PaymentsApiUpdateRequest,
@@ -117,14 +117,14 @@ const PaymentFormPage: React.FC = () => {
                 page: 0,
                 size: 200,
             };
-            const bankReq: BankAccountsApiList3Request = {
+            const bankReq: BankAccountsApiList2Request = {
                 companyId,
                 page: 0,
                 size: 100,
             };
             const [partRes, bankRes] = await Promise.all([
                 corePartnersApi.list1(partnersReq),
-                coreBankAccountsApi.list3(bankReq),
+                coreBankAccountsApi.list2(bankReq),
             ]);
             setPartners(partRes.data.data?.content || []);
             setBankAccounts(bankRes.data.data?.content || []);

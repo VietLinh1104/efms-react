@@ -38,7 +38,7 @@ import type {
     CreatePartnerRequest,
     PartnerResponse,
     AccountResponse,
-    AccountsApiList6Request,
+    AccountsApiList4Request,
     PartnersApiToggleActiveRequest,
     PartnersApiUpdate1Request,
     PartnersApiCreate1Request
@@ -107,10 +107,10 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
         if (open) {
             const fetchAccounts = async () => {
                 try {
-                    const params: AccountsApiList6Request = {
+                    const params: AccountsApiList4Request = {
                         companyId: companyId ?? "",
                     };
-                    const res = await coreAccountsApi.list6(params);
+                    const res = await coreAccountsApi.list4(params);
                     setAccounts(res.data.data || []);
                 } catch (err) {
                     console.error("Error fetching accounts:", err);

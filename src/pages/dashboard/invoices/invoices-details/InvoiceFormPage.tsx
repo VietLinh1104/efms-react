@@ -38,7 +38,7 @@ import type {
     AccountResponse,
     PartnerResponse,
     InvoicesApiCreateDraftInvoiceRequest,
-    AccountsApiList6Request,
+    AccountsApiList4Request,
     PartnersApiList1Request,
     InvoiceResponse,
     InvoiceRequest
@@ -174,7 +174,7 @@ const InvoiceFormPage: React.FC = () => {
 
     useEffect(() => {
         const fetchCommon = async () => {
-            const AccountsApiList7Request: AccountsApiList6Request = {
+            const AccountsApiList7Request: AccountsApiList4Request = {
                 companyId: companyId ?? "",
             }
             const PartnersApiList1Request: PartnersApiList1Request = {
@@ -186,7 +186,7 @@ const InvoiceFormPage: React.FC = () => {
             }
             try {
                 const [acc, part] = await Promise.all([
-                    coreAccountsApi.list6(AccountsApiList7Request),
+                    coreAccountsApi.list4(AccountsApiList7Request),
                     corePartnersApi.list1(PartnersApiList1Request),
                 ]);
                 setAccounts(acc.data.data || []);
@@ -210,7 +210,7 @@ const InvoiceFormPage: React.FC = () => {
         try {
             await coreInvoicesApi.confirmInvoiceToProcess({ id });
             success("Xác nhận hóa đơn thành công!");
-            fetchDetail();
+            navigate("/invoices");
         } catch (err) {
             if (isForbidden(err)) return;
             console.error("Confirm fail", err);
@@ -222,11 +222,13 @@ const InvoiceFormPage: React.FC = () => {
 
     const handleApprove = async () => {
         if (!id) return;
+        const comment = window.prompt("Nhập ghi chú duyệt (tùy chọn):");
+        if (comment === null) return;
         setIsApproveLoading(true);
         try {
-            await coreInvoicesApi.approveInvoice({ id });
+            await coreInvoicesApi.approveInvoice({ id, comment: comment || undefined });
             success("Đã duyệt hóa đơn AP!");
-            fetchDetail();
+            navigate("/invoices");
         } catch (err) {
             if (isForbidden(err)) return;
             console.error("Approve fail", err);
@@ -238,17 +240,19 @@ const InvoiceFormPage: React.FC = () => {
 
     const handleReject = async () => {
         if (!id) return;
+        const comment = window.prompt("Lý do từ chối (tùy chọn):");
+        if (comment === null) return;
         setIsRejectLoading(true);
         try {
-            await coreInvoicesApi.rejectInvoice({ id });
+            await coreInvoicesApi.rejectInvoice({ id, comment: comment || undefined });
             success("Đã từ chối hóa đơn!");
-            fetchDetail();
+            navigate("/invoices");
         } catch (err) {
             if (isForbidden(err)) return;
             console.error("Reject fail", err);
             error("Từ chối thất bại.");
         } finally {
-            setIsApproveLoading(false);
+            setIsRejectLoading(false);
         }
     };
 
@@ -625,17 +629,22 @@ const InvoiceFormPage: React.FC = () => {
                             <CardContent className={""}>
                                 <div className="">
                                     <div className="relative w-full ">
-                                        <span className={`absolute left - 3 top - 1 / 2 - translate - y - 1 / 2 h - 2 w - 2 rounded - full ${getStatusColor(currentStatus)} `} />
+                                        <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentStatus)}`} />
                                         <Input className="pl-8 uppercase" value={currentStatus} readOnly={true} />
                                     </div>
                                 </div>
 
                                 {isAP && isEditMode && (
-                                    <div className="mt-2">
+                                    <div className="mt-2 space-y-2">
                                         <div className="relative w-full ">
-                                            <span className={`absolute left - 3 top - 1 / 2 - translate - y - 1 / 2 h - 2 w - 2 rounded - full ${getStatusColor(currentApprovalStatus)} `} />
+                                            <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentApprovalStatus)} `} />
                                             <Input className="pl-8 uppercase" value={currentApprovalStatus} readOnly={true} />
                                         </div>
+                                        {invoice?.approvalComment && (
+                                            <div className="text-sm text-muted-foreground p-2 bg-muted/50 rounded-md">
+                                                <strong>Ghi chú duyệt:</strong> {invoice.approvalComment}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 

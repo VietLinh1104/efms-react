@@ -34,9 +34,9 @@ import type {
     BankAccountResponse,
     CreateBankAccountRequest,
     AccountResponse,
-    AccountsApiList6Request,
+    AccountsApiList4Request,
     BankAccountsApiUpdate2Request,
-    BankAccountsApiCreate3Request,
+    BankAccountsApiCreate2Request,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { coreAccountsApi, coreBankAccountsApi } from "@/api";
@@ -103,10 +103,10 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
 
         const fetchGlAccounts = async () => {
             try {
-                const AccountsApiList6Request: AccountsApiList6Request = {
+                const AccountsApiList4Request: AccountsApiList4Request = {
                     companyId: companyId ?? "",
                 };
-                const res = await coreAccountsApi.list6(AccountsApiList6Request);
+                const res = await coreAccountsApi.list4(AccountsApiList4Request);
                 setGlAccounts(res.data.data || []);
             } catch (e) {
                 console.error(e);
@@ -155,10 +155,10 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
                 await coreBankAccountsApi.update2(BankAccountsApiUpdate2Request);
                 success("Cập nhật tài khoản thành công!");
             } else {
-                const BankAccountsApiCreate3Request: BankAccountsApiCreate3Request = {
+                const BankAccountsApiCreate2Request: BankAccountsApiCreate2Request = {
                     createBankAccountRequest: payload,
                 };
-                await coreBankAccountsApi.create3(BankAccountsApiCreate3Request);
+                await coreBankAccountsApi.create2(BankAccountsApiCreate2Request);
                 success("Tạo tài khoản thành công!");
             }
             onSuccess();

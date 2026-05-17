@@ -7,17 +7,13 @@ import {
 import {
     Bot,
     Codepen,
-    UserRoundPlus,
     User,
     ListTree,
     BookText,
-    Scale,
     Users,
     Receipt,
     CreditCard,
     Landmark,
-    History,
-    ShieldCheck,
     Building2,
     CalendarDays,
     LogOut

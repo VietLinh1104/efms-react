@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:8080/api/core*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**approveInvoice**](#approveinvoice) | **POST** /v1/invoices/{id}/approve | Duyệt hóa đơn mua hàng (AP) — AP Approve|
+|[**approveInvoice**](#approveinvoice) | **POST** /v1/invoices/{id}/approve | Duyệt hóa đơn mua hàng (AP) — AP Approve. Cập nhật approval_status&#x3D;approved trực tiếp vào DB|
 |[**cancelInvoice**](#cancelinvoice) | **POST** /v1/invoices/{id}/cancel | Huỷ hóa đơn|
 |[**confirmInvoiceToProcess**](#confirminvoicetoprocess) | **POST** /v1/invoices/{id}/confirm | Xác nhận hóa đơn (draft → open)|
 |[**createDraftInvoice**](#createdraftinvoice) | **POST** /v1/invoices | Tạo Hóa đơn (draft)|
@@ -14,7 +14,7 @@ All URIs are relative to *http://localhost:8080/api/core*
 |[**getInvoiceDetail**](#getinvoicedetail) | **GET** /v1/invoices/{id} | Chi tiết hóa đơn kèm các dòng lines|
 |[**getOverdueInvoices**](#getoverdueinvoices) | **GET** /v1/invoices/overdue | Lấy các hóa đơn quá hạn chưa thanh toán (AR/AP)|
 |[**listInvoices**](#listinvoices) | **GET** /v1/invoices | Danh sách hóa đơn (có phân trang và filter)|
-|[**rejectInvoice**](#rejectinvoice) | **POST** /v1/invoices/{id}/reject | Từ chối duyệt hóa đơn (AP) — AP Reject|
+|[**rejectInvoice**](#rejectinvoice) | **POST** /v1/invoices/{id}/reject | Từ chối duyệt hóa đơn (AP) — AP Reject. Cập nhật approval_status&#x3D;rejected trực tiếp vào DB|
 |[**updateDraftInvoice**](#updatedraftinvoice) | **PUT** /v1/invoices/{id} | Cập nhật Hóa đơn (chỉ khi draft)|
 
 # **approveInvoice**
@@ -33,9 +33,11 @@ const configuration = new Configuration();
 const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
+let comment: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.approveInvoice(
-    id
+    id,
+    comment
 );
 ```
 
@@ -44,6 +46,7 @@ const { status, data } = await apiInstance.approveInvoice(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **id** | [**string**] |  | defaults to undefined|
+| **comment** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
@@ -542,9 +545,11 @@ const configuration = new Configuration();
 const apiInstance = new InvoicesApi(configuration);
 
 let id: string; // (default to undefined)
+let comment: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.rejectInvoice(
-    id
+    id,
+    comment
 );
 ```
 
@@ -553,6 +558,7 @@ const { status, data } = await apiInstance.rejectInvoice(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **id** | [**string**] |  | defaults to undefined|
+| **comment** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type

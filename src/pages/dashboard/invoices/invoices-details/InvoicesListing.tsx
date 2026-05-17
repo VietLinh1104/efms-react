@@ -3,9 +3,9 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { Plus, RefreshCcw, Search, CheckSquare } from "lucide-react";
-import { coreInvoicesApi, coreInvoiceApprovalControllerApi } from "@/api";
+import { coreInvoicesApi, coreInvoiceApprovalApi } from "@/api";
 import type {
-    InvoiceResponse, InvoiceApprovalControllerApiGetAllTasksRequest,
+    InvoiceResponse, InvoiceApprovalApiGetPendingApprovalsRequest,
     InvoicesApiListInvoicesRequest, InvoicesApiDeleteInvoiceRequest
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
@@ -18,8 +18,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { isForbidden } from "@/lib/utils";
 
 type TaskInvoiceResponse = InvoiceResponse & {
-    taskId?: string;
-    taskName?: string;
 };
 
 const InvoicesListing: React.FC = () => {
@@ -60,13 +58,15 @@ const InvoicesListing: React.FC = () => {
 
     // 2. Hàm fetch dữ liệu Tasks (từ API backend)
     const fetchTasks = useCallback(async () => {
+        if (!companyId) return;
         setIsTasksLoading(true);
         try {
-            const reqUrl: InvoiceApprovalControllerApiGetAllTasksRequest = {
+            const reqUrl: InvoiceApprovalApiGetPendingApprovalsRequest = {
+                companyId: companyId,
                 page: 0,
                 size: 100,
             }
-            const res = await coreInvoiceApprovalControllerApi.getAllTasks(reqUrl);
+            const res = await coreInvoiceApprovalApi.getPendingApprovals(reqUrl);
             const content = res.data?.data?.content || [];
             if (Array.isArray(content)) {
                 setTasksData(content);
@@ -78,7 +78,7 @@ const InvoicesListing: React.FC = () => {
         } finally {
             setIsTasksLoading(false);
         }
-    }, [error]);
+    }, [companyId, error]);
 
     const handleView = useCallback((invoice: InvoiceResponse) => {
         navigate(`/invoices/${invoice.id}`);
@@ -135,13 +135,7 @@ const InvoicesListing: React.FC = () => {
         fetchTasks();
     }, [fetchInvoices, fetchTasks]);
 
-    // 3. Define columns cho Tasks
     const tasksColumns: ColumnDef<TaskInvoiceResponse>[] = [
-        {
-            accessorKey: "taskName",
-            header: "Nhiệm vụ",
-            cell: ({ row }) => <div className="font-semibold text-blue-600">{row.original.taskName || "Phê duyệt hoá đơn"}</div>,
-        },
         {
             accessorKey: "invoiceNumber",
             header: "Số hóa đơn",
@@ -203,7 +197,7 @@ const InvoicesListing: React.FC = () => {
             <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-bold tracking-tight">Hóa đơn & Chứng từ</h2>
                 <p className="text-muted-foreground">
-                    Quản lý hóa đơn bán hàng (AR), hóa đơn mua hàng (AP) và phê duyệt từ Camunda 8.
+                    Quản lý hóa đơn bán hàng (AR), hóa đơn mua hàng (AP) và phê duyệt thanh toán.
                 </p>
             </div>
 

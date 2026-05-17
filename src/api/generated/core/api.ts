@@ -98,43 +98,6 @@ export interface AccountResponse {
     'children'?: Array<AccountResponse>;
 }
 /**
- * Báo cáo Tuổi nợ (Aging Report) cho 1 Đối tác / Hóa đơn
- */
-export interface AgingResponse {
-    /**
-     * ID Đối tác hoặc Hóa đơn
-     */
-    'id'?: string;
-    /**
-     * Tên Đối tác
-     */
-    'name'?: string;
-    /**
-     * Tổng dư nợ
-     */
-    'totalAmount'?: number;
-    /**
-     * Số dư chưa quá hạn (Current)
-     */
-    'current'?: number;
-    /**
-     * Quá hạn từ 1 đến 30 ngày
-     */
-    'over1To30'?: number;
-    /**
-     * Quá hạn từ 31 đến 60 ngày
-     */
-    'over31To60'?: number;
-    /**
-     * Quá hạn từ 61 đến 90 ngày
-     */
-    'over61To90'?: number;
-    /**
-     * Quá hạn trên 90 ngày
-     */
-    'over90'?: number;
-}
-/**
  * Payload phân bổ thanh toán vào một hoá đơn
  */
 export interface AllocatePaymentRequest {
@@ -157,35 +120,15 @@ export interface ApiResponseAccountResponse {
     'message'?: string;
     'data'?: AccountResponse;
 }
-export interface ApiResponseBalanceSheetResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: BalanceSheetResponse;
-}
 export interface ApiResponseBankAccountResponse {
     'status'?: number;
     'message'?: string;
     'data'?: BankAccountResponse;
 }
-export interface ApiResponseBankTransactionResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: BankTransactionResponse;
-}
 export interface ApiResponseBigDecimal {
     'status'?: number;
     'message'?: string;
     'data'?: number;
-}
-export interface ApiResponseCashFlowResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: CashFlowResponse;
-}
-export interface ApiResponseFiscalPeriodResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: FiscalPeriodResponse;
 }
 export interface ApiResponseInvoiceResponse {
     'status'?: number;
@@ -202,21 +145,6 @@ export interface ApiResponseListAccountResponse {
     'message'?: string;
     'data'?: Array<AccountResponse>;
 }
-export interface ApiResponseListAgingResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: Array<AgingResponse>;
-}
-export interface ApiResponseListBankTransactionResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: Array<BankTransactionResponse>;
-}
-export interface ApiResponseListFiscalPeriodResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: Array<FiscalPeriodResponse>;
-}
 export interface ApiResponseListInvoiceResponse {
     'status'?: number;
     'message'?: string;
@@ -231,11 +159,6 @@ export interface ApiResponsePagedResponseBankAccountResponse {
     'status'?: number;
     'message'?: string;
     'data'?: PagedResponseBankAccountResponse;
-}
-export interface ApiResponsePagedResponseBankTransactionResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: PagedResponseBankTransactionResponse;
 }
 export interface ApiResponsePagedResponseInvoiceResponse {
     'status'?: number;
@@ -267,55 +190,15 @@ export interface ApiResponsePaymentResponse {
     'message'?: string;
     'data'?: PaymentResponse;
 }
-export interface ApiResponseProfitLossResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: ProfitLossResponse;
-}
-export interface ApiResponseReconciliationSummaryResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: ReconciliationSummaryResponse;
-}
 export interface ApiResponseString {
     'status'?: number;
     'message'?: string;
     'data'?: string;
 }
-export interface ApiResponseTrialBalanceResponse {
-    'status'?: number;
-    'message'?: string;
-    'data'?: TrialBalanceResponse;
-}
 export interface ApiResponseVoid {
     'status'?: number;
     'message'?: string;
     'data'?: object;
-}
-/**
- * Báo cáo Bảng cân đối kế toán (Balance Sheet)
- */
-export interface BalanceSheetResponse {
-    /**
-     * Tên công ty
-     */
-    'companyName'?: string;
-    /**
-     * Lập tới ngày
-     */
-    'asOfDate'?: string;
-    /**
-     * Tài sản (Assets)
-     */
-    'assets'?: Array<ReportRowResponse>;
-    /**
-     * Nợ phải trả (Liabilities)
-     */
-    'liabilities'?: Array<ReportRowResponse>;
-    /**
-     * Vốn chủ sở hữu (Equity)
-     */
-    'equity'?: Array<ReportRowResponse>;
 }
 /**
  * Thông tin tài khoản ngân hàng
@@ -365,87 +248,6 @@ export interface BankAccountResponse {
      * Thời gian tạo
      */
     'createdAt'?: string;
-}
-/**
- * Thông tin giao dịch ngân hàng
- */
-export interface BankTransactionResponse {
-    /**
-     * ID giao dịch
-     */
-    'id'?: string;
-    /**
-     * ID tài khoản ngân hàng
-     */
-    'bankAccountId'?: string;
-    /**
-     * Tên tài khoản (ví dụ: Techcombank VND)
-     */
-    'bankAccountName'?: string;
-    /**
-     * Ngày giao dịch
-     */
-    'transactionDate'?: string;
-    /**
-     * Nội dung giao dịch
-     */
-    'description'?: string;
-    /**
-     * Loại (in / out)
-     */
-    'type'?: string;
-    /**
-     * Số tiền
-     */
-    'amount'?: number;
-    /**
-     * Mã tham chiếu NH
-     */
-    'reference'?: string;
-    /**
-     * Trạng thái đối chiếu (Đã khớp hay chưa)
-     */
-    'isReconciled'?: boolean;
-    /**
-     * ID bút toán Kế toán (Journal Entry) liên kết nếu đã khớp
-     */
-    'journalEntryId'?: string;
-    /**
-     * Ngày nạp dữ liệu
-     */
-    'createdAt'?: string;
-}
-/**
- * Báo cáo Lưu chuyển tiền tệ (Cash Flow Statement)
- */
-export interface CashFlowResponse {
-    /**
-     * Tên công ty
-     */
-    'companyName'?: string;
-    /**
-     * Từ ngày
-     */
-    'fromDate'?: string;
-    /**
-     * Đến ngày
-     */
-    'toDate'?: string;
-    /**
-     * Tiền thuần từ hoạt động kinh doanh (Operating Activities)
-     */
-    'operatingActivities'?: Array<ReportRowResponse>;
-    /**
-     * Tiền thuần từ hoạt động đầu tư (Investing Activities)
-     */
-    'investingActivities'?: Array<ReportRowResponse>;
-    /**
-     * Tiền thuần từ hoạt động tài chính (Financing Activities)
-     */
-    'financingActivities'?: Array<ReportRowResponse>;
-    'netCashFlow'?: ReportRowResponse;
-    'openingCash'?: ReportRowResponse;
-    'closingCash'?: ReportRowResponse;
 }
 /**
  * Payload tạo / cập nhật tài khoản kế toán
@@ -512,85 +314,6 @@ export interface CreateBankAccountRequest {
      * UUID Công ty
      */
     'companyId': string;
-}
-/**
- * Payload tạo giao dịch ngân hàng (thủ công)
- */
-export interface CreateBankTransactionRequest {
-    /**
-     * UUID tài khoản ngân hàng
-     */
-    'bankAccountId': string;
-    /**
-     * Ngày giao dịch
-     */
-    'transactionDate': string;
-    /**
-     * Diễn giải / Nội dung CK
-     */
-    'description'?: string;
-    /**
-     * Loại giao dịch (in / out)
-     */
-    'type': string;
-    /**
-     * Số tiền giao dịch
-     */
-    'amount': number;
-    /**
-     * Tham chiếu (Mã GD NH, Reference ID)
-     */
-    'reference'?: string;
-}
-/**
- * Payload tạo kỳ kế toán
- */
-export interface CreateFiscalPeriodRequest {
-    /**
-     * Tên kỳ kế toán
-     */
-    'name': string;
-    /**
-     * Ngày bắt đầu kỳ
-     */
-    'startDate': string;
-    /**
-     * Ngày kết thúc kỳ
-     */
-    'endDate': string;
-    /**
-     * UUID công ty
-     */
-    'companyId'?: string;
-}
-/**
- * Payload tạo chứng từ kế toán
- */
-export interface CreateJournalRequest {
-    /**
-     * Ngày chứng từ
-     */
-    'entryDate': string;
-    /**
-     * Số tham chiếu
-     */
-    'reference'?: string;
-    /**
-     * Mô tả chứng từ
-     */
-    'description'?: string;
-    /**
-     * UUID kỳ kế toán
-     */
-    'periodId'?: string;
-    /**
-     * UUID công ty
-     */
-    'companyId'?: string;
-    /**
-     * Danh sách dòng bút toán (phải cân đối Nợ = Có)
-     */
-    'lines': Array<JournalLineRequest>;
 }
 /**
  * Payload tạo/cập nhật đối tác (Khách hàng / NCC)
@@ -677,43 +400,6 @@ export interface CreatePaymentRequest {
      * UUID công ty sở hữu
      */
     'companyId'?: string;
-}
-/**
- * Thông tin kỳ kế toán
- */
-export interface FiscalPeriodResponse {
-    /**
-     * ID kỳ kế toán
-     */
-    'id'?: string;
-    /**
-     * Tên kỳ kế toán
-     */
-    'name'?: string;
-    /**
-     * Ngày bắt đầu
-     */
-    'startDate'?: string;
-    /**
-     * Ngày kết thúc
-     */
-    'endDate'?: string;
-    /**
-     * Trạng thái kỳ (open / closed)
-     */
-    'status'?: string;
-    /**
-     * Người đóng kỳ
-     */
-    'closedBy'?: string;
-    /**
-     * Thời điểm đóng kỳ
-     */
-    'closedAt'?: string;
-    /**
-     * Thời điểm tạo
-     */
-    'createdAt'?: string;
 }
 /**
  * Payload dòng hóa đơn
@@ -924,6 +610,14 @@ export interface InvoiceResponse {
      */
     'status'?: string;
     /**
+     * Trạng thái duyệt AP (pending, approved, rejected)
+     */
+    'approvalStatus'?: string;
+    /**
+     * Ghi chú phê duyệt / từ chối
+     */
+    'approvalComment'?: string;
+    /**
      * Người lập
      */
     'createdBy'?: string;
@@ -932,25 +626,9 @@ export interface InvoiceResponse {
      */
     'createdAt'?: string;
     /**
-     * Trạng thái duyệt (pending, approved, rejected)
-     */
-    'approvalStatus'?: string;
-    /**
-     * ID xử lý BPMN Camunda
-     */
-    'camundaProcessId'?: string;
-    /**
-     * ID Bút toán liên kết (nếu đã confirm)
+     * ID Bút toán liên kết (nếu đã được duyệt và sinh sổ cái)
      */
     'journalEntryId'?: string;
-    /**
-     * ID Task duyệt (nếu có)
-     */
-    'taskId'?: string;
-    /**
-     * Tên Task duyệt (nếu có)
-     */
-    'taskName'?: string;
     /**
      * Chi tiết các dòng hóa đơn (chỉ có khi gọi detail)
      */
@@ -985,13 +663,9 @@ export interface JournalEntryResponse {
      */
     'source'?: string;
     /**
-     * ID kỳ kế toán
+     * ID kỳ kế toán (tham chiếu, không hiển thị trong UI)
      */
     'periodId'?: string;
-    /**
-     * Tên kỳ kế toán
-     */
-    'periodName'?: string;
     /**
      * Người tạo
      */
@@ -1012,43 +686,6 @@ export interface JournalEntryResponse {
      * Danh sách dòng bút toán (chỉ có trong API detail)
      */
     'lines'?: Array<JournalLineResponse>;
-}
-/**
- * Một dòng bút toán trong chứng từ kế toán
- */
-export interface JournalLineRequest {
-    /**
-     * UUID tài khoản kế toán
-     */
-    'accountId': string;
-    /**
-     * UUID đối tác liên quan
-     */
-    'partnerId'?: string;
-    /**
-     * Số tiền Nợ
-     */
-    'debit': number;
-    /**
-     * Số tiền Có
-     */
-    'credit': number;
-    /**
-     * Mã tiền tệ
-     */
-    'currencyCode'?: string;
-    /**
-     * Số tiền theo tiền tệ gốc (nếu khác VND)
-     */
-    'amountCurrency'?: number;
-    /**
-     * Tỷ giá quy đổi
-     */
-    'exchangeRate'?: number;
-    /**
-     * Mô tả dòng bút toán
-     */
-    'description'?: string;
 }
 /**
  * Một dòng bút toán
@@ -1148,39 +785,6 @@ export interface PagedResponseBankAccountResponse {
      * Danh sách phần tử
      */
     'content'?: Array<BankAccountResponse>;
-    /**
-     * Trang hiện tại (0-indexed)
-     */
-    'page'?: number;
-    /**
-     * Số phần tử mỗi trang
-     */
-    'size'?: number;
-    /**
-     * Tổng số phần tử
-     */
-    'totalElements'?: number;
-    /**
-     * Tổng số trang
-     */
-    'totalPages'?: number;
-    /**
-     * Có trang trước không
-     */
-    'hasPrevious'?: boolean;
-    /**
-     * Có trang sau không
-     */
-    'hasNext'?: boolean;
-}
-/**
- * Wrapper cho danh sách có phân trang
- */
-export interface PagedResponseBankTransactionResponse {
-    /**
-     * Danh sách phần tử
-     */
-    'content'?: Array<BankTransactionResponse>;
     /**
      * Trang hiện tại (0-indexed)
      */
@@ -1452,158 +1056,6 @@ export interface PaymentResponse {
      */
     'allocations'?: Array<InvoicePaymentResponse>;
 }
-/**
- * Bảng Kết quả kinh doanh (Profit & Loss)
- */
-export interface ProfitLossResponse {
-    /**
-     * Tên công ty
-     */
-    'companyName'?: string;
-    /**
-     * Từ ngày
-     */
-    'fromDate'?: string;
-    /**
-     * Đến ngày
-     */
-    'toDate'?: string;
-    /**
-     * Doanh thu (Revenues)
-     */
-    'revenues'?: Array<ReportRowResponse>;
-    /**
-     * Chi phí (Expenses)
-     */
-    'expenses'?: Array<ReportRowResponse>;
-    'netIncome'?: ReportRowResponse;
-}
-/**
- * Payload đối chiếu: Khớp thủ công 1 giao dịch ngân hàng vào 1 chứng từ Hệ thống (Journal Entry)
- */
-export interface ReconcileMatchRequest {
-    /**
-     * UUID của Giao dịch Ngân hàng chưa đối chiếu
-     */
-    'bankTransactionId': string;
-    /**
-     * UUID của Bút toán trên Hệ thống (Journal Entry) cần khớp
-     */
-    'journalEntryId': string;
-}
-/**
- * Báo cáo tổng hợp đối chiếu số dư (Ngân hàng vs Hệ thống)
- */
-export interface ReconciliationSummaryResponse {
-    /**
-     * Ngày tính toán số dư
-     */
-    'asOfDate'?: string;
-    /**
-     * Số dư hiện tại trên Bank (theo import)
-     */
-    'bankBalance'?: number;
-    /**
-     * Số dư trên hệ thống (Sổ cái - GL)
-     */
-    'systemBalance'?: number;
-    /**
-     * Tổng tiền các giao dịch chưa bị đối chiếu (Unreconciled) trên Bank
-     */
-    'unreconciledBankTransactions'?: number;
-    /**
-     * Tổng tiền các bút toán Hệ thống chưa được đối chiếu (Unreconciled System entries)
-     */
-    'unreconciledSystemEntries'?: number;
-    /**
-     * Độ chênh lệch (bankBalance - systemBalance)
-     */
-    'difference'?: number;
-}
-/**
- * Một dòng dữ liệu trong báo cáo tài chính (hỗ trợ phân cấp cây)
- */
-export interface ReportRowResponse {
-    /**
-     * Mã/Tên mục báo cáo (vd: 111, Tiền mặt)
-     */
-    'name'?: string;
-    /**
-     * Giá trị số tiền
-     */
-    'amount'?: number;
-    /**
-     * Mức độ thò thụt (Cấp độ cha con) để in lề
-     */
-    'level'?: number;
-    /**
-     * Danh sách dòng con (nếu có)
-     */
-    'children'?: Array<ReportRowResponse>;
-    'total'?: boolean;
-}
-/**
- * Một dòng trong Bảng cân đối tài khoản (Trial Balance)
- */
-export interface TrialBalanceLineResponse {
-    /**
-     * Mã tài khoản
-     */
-    'accountCode'?: string;
-    /**
-     * Tên tài khoản
-     */
-    'accountName'?: string;
-    /**
-     * Số dư đầu kỳ Nợ
-     */
-    'openingDebit'?: number;
-    /**
-     * Số dư đầu kỳ Có
-     */
-    'openingCredit'?: number;
-    /**
-     * Phát sinh Nợ trong kỳ
-     */
-    'periodDebit'?: number;
-    /**
-     * Phát sinh Có trong kỳ
-     */
-    'periodCredit'?: number;
-    /**
-     * Số dư cuối kỳ Nợ
-     */
-    'closingDebit'?: number;
-    /**
-     * Số dư cuối kỳ Có
-     */
-    'closingCredit'?: number;
-}
-/**
- * Bảng cân đối tài khoản (Trial Balance)
- */
-export interface TrialBalanceResponse {
-    /**
-     * UUID kỳ kế toán
-     */
-    'periodId'?: string;
-    /**
-     * Tên kỳ kế toán
-     */
-    'periodName'?: string;
-    /**
-     * Ngày bắt đầu
-     */
-    'fromDate'?: string;
-    /**
-     * Ngày kết thúc
-     */
-    'toDate'?: string;
-    /**
-     * Danh sách các dòng tài khoản
-     */
-    'lines'?: Array<TrialBalanceLineResponse>;
-}
 
 /**
  * AccountsApi - axios parameter creator
@@ -1617,9 +1069,9 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create6: async (createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create3: async (createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createAccountRequest' is not null or undefined
-            assertParamExists('create6', 'createAccountRequest', createAccountRequest)
+            assertParamExists('create3', 'createAccountRequest', createAccountRequest)
             const localVarPath = `/v1/accounting/accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1704,9 +1156,9 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getById3: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getById2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getById3', 'id', id)
+            assertParamExists('getById2', 'id', id)
             const localVarPath = `/v1/accounting/accounts/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1739,9 +1191,9 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list6: async (companyId: string, tree?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list4: async (companyId: string, tree?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list6', 'companyId', companyId)
+            assertParamExists('list4', 'companyId', companyId)
             const localVarPath = `/v1/accounting/accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1862,11 +1314,11 @@ export const AccountsApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update4: async (id: string, createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        update3: async (id: string, createAccountRequest: CreateAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('update4', 'id', id)
+            assertParamExists('update3', 'id', id)
             // verify required parameter 'createAccountRequest' is not null or undefined
-            assertParamExists('update4', 'createAccountRequest', createAccountRequest)
+            assertParamExists('update3', 'createAccountRequest', createAccountRequest)
             const localVarPath = `/v1/accounting/accounts/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1909,10 +1361,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create6(createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create6(createAccountRequest, options);
+        async create3(createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create3(createAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.create6']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.create3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1937,10 +1389,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getById3(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getById3(id, options);
+        async getById2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getById2(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.getById3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.getById2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1951,10 +1403,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list6(companyId: string, tree?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list6(companyId, tree, options);
+        async list4(companyId: string, tree?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list4(companyId, tree, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.list6']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.list4']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1993,10 +1445,10 @@ export const AccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update4(id: string, createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update4(id, createAccountRequest, options);
+        async update3(id: string, createAccountRequest: CreateAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.update3(id, createAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AccountsApi.update4']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AccountsApi.update3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2011,12 +1463,12 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Tạo tài khoản mới
-         * @param {AccountsApiCreate6Request} requestParameters Request parameters.
+         * @param {AccountsApiCreate3Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create6(requestParameters: AccountsApiCreate6Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
-            return localVarFp.create6(requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
+        create3(requestParameters: AccountsApiCreate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
+            return localVarFp.create3(requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2031,22 +1483,22 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Chi tiết tài khoản
-         * @param {AccountsApiGetById3Request} requestParameters Request parameters.
+         * @param {AccountsApiGetById2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getById3(requestParameters: AccountsApiGetById3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
-            return localVarFp.getById3(requestParameters.id, options).then((request) => request(axios, basePath));
+        getById2(requestParameters: AccountsApiGetById2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
+            return localVarFp.getById2(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Lấy danh sách tài khoản theo công ty. Truyền tree=true để lấy dạng cây.
          * @summary Danh sách tài khoản
-         * @param {AccountsApiList6Request} requestParameters Request parameters.
+         * @param {AccountsApiList4Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list6(requestParameters: AccountsApiList6Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAccountResponse> {
-            return localVarFp.list6(requestParameters.companyId, requestParameters.tree, options).then((request) => request(axios, basePath));
+        list4(requestParameters: AccountsApiList4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAccountResponse> {
+            return localVarFp.list4(requestParameters.companyId, requestParameters.tree, options).then((request) => request(axios, basePath));
         },
         /**
          * Lấy danh sách tài khoản theo công ty (pagination).
@@ -2071,20 +1523,20 @@ export const AccountsApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Cập nhật tài khoản
-         * @param {AccountsApiUpdate4Request} requestParameters Request parameters.
+         * @param {AccountsApiUpdate3Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update4(requestParameters: AccountsApiUpdate4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
-            return localVarFp.update4(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
+        update3(requestParameters: AccountsApiUpdate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseAccountResponse> {
+            return localVarFp.update3(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for create6 operation in AccountsApi.
+ * Request parameters for create3 operation in AccountsApi.
  */
-export interface AccountsApiCreate6Request {
+export interface AccountsApiCreate3Request {
     readonly createAccountRequest: CreateAccountRequest
 }
 
@@ -2109,9 +1561,9 @@ export interface AccountsApiGetBalance2Request {
 }
 
 /**
- * Request parameters for getById3 operation in AccountsApi.
+ * Request parameters for getById2 operation in AccountsApi.
  */
-export interface AccountsApiGetById3Request {
+export interface AccountsApiGetById2Request {
     /**
      * UUID tài khoản
      */
@@ -2119,9 +1571,9 @@ export interface AccountsApiGetById3Request {
 }
 
 /**
- * Request parameters for list6 operation in AccountsApi.
+ * Request parameters for list4 operation in AccountsApi.
  */
-export interface AccountsApiList6Request {
+export interface AccountsApiList4Request {
     /**
      * UUID công ty
      */
@@ -2158,9 +1610,9 @@ export interface AccountsApiToggleActive2Request {
 }
 
 /**
- * Request parameters for update4 operation in AccountsApi.
+ * Request parameters for update3 operation in AccountsApi.
  */
-export interface AccountsApiUpdate4Request {
+export interface AccountsApiUpdate3Request {
     /**
      * UUID tài khoản
      */
@@ -2176,12 +1628,12 @@ export class AccountsApi extends BaseAPI {
     /**
      * 
      * @summary Tạo tài khoản mới
-     * @param {AccountsApiCreate6Request} requestParameters Request parameters.
+     * @param {AccountsApiCreate3Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create6(requestParameters: AccountsApiCreate6Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).create6(requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public create3(requestParameters: AccountsApiCreate3Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).create3(requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2198,23 +1650,23 @@ export class AccountsApi extends BaseAPI {
     /**
      * 
      * @summary Chi tiết tài khoản
-     * @param {AccountsApiGetById3Request} requestParameters Request parameters.
+     * @param {AccountsApiGetById2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getById3(requestParameters: AccountsApiGetById3Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).getById3(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getById2(requestParameters: AccountsApiGetById2Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).getById2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Lấy danh sách tài khoản theo công ty. Truyền tree=true để lấy dạng cây.
      * @summary Danh sách tài khoản
-     * @param {AccountsApiList6Request} requestParameters Request parameters.
+     * @param {AccountsApiList4Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list6(requestParameters: AccountsApiList6Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).list6(requestParameters.companyId, requestParameters.tree, options).then((request) => request(this.axios, this.basePath));
+    public list4(requestParameters: AccountsApiList4Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).list4(requestParameters.companyId, requestParameters.tree, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2242,12 +1694,12 @@ export class AccountsApi extends BaseAPI {
     /**
      * 
      * @summary Cập nhật tài khoản
-     * @param {AccountsApiUpdate4Request} requestParameters Request parameters.
+     * @param {AccountsApiUpdate3Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public update4(requestParameters: AccountsApiUpdate4Request, options?: RawAxiosRequestConfig) {
-        return AccountsApiFp(this.configuration).update4(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public update3(requestParameters: AccountsApiUpdate3Request, options?: RawAxiosRequestConfig) {
+        return AccountsApiFp(this.configuration).update3(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2265,9 +1717,9 @@ export const BankAccountsApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create3: async (createBankAccountRequest: CreateBankAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create2: async (createBankAccountRequest: CreateBankAccountRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createBankAccountRequest' is not null or undefined
-            assertParamExists('create3', 'createBankAccountRequest', createBankAccountRequest)
+            assertParamExists('create2', 'createBankAccountRequest', createBankAccountRequest)
             const localVarPath = `/v1/finance/bank-accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2334,9 +1786,9 @@ export const BankAccountsApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getById2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getById1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('getById2', 'id', id)
+            assertParamExists('getById1', 'id', id)
             const localVarPath = `/v1/finance/bank-accounts/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -2372,9 +1824,9 @@ export const BankAccountsApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list3: async (companyId: string, type?: string, search?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list2: async (companyId: string, type?: string, search?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list3', 'companyId', companyId)
+            assertParamExists('list2', 'companyId', companyId)
             const localVarPath = `/v1/finance/bank-accounts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2507,10 +1959,10 @@ export const BankAccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create3(createBankAccountRequest: CreateBankAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create3(createBankAccountRequest, options);
+        async create2(createBankAccountRequest: CreateBankAccountRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.create2(createBankAccountRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.create3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.create2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2533,10 +1985,10 @@ export const BankAccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getById2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getById2(id, options);
+        async getById1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getById1(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.getById2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.getById1']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2550,10 +2002,10 @@ export const BankAccountsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list3(companyId: string, type?: string, search?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankAccountResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list3(companyId, type, search, page, size, options);
+        async list2(companyId: string, type?: string, search?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankAccountResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list2(companyId, type, search, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.list3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['BankAccountsApi.list2']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2595,12 +2047,12 @@ export const BankAccountsApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Tạo tài khoản ngân hàng
-         * @param {BankAccountsApiCreate3Request} requestParameters Request parameters.
+         * @param {BankAccountsApiCreate2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create3(requestParameters: BankAccountsApiCreate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
-            return localVarFp.create3(requestParameters.createBankAccountRequest, options).then((request) => request(axios, basePath));
+        create2(requestParameters: BankAccountsApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
+            return localVarFp.create2(requestParameters.createBankAccountRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2615,22 +2067,22 @@ export const BankAccountsApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Chi tiết tài khoản ngân hàng
-         * @param {BankAccountsApiGetById2Request} requestParameters Request parameters.
+         * @param {BankAccountsApiGetById1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getById2(requestParameters: BankAccountsApiGetById2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
-            return localVarFp.getById2(requestParameters.id, options).then((request) => request(axios, basePath));
+        getById1(requestParameters: BankAccountsApiGetById1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankAccountResponse> {
+            return localVarFp.getById1(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Danh sách tài khoản ngân hàng
-         * @param {BankAccountsApiList3Request} requestParameters Request parameters.
+         * @param {BankAccountsApiList2Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list3(requestParameters: BankAccountsApiList3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankAccountResponse> {
-            return localVarFp.list3(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        list2(requestParameters: BankAccountsApiList2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankAccountResponse> {
+            return localVarFp.list2(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2656,9 +2108,9 @@ export const BankAccountsApiFactory = function (configuration?: Configuration, b
 };
 
 /**
- * Request parameters for create3 operation in BankAccountsApi.
+ * Request parameters for create2 operation in BankAccountsApi.
  */
-export interface BankAccountsApiCreate3Request {
+export interface BankAccountsApiCreate2Request {
     readonly createBankAccountRequest: CreateBankAccountRequest
 }
 
@@ -2670,16 +2122,16 @@ export interface BankAccountsApiGetBalance1Request {
 }
 
 /**
- * Request parameters for getById2 operation in BankAccountsApi.
+ * Request parameters for getById1 operation in BankAccountsApi.
  */
-export interface BankAccountsApiGetById2Request {
+export interface BankAccountsApiGetById1Request {
     readonly id: string
 }
 
 /**
- * Request parameters for list3 operation in BankAccountsApi.
+ * Request parameters for list2 operation in BankAccountsApi.
  */
-export interface BankAccountsApiList3Request {
+export interface BankAccountsApiList2Request {
     readonly companyId: string
 
     /**
@@ -2720,12 +2172,12 @@ export class BankAccountsApi extends BaseAPI {
     /**
      * 
      * @summary Tạo tài khoản ngân hàng
-     * @param {BankAccountsApiCreate3Request} requestParameters Request parameters.
+     * @param {BankAccountsApiCreate2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public create3(requestParameters: BankAccountsApiCreate3Request, options?: RawAxiosRequestConfig) {
-        return BankAccountsApiFp(this.configuration).create3(requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    public create2(requestParameters: BankAccountsApiCreate2Request, options?: RawAxiosRequestConfig) {
+        return BankAccountsApiFp(this.configuration).create2(requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2742,23 +2194,23 @@ export class BankAccountsApi extends BaseAPI {
     /**
      * 
      * @summary Chi tiết tài khoản ngân hàng
-     * @param {BankAccountsApiGetById2Request} requestParameters Request parameters.
+     * @param {BankAccountsApiGetById1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getById2(requestParameters: BankAccountsApiGetById2Request, options?: RawAxiosRequestConfig) {
-        return BankAccountsApiFp(this.configuration).getById2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public getById1(requestParameters: BankAccountsApiGetById1Request, options?: RawAxiosRequestConfig) {
+        return BankAccountsApiFp(this.configuration).getById1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Danh sách tài khoản ngân hàng
-     * @param {BankAccountsApiList3Request} requestParameters Request parameters.
+     * @param {BankAccountsApiList2Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list3(requestParameters: BankAccountsApiList3Request, options?: RawAxiosRequestConfig) {
-        return BankAccountsApiFp(this.configuration).list3(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public list2(requestParameters: BankAccountsApiList2Request, options?: RawAxiosRequestConfig) {
+        return BankAccountsApiFp(this.configuration).list2(requestParameters.companyId, requestParameters.type, requestParameters.search, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2787,509 +2239,22 @@ export class BankAccountsApi extends BaseAPI {
 
 
 /**
- * BankReconciliationApi - axios parameter creator
+ * InvoiceApprovalApi - axios parameter creator
  */
-export const BankReconciliationApiAxiosParamCreator = function (configuration?: Configuration) {
+export const InvoiceApprovalApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Tính năng tự động tìm kiếm và Match hàng loạt các GD có Amount trùng và cùng Time
-         * @param {string} bankAccountId 
+         * @summary Chi tiết hóa đơn AP đang chờ duyệt
+         * @param {string} invoiceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        autoMatch: async (bankAccountId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bankAccountId' is not null or undefined
-            assertParamExists('autoMatch', 'bankAccountId', bankAccountId)
-            const localVarPath = `/v1/finance/reconciliation/auto-match`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (bankAccountId !== undefined) {
-                localVarQueryParameter['bankAccountId'] = bankAccountId;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lấy danh sách các giao dịch NH đang đợi ghép / chờ đối chiếu
-         * @param {string} bankAccountId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPendingMatches: async (bankAccountId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bankAccountId' is not null or undefined
-            assertParamExists('getPendingMatches', 'bankAccountId', bankAccountId)
-            const localVarPath = `/v1/finance/reconciliation`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (bankAccountId !== undefined) {
-                localVarQueryParameter['bankAccountId'] = bankAccountId;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Báo cáo Tổng hợp tình trạng Số dư & Giao dịch
-         * @param {string} bankAccountId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSummary: async (bankAccountId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bankAccountId' is not null or undefined
-            assertParamExists('getSummary', 'bankAccountId', bankAccountId)
-            const localVarPath = `/v1/finance/reconciliation/summary`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (bankAccountId !== undefined) {
-                localVarQueryParameter['bankAccountId'] = bankAccountId;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Ghép thủ công 1 GD ngân hàng với 1 Bút toán trên Hệ thống
-         * @param {ReconcileMatchRequest} reconcileMatchRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        manualMatch: async (reconcileMatchRequest: ReconcileMatchRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'reconcileMatchRequest' is not null or undefined
-            assertParamExists('manualMatch', 'reconcileMatchRequest', reconcileMatchRequest)
-            const localVarPath = `/v1/finance/reconciliation/match`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(reconcileMatchRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gỡ / Xóa link khớp của giao dịch (Un-reconcile)
-         * @param {string} bankTransactionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        unmatch: async (bankTransactionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bankTransactionId' is not null or undefined
-            assertParamExists('unmatch', 'bankTransactionId', bankTransactionId)
-            const localVarPath = `/v1/finance/reconciliation/unmatch/{bankTransactionId}`
-                .replace(`{${"bankTransactionId"}}`, encodeURIComponent(String(bankTransactionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * BankReconciliationApi - functional programming interface
- */
-export const BankReconciliationApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = BankReconciliationApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Tính năng tự động tìm kiếm và Match hàng loạt các GD có Amount trùng và cùng Time
-         * @param {string} bankAccountId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async autoMatch(bankAccountId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.autoMatch(bankAccountId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankReconciliationApi.autoMatch']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Lấy danh sách các giao dịch NH đang đợi ghép / chờ đối chiếu
-         * @param {string} bankAccountId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getPendingMatches(bankAccountId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getPendingMatches(bankAccountId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankReconciliationApi.getPendingMatches']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Báo cáo Tổng hợp tình trạng Số dư & Giao dịch
-         * @param {string} bankAccountId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSummary(bankAccountId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseReconciliationSummaryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSummary(bankAccountId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankReconciliationApi.getSummary']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Ghép thủ công 1 GD ngân hàng với 1 Bút toán trên Hệ thống
-         * @param {ReconcileMatchRequest} reconcileMatchRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async manualMatch(reconcileMatchRequest: ReconcileMatchRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.manualMatch(reconcileMatchRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankReconciliationApi.manualMatch']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Gỡ / Xóa link khớp của giao dịch (Un-reconcile)
-         * @param {string} bankTransactionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async unmatch(bankTransactionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.unmatch(bankTransactionId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankReconciliationApi.unmatch']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * BankReconciliationApi - factory interface
- */
-export const BankReconciliationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = BankReconciliationApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Tính năng tự động tìm kiếm và Match hàng loạt các GD có Amount trùng và cùng Time
-         * @param {BankReconciliationApiAutoMatchRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        autoMatch(requestParameters: BankReconciliationApiAutoMatchRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListBankTransactionResponse> {
-            return localVarFp.autoMatch(requestParameters.bankAccountId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lấy danh sách các giao dịch NH đang đợi ghép / chờ đối chiếu
-         * @param {BankReconciliationApiGetPendingMatchesRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPendingMatches(requestParameters: BankReconciliationApiGetPendingMatchesRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListBankTransactionResponse> {
-            return localVarFp.getPendingMatches(requestParameters.bankAccountId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Báo cáo Tổng hợp tình trạng Số dư & Giao dịch
-         * @param {BankReconciliationApiGetSummaryRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSummary(requestParameters: BankReconciliationApiGetSummaryRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseReconciliationSummaryResponse> {
-            return localVarFp.getSummary(requestParameters.bankAccountId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Ghép thủ công 1 GD ngân hàng với 1 Bút toán trên Hệ thống
-         * @param {BankReconciliationApiManualMatchRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        manualMatch(requestParameters: BankReconciliationApiManualMatchRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankTransactionResponse> {
-            return localVarFp.manualMatch(requestParameters.reconcileMatchRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gỡ / Xóa link khớp của giao dịch (Un-reconcile)
-         * @param {BankReconciliationApiUnmatchRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        unmatch(requestParameters: BankReconciliationApiUnmatchRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankTransactionResponse> {
-            return localVarFp.unmatch(requestParameters.bankTransactionId, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for autoMatch operation in BankReconciliationApi.
- */
-export interface BankReconciliationApiAutoMatchRequest {
-    readonly bankAccountId: string
-}
-
-/**
- * Request parameters for getPendingMatches operation in BankReconciliationApi.
- */
-export interface BankReconciliationApiGetPendingMatchesRequest {
-    readonly bankAccountId: string
-}
-
-/**
- * Request parameters for getSummary operation in BankReconciliationApi.
- */
-export interface BankReconciliationApiGetSummaryRequest {
-    readonly bankAccountId: string
-}
-
-/**
- * Request parameters for manualMatch operation in BankReconciliationApi.
- */
-export interface BankReconciliationApiManualMatchRequest {
-    readonly reconcileMatchRequest: ReconcileMatchRequest
-}
-
-/**
- * Request parameters for unmatch operation in BankReconciliationApi.
- */
-export interface BankReconciliationApiUnmatchRequest {
-    readonly bankTransactionId: string
-}
-
-/**
- * BankReconciliationApi - object-oriented interface
- */
-export class BankReconciliationApi extends BaseAPI {
-    /**
-     * 
-     * @summary Tính năng tự động tìm kiếm và Match hàng loạt các GD có Amount trùng và cùng Time
-     * @param {BankReconciliationApiAutoMatchRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public autoMatch(requestParameters: BankReconciliationApiAutoMatchRequest, options?: RawAxiosRequestConfig) {
-        return BankReconciliationApiFp(this.configuration).autoMatch(requestParameters.bankAccountId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lấy danh sách các giao dịch NH đang đợi ghép / chờ đối chiếu
-     * @param {BankReconciliationApiGetPendingMatchesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getPendingMatches(requestParameters: BankReconciliationApiGetPendingMatchesRequest, options?: RawAxiosRequestConfig) {
-        return BankReconciliationApiFp(this.configuration).getPendingMatches(requestParameters.bankAccountId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Báo cáo Tổng hợp tình trạng Số dư & Giao dịch
-     * @param {BankReconciliationApiGetSummaryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getSummary(requestParameters: BankReconciliationApiGetSummaryRequest, options?: RawAxiosRequestConfig) {
-        return BankReconciliationApiFp(this.configuration).getSummary(requestParameters.bankAccountId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Ghép thủ công 1 GD ngân hàng với 1 Bút toán trên Hệ thống
-     * @param {BankReconciliationApiManualMatchRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public manualMatch(requestParameters: BankReconciliationApiManualMatchRequest, options?: RawAxiosRequestConfig) {
-        return BankReconciliationApiFp(this.configuration).manualMatch(requestParameters.reconcileMatchRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gỡ / Xóa link khớp của giao dịch (Un-reconcile)
-     * @param {BankReconciliationApiUnmatchRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public unmatch(requestParameters: BankReconciliationApiUnmatchRequest, options?: RawAxiosRequestConfig) {
-        return BankReconciliationApiFp(this.configuration).unmatch(requestParameters.bankTransactionId, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * BankTransactionsApi - axios parameter creator
- */
-export const BankTransactionsApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Tạo một giao dịch thủ công trên hệ thống
-         * @param {CreateBankTransactionRequest} createBankTransactionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create2: async (createBankTransactionRequest: CreateBankTransactionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createBankTransactionRequest' is not null or undefined
-            assertParamExists('create2', 'createBankTransactionRequest', createBankTransactionRequest)
-            const localVarPath = `/v1/finance/bank-transactions`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createBankTransactionRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        delete1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('delete1', 'id', id)
-            const localVarPath = `/v1/finance/bank-transactions/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Chi tiết một giao dịch ngân hàng
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getById1: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getById1', 'id', id)
-            const localVarPath = `/v1/finance/bank-transactions/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getInvoiceDetail1: async (invoiceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'invoiceId' is not null or undefined
+            assertParamExists('getInvoiceDetail1', 'invoiceId', invoiceId)
+            const localVarPath = `/v1/invoice-tasks/tasks/{invoiceId}/invoice`
+                .replace(`{${"invoiceId"}}`, encodeURIComponent(String(invoiceId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3313,714 +2278,17 @@ export const BankTransactionsApiAxiosParamCreator = function (configuration?: Co
             };
         },
         /**
-         * Đang phát triển - TODO: sử dụng MultiPartFile upload
-         * @summary Import bản sao kê (Bank Statement) từ file CSV/Excel
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        importData: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/finance/bank-transactions/import`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * 
-         * @summary Danh sách giao dịch ngân hàng
+         * @summary Danh sách AP Bill đang chờ phê duyệt
          * @param {string} companyId 
-         * @param {string} [bankAccountId] 
-         * @param {string} [type] 
-         * @param {string} [status] 
-         * @param {string} [fromDate] 
-         * @param {string} [toDate] 
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list2: async (companyId: string, bankAccountId?: string, type?: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getPendingApprovals: async (companyId: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list2', 'companyId', companyId)
-            const localVarPath = `/v1/finance/bank-transactions`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (bankAccountId !== undefined) {
-                localVarQueryParameter['bankAccountId'] = bankAccountId;
-            }
-
-            if (type !== undefined) {
-                localVarQueryParameter['type'] = type;
-            }
-
-            if (status !== undefined) {
-                localVarQueryParameter['status'] = status;
-            }
-
-            if (fromDate !== undefined) {
-                localVarQueryParameter['fromDate'] = (fromDate as any instanceof Date) ?
-                    (fromDate as any).toISOString().substring(0,10) :
-                    fromDate;
-            }
-
-            if (toDate !== undefined) {
-                localVarQueryParameter['toDate'] = (toDate as any instanceof Date) ?
-                    (toDate as any).toISOString().substring(0,10) :
-                    toDate;
-            }
-
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
-            }
-
-            if (size !== undefined) {
-                localVarQueryParameter['size'] = size;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * BankTransactionsApi - functional programming interface
- */
-export const BankTransactionsApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = BankTransactionsApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Tạo một giao dịch thủ công trên hệ thống
-         * @param {CreateBankTransactionRequest} createBankTransactionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async create2(createBankTransactionRequest: CreateBankTransactionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create2(createBankTransactionRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.create2']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async delete1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete1(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.delete1']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Chi tiết một giao dịch ngân hàng
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getById1(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getById1(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.getById1']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Đang phát triển - TODO: sử dụng MultiPartFile upload
-         * @summary Import bản sao kê (Bank Statement) từ file CSV/Excel
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async importData(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.importData(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.importData']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Danh sách giao dịch ngân hàng
-         * @param {string} companyId 
-         * @param {string} [bankAccountId] 
-         * @param {string} [type] 
-         * @param {string} [status] 
-         * @param {string} [fromDate] 
-         * @param {string} [toDate] 
-         * @param {number} [page] 
-         * @param {number} [size] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async list2(companyId: string, bankAccountId?: string, type?: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseBankTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list2(companyId, bankAccountId, type, status, fromDate, toDate, page, size, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['BankTransactionsApi.list2']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * BankTransactionsApi - factory interface
- */
-export const BankTransactionsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = BankTransactionsApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Tạo một giao dịch thủ công trên hệ thống
-         * @param {BankTransactionsApiCreate2Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create2(requestParameters: BankTransactionsApiCreate2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankTransactionResponse> {
-            return localVarFp.create2(requestParameters.createBankTransactionRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)
-         * @param {BankTransactionsApiDelete1Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        delete1(requestParameters: BankTransactionsApiDelete1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
-            return localVarFp.delete1(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Chi tiết một giao dịch ngân hàng
-         * @param {BankTransactionsApiGetById1Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getById1(requestParameters: BankTransactionsApiGetById1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBankTransactionResponse> {
-            return localVarFp.getById1(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Đang phát triển - TODO: sử dụng MultiPartFile upload
-         * @summary Import bản sao kê (Bank Statement) từ file CSV/Excel
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        importData(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.importData(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Danh sách giao dịch ngân hàng
-         * @param {BankTransactionsApiList2Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        list2(requestParameters: BankTransactionsApiList2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseBankTransactionResponse> {
-            return localVarFp.list2(requestParameters.companyId, requestParameters.bankAccountId, requestParameters.type, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for create2 operation in BankTransactionsApi.
- */
-export interface BankTransactionsApiCreate2Request {
-    readonly createBankTransactionRequest: CreateBankTransactionRequest
-}
-
-/**
- * Request parameters for delete1 operation in BankTransactionsApi.
- */
-export interface BankTransactionsApiDelete1Request {
-    readonly id: string
-}
-
-/**
- * Request parameters for getById1 operation in BankTransactionsApi.
- */
-export interface BankTransactionsApiGetById1Request {
-    readonly id: string
-}
-
-/**
- * Request parameters for list2 operation in BankTransactionsApi.
- */
-export interface BankTransactionsApiList2Request {
-    readonly companyId: string
-
-    readonly bankAccountId?: string
-
-    readonly type?: string
-
-    readonly status?: string
-
-    readonly fromDate?: string
-
-    readonly toDate?: string
-
-    readonly page?: number
-
-    readonly size?: number
-}
-
-/**
- * BankTransactionsApi - object-oriented interface
- */
-export class BankTransactionsApi extends BaseAPI {
-    /**
-     * 
-     * @summary Tạo một giao dịch thủ công trên hệ thống
-     * @param {BankTransactionsApiCreate2Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public create2(requestParameters: BankTransactionsApiCreate2Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).create2(requestParameters.createBankTransactionRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Xoá giao dịch (Chỉ khi CHƯA được đối chiếu - unreconciled)
-     * @param {BankTransactionsApiDelete1Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public delete1(requestParameters: BankTransactionsApiDelete1Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).delete1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Chi tiết một giao dịch ngân hàng
-     * @param {BankTransactionsApiGetById1Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getById1(requestParameters: BankTransactionsApiGetById1Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).getById1(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Đang phát triển - TODO: sử dụng MultiPartFile upload
-     * @summary Import bản sao kê (Bank Statement) từ file CSV/Excel
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public importData(options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).importData(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Danh sách giao dịch ngân hàng
-     * @param {BankTransactionsApiList2Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public list2(requestParameters: BankTransactionsApiList2Request, options?: RawAxiosRequestConfig) {
-        return BankTransactionsApiFp(this.configuration).list2(requestParameters.companyId, requestParameters.bankAccountId, requestParameters.type, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * FiscalPeriodsApi - axios parameter creator
- */
-export const FiscalPeriodsApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Đóng kỳ kế toán
-         * @param {string} id UUID kỳ kế toán
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        close: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('close', 'id', id)
-            const localVarPath = `/v1/accounting/fiscal-periods/{id}/close`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Tạo kỳ kế toán mới
-         * @param {CreateFiscalPeriodRequest} createFiscalPeriodRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create5: async (createFiscalPeriodRequest: CreateFiscalPeriodRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createFiscalPeriodRequest' is not null or undefined
-            assertParamExists('create5', 'createFiscalPeriodRequest', createFiscalPeriodRequest)
-            const localVarPath = `/v1/accounting/fiscal-periods`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createFiscalPeriodRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Danh sách kỳ kế toán
-         * @param {string} companyId UUID công ty
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        list5: async (companyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list5', 'companyId', companyId)
-            const localVarPath = `/v1/accounting/fiscal-periods`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Mở lại kỳ kế toán (Admin)
-         * @param {string} id UUID kỳ kế toán
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reopen: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('reopen', 'id', id)
-            const localVarPath = `/v1/accounting/fiscal-periods/{id}/reopen`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * FiscalPeriodsApi - functional programming interface
- */
-export const FiscalPeriodsApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = FiscalPeriodsApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Đóng kỳ kế toán
-         * @param {string} id UUID kỳ kế toán
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async close(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseFiscalPeriodResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.close(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.close']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Tạo kỳ kế toán mới
-         * @param {CreateFiscalPeriodRequest} createFiscalPeriodRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async create5(createFiscalPeriodRequest: CreateFiscalPeriodRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseFiscalPeriodResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create5(createFiscalPeriodRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.create5']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Danh sách kỳ kế toán
-         * @param {string} companyId UUID công ty
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async list5(companyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListFiscalPeriodResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list5(companyId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.list5']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Mở lại kỳ kế toán (Admin)
-         * @param {string} id UUID kỳ kế toán
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async reopen(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseFiscalPeriodResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.reopen(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FiscalPeriodsApi.reopen']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * FiscalPeriodsApi - factory interface
- */
-export const FiscalPeriodsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = FiscalPeriodsApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Đóng kỳ kế toán
-         * @param {FiscalPeriodsApiCloseRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        close(requestParameters: FiscalPeriodsApiCloseRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseFiscalPeriodResponse> {
-            return localVarFp.close(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Tạo kỳ kế toán mới
-         * @param {FiscalPeriodsApiCreate5Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create5(requestParameters: FiscalPeriodsApiCreate5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseFiscalPeriodResponse> {
-            return localVarFp.create5(requestParameters.createFiscalPeriodRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Danh sách kỳ kế toán
-         * @param {FiscalPeriodsApiList5Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        list5(requestParameters: FiscalPeriodsApiList5Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListFiscalPeriodResponse> {
-            return localVarFp.list5(requestParameters.companyId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Mở lại kỳ kế toán (Admin)
-         * @param {FiscalPeriodsApiReopenRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        reopen(requestParameters: FiscalPeriodsApiReopenRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseFiscalPeriodResponse> {
-            return localVarFp.reopen(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for close operation in FiscalPeriodsApi.
- */
-export interface FiscalPeriodsApiCloseRequest {
-    /**
-     * UUID kỳ kế toán
-     */
-    readonly id: string
-}
-
-/**
- * Request parameters for create5 operation in FiscalPeriodsApi.
- */
-export interface FiscalPeriodsApiCreate5Request {
-    readonly createFiscalPeriodRequest: CreateFiscalPeriodRequest
-}
-
-/**
- * Request parameters for list5 operation in FiscalPeriodsApi.
- */
-export interface FiscalPeriodsApiList5Request {
-    /**
-     * UUID công ty
-     */
-    readonly companyId: string
-}
-
-/**
- * Request parameters for reopen operation in FiscalPeriodsApi.
- */
-export interface FiscalPeriodsApiReopenRequest {
-    /**
-     * UUID kỳ kế toán
-     */
-    readonly id: string
-}
-
-/**
- * FiscalPeriodsApi - object-oriented interface
- */
-export class FiscalPeriodsApi extends BaseAPI {
-    /**
-     * 
-     * @summary Đóng kỳ kế toán
-     * @param {FiscalPeriodsApiCloseRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public close(requestParameters: FiscalPeriodsApiCloseRequest, options?: RawAxiosRequestConfig) {
-        return FiscalPeriodsApiFp(this.configuration).close(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Tạo kỳ kế toán mới
-     * @param {FiscalPeriodsApiCreate5Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public create5(requestParameters: FiscalPeriodsApiCreate5Request, options?: RawAxiosRequestConfig) {
-        return FiscalPeriodsApiFp(this.configuration).create5(requestParameters.createFiscalPeriodRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Danh sách kỳ kế toán
-     * @param {FiscalPeriodsApiList5Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public list5(requestParameters: FiscalPeriodsApiList5Request, options?: RawAxiosRequestConfig) {
-        return FiscalPeriodsApiFp(this.configuration).list5(requestParameters.companyId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Mở lại kỳ kế toán (Admin)
-     * @param {FiscalPeriodsApiReopenRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public reopen(requestParameters: FiscalPeriodsApiReopenRequest, options?: RawAxiosRequestConfig) {
-        return FiscalPeriodsApiFp(this.configuration).reopen(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * InvoiceApprovalControllerApi - axios parameter creator
- */
-export const InvoiceApprovalControllerApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {number} [page] 
-         * @param {number} [size] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAllTasks: async (page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            assertParamExists('getPendingApprovals', 'companyId', companyId)
             const localVarPath = `/v1/invoice-tasks/tasks`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4033,6 +2301,10 @@ export const InvoiceApprovalControllerApiAxiosParamCreator = function (configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            if (companyId !== undefined) {
+                localVarQueryParameter['companyId'] = companyId;
+            }
+
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
@@ -4052,141 +2324,117 @@ export const InvoiceApprovalControllerApiAxiosParamCreator = function (configura
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @param {string} taskId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getInvoiceByTaskId: async (taskId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'taskId' is not null or undefined
-            assertParamExists('getInvoiceByTaskId', 'taskId', taskId)
-            const localVarPath = `/v1/invoice-tasks/tasks/{taskId}/invoice`
-                .replace(`{${"taskId"}}`, encodeURIComponent(String(taskId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
 /**
- * InvoiceApprovalControllerApi - functional programming interface
+ * InvoiceApprovalApi - functional programming interface
  */
-export const InvoiceApprovalControllerApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = InvoiceApprovalControllerApiAxiosParamCreator(configuration)
+export const InvoiceApprovalApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = InvoiceApprovalApiAxiosParamCreator(configuration)
     return {
         /**
          * 
+         * @summary Chi tiết hóa đơn AP đang chờ duyệt
+         * @param {string} invoiceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getInvoiceDetail1(invoiceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getInvoiceDetail1(invoiceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['InvoiceApprovalApi.getInvoiceDetail1']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Danh sách AP Bill đang chờ phê duyệt
+         * @param {string} companyId 
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllTasks(page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllTasks(page, size, options);
+        async getPendingApprovals(companyId: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPendingApprovals(companyId, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoiceApprovalControllerApi.getAllTasks']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} taskId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getInvoiceByTaskId(taskId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getInvoiceByTaskId(taskId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['InvoiceApprovalControllerApi.getInvoiceByTaskId']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['InvoiceApprovalApi.getPendingApprovals']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * InvoiceApprovalControllerApi - factory interface
+ * InvoiceApprovalApi - factory interface
  */
-export const InvoiceApprovalControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = InvoiceApprovalControllerApiFp(configuration)
+export const InvoiceApprovalApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = InvoiceApprovalApiFp(configuration)
     return {
         /**
          * 
-         * @param {InvoiceApprovalControllerApiGetAllTasksRequest} requestParameters Request parameters.
+         * @summary Chi tiết hóa đơn AP đang chờ duyệt
+         * @param {InvoiceApprovalApiGetInvoiceDetail1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllTasks(requestParameters: InvoiceApprovalControllerApiGetAllTasksRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseInvoiceResponse> {
-            return localVarFp.getAllTasks(requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        getInvoiceDetail1(requestParameters: InvoiceApprovalApiGetInvoiceDetail1Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
+            return localVarFp.getInvoiceDetail1(requestParameters.invoiceId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest} requestParameters Request parameters.
+         * @summary Danh sách AP Bill đang chờ phê duyệt
+         * @param {InvoiceApprovalApiGetPendingApprovalsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getInvoiceByTaskId(requestParameters: InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.getInvoiceByTaskId(requestParameters.taskId, options).then((request) => request(axios, basePath));
+        getPendingApprovals(requestParameters: InvoiceApprovalApiGetPendingApprovalsRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseInvoiceResponse> {
+            return localVarFp.getPendingApprovals(requestParameters.companyId, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for getAllTasks operation in InvoiceApprovalControllerApi.
+ * Request parameters for getInvoiceDetail1 operation in InvoiceApprovalApi.
  */
-export interface InvoiceApprovalControllerApiGetAllTasksRequest {
+export interface InvoiceApprovalApiGetInvoiceDetail1Request {
+    readonly invoiceId: string
+}
+
+/**
+ * Request parameters for getPendingApprovals operation in InvoiceApprovalApi.
+ */
+export interface InvoiceApprovalApiGetPendingApprovalsRequest {
+    readonly companyId: string
+
     readonly page?: number
 
     readonly size?: number
 }
 
 /**
- * Request parameters for getInvoiceByTaskId operation in InvoiceApprovalControllerApi.
+ * InvoiceApprovalApi - object-oriented interface
  */
-export interface InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest {
-    readonly taskId: string
-}
-
-/**
- * InvoiceApprovalControllerApi - object-oriented interface
- */
-export class InvoiceApprovalControllerApi extends BaseAPI {
+export class InvoiceApprovalApi extends BaseAPI {
     /**
      * 
-     * @param {InvoiceApprovalControllerApiGetAllTasksRequest} requestParameters Request parameters.
+     * @summary Chi tiết hóa đơn AP đang chờ duyệt
+     * @param {InvoiceApprovalApiGetInvoiceDetail1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getAllTasks(requestParameters: InvoiceApprovalControllerApiGetAllTasksRequest = {}, options?: RawAxiosRequestConfig) {
-        return InvoiceApprovalControllerApiFp(this.configuration).getAllTasks(requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+    public getInvoiceDetail1(requestParameters: InvoiceApprovalApiGetInvoiceDetail1Request, options?: RawAxiosRequestConfig) {
+        return InvoiceApprovalApiFp(this.configuration).getInvoiceDetail1(requestParameters.invoiceId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest} requestParameters Request parameters.
+     * @summary Danh sách AP Bill đang chờ phê duyệt
+     * @param {InvoiceApprovalApiGetPendingApprovalsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getInvoiceByTaskId(requestParameters: InvoiceApprovalControllerApiGetInvoiceByTaskIdRequest, options?: RawAxiosRequestConfig) {
-        return InvoiceApprovalControllerApiFp(this.configuration).getInvoiceByTaskId(requestParameters.taskId, options).then((request) => request(this.axios, this.basePath));
+    public getPendingApprovals(requestParameters: InvoiceApprovalApiGetPendingApprovalsRequest, options?: RawAxiosRequestConfig) {
+        return InvoiceApprovalApiFp(this.configuration).getPendingApprovals(requestParameters.companyId, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4199,12 +2447,13 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
     return {
         /**
          * 
-         * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve
+         * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve. Cập nhật approval_status=approved trực tiếp vào DB
          * @param {string} id 
+         * @param {string} [comment] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        approveInvoice: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        approveInvoice: async (id: string, comment?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('approveInvoice', 'id', id)
             const localVarPath = `/v1/invoices/{id}/approve`
@@ -4219,6 +2468,10 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (comment !== undefined) {
+                localVarQueryParameter['comment'] = comment;
+            }
 
             localVarHeaderParameter['Accept'] = '*/*';
 
@@ -4570,12 +2823,13 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Từ chối duyệt hóa đơn (AP) — AP Reject
+         * @summary Từ chối duyệt hóa đơn (AP) — AP Reject. Cập nhật approval_status=rejected trực tiếp vào DB
          * @param {string} id 
+         * @param {string} [comment] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        rejectInvoice: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        rejectInvoice: async (id: string, comment?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('rejectInvoice', 'id', id)
             const localVarPath = `/v1/invoices/{id}/reject`
@@ -4590,6 +2844,10 @@ export const InvoicesApiAxiosParamCreator = function (configuration?: Configurat
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (comment !== undefined) {
+                localVarQueryParameter['comment'] = comment;
+            }
 
             localVarHeaderParameter['Accept'] = '*/*';
 
@@ -4652,13 +2910,14 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve
+         * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve. Cập nhật approval_status=approved trực tiếp vào DB
          * @param {string} id 
+         * @param {string} [comment] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async approveInvoice(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.approveInvoice(id, options);
+        async approveInvoice(id: string, comment?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.approveInvoice(id, comment, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['InvoicesApi.approveInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4786,13 +3045,14 @@ export const InvoicesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Từ chối duyệt hóa đơn (AP) — AP Reject
+         * @summary Từ chối duyệt hóa đơn (AP) — AP Reject. Cập nhật approval_status=rejected trực tiếp vào DB
          * @param {string} id 
+         * @param {string} [comment] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async rejectInvoice(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.rejectInvoice(id, options);
+        async rejectInvoice(id: string, comment?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseInvoiceResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.rejectInvoice(id, comment, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['InvoicesApi.rejectInvoice']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4822,13 +3082,13 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
     return {
         /**
          * 
-         * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve
+         * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve. Cập nhật approval_status=approved trực tiếp vào DB
          * @param {InvoicesApiApproveInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         approveInvoice(requestParameters: InvoicesApiApproveInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.approveInvoice(requestParameters.id, options).then((request) => request(axios, basePath));
+            return localVarFp.approveInvoice(requestParameters.id, requestParameters.comment, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4921,13 +3181,13 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Từ chối duyệt hóa đơn (AP) — AP Reject
+         * @summary Từ chối duyệt hóa đơn (AP) — AP Reject. Cập nhật approval_status=rejected trực tiếp vào DB
          * @param {InvoicesApiRejectInvoiceRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         rejectInvoice(requestParameters: InvoicesApiRejectInvoiceRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseInvoiceResponse> {
-            return localVarFp.rejectInvoice(requestParameters.id, options).then((request) => request(axios, basePath));
+            return localVarFp.rejectInvoice(requestParameters.id, requestParameters.comment, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4947,6 +3207,8 @@ export const InvoicesApiFactory = function (configuration?: Configuration, baseP
  */
 export interface InvoicesApiApproveInvoiceRequest {
     readonly id: string
+
+    readonly comment?: string
 }
 
 /**
@@ -5020,6 +3282,8 @@ export interface InvoicesApiListInvoicesRequest {
  */
 export interface InvoicesApiRejectInvoiceRequest {
     readonly id: string
+
+    readonly comment?: string
 }
 
 /**
@@ -5037,13 +3301,13 @@ export interface InvoicesApiUpdateDraftInvoiceRequest {
 export class InvoicesApi extends BaseAPI {
     /**
      * 
-     * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve
+     * @summary Duyệt hóa đơn mua hàng (AP) — AP Approve. Cập nhật approval_status=approved trực tiếp vào DB
      * @param {InvoicesApiApproveInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     public approveInvoice(requestParameters: InvoicesApiApproveInvoiceRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).approveInvoice(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+        return InvoicesApiFp(this.configuration).approveInvoice(requestParameters.id, requestParameters.comment, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5146,13 +3410,13 @@ export class InvoicesApi extends BaseAPI {
 
     /**
      * 
-     * @summary Từ chối duyệt hóa đơn (AP) — AP Reject
+     * @summary Từ chối duyệt hóa đơn (AP) — AP Reject. Cập nhật approval_status=rejected trực tiếp vào DB
      * @param {InvoicesApiRejectInvoiceRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     public rejectInvoice(requestParameters: InvoicesApiRejectInvoiceRequest, options?: RawAxiosRequestConfig) {
-        return InvoicesApiFp(this.configuration).rejectInvoice(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+        return InvoicesApiFp(this.configuration).rejectInvoice(requestParameters.id, requestParameters.comment, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5176,111 +3440,8 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
     return {
         /**
          * 
-         * @summary Huỷ chứng từ
-         * @param {string} id UUID chứng từ
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        cancel: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('cancel', 'id', id)
-            const localVarPath = `/v1/accounting/journals/{id}/cancel`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Tổng Nợ phải bằng Tổng Có mới tạo được
-         * @summary Tạo chứng từ mới (trạng thái draft)
-         * @param {CreateJournalRequest} createJournalRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create4: async (createJournalRequest: CreateJournalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createJournalRequest' is not null or undefined
-            assertParamExists('create4', 'createJournalRequest', createJournalRequest)
-            const localVarPath = `/v1/accounting/journals`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createJournalRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {string} id UUID chứng từ
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        delete2: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('delete2', 'id', id)
-            const localVarPath = `/v1/accounting/journals/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Chi tiết chứng từ kèm các dòng bút toán
-         * @param {string} id UUID chứng từ
+         * @summary Chi tiết bút toán kèm các dòng Nợ/Có
+         * @param {string} id UUID bút toán
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5313,7 +3474,7 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
-         * @summary Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)
+         * @summary Danh sách bút toán (phân trang, lọc theo trạng thái / ngày)
          * @param {string} companyId UUID công ty
          * @param {string} [status] Lọc theo trạng thái: draft, posted, cancelled
          * @param {string} [fromDate] Từ ngày (yyyy-MM-dd)
@@ -5323,9 +3484,9 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list4: async (companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list3: async (companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('list4', 'companyId', companyId)
+            assertParamExists('list3', 'companyId', companyId)
             const localVarPath = `/v1/accounting/journals`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5377,79 +3538,6 @@ export const JournalEntriesApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @summary Post chứng từ (draft → posted)
-         * @param {string} id UUID chứng từ
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        post: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('post', 'id', id)
-            const localVarPath = `/v1/accounting/journals/{id}/post`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {string} id UUID chứng từ
-         * @param {CreateJournalRequest} createJournalRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        update3: async (id: string, createJournalRequest: CreateJournalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('update3', 'id', id)
-            // verify required parameter 'createJournalRequest' is not null or undefined
-            assertParamExists('update3', 'createJournalRequest', createJournalRequest)
-            const localVarPath = `/v1/accounting/journals/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createJournalRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -5461,47 +3549,8 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Huỷ chứng từ
-         * @param {string} id UUID chứng từ
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async cancel(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.cancel(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.cancel']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Tổng Nợ phải bằng Tổng Có mới tạo được
-         * @summary Tạo chứng từ mới (trạng thái draft)
-         * @param {CreateJournalRequest} createJournalRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async create4(createJournalRequest: CreateJournalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.create4(createJournalRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.create4']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {string} id UUID chứng từ
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async delete2(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseVoid>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.delete2(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.delete2']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Chi tiết chứng từ kèm các dòng bút toán
-         * @param {string} id UUID chứng từ
+         * @summary Chi tiết bút toán kèm các dòng Nợ/Có
+         * @param {string} id UUID bút toán
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -5513,7 +3562,7 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)
+         * @summary Danh sách bút toán (phân trang, lọc theo trạng thái / ngày)
          * @param {string} companyId UUID công ty
          * @param {string} [status] Lọc theo trạng thái: draft, posted, cancelled
          * @param {string} [fromDate] Từ ngày (yyyy-MM-dd)
@@ -5523,37 +3572,10 @@ export const JournalEntriesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list4(companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list4(companyId, status, fromDate, toDate, page, size, options);
+        async list3(companyId: string, status?: string, fromDate?: string, toDate?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseJournalEntryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list3(companyId, status, fromDate, toDate, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.list4']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Post chứng từ (draft → posted)
-         * @param {string} id UUID chứng từ
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async post(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.post(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.post']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {string} id UUID chứng từ
-         * @param {CreateJournalRequest} createJournalRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async update3(id: string, createJournalRequest: CreateJournalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseJournalEntryResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update3(id, createJournalRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.update3']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['JournalEntriesApi.list3']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -5567,37 +3589,7 @@ export const JournalEntriesApiFactory = function (configuration?: Configuration,
     return {
         /**
          * 
-         * @summary Huỷ chứng từ
-         * @param {JournalEntriesApiCancelRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        cancel(requestParameters: JournalEntriesApiCancelRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.cancel(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Tổng Nợ phải bằng Tổng Có mới tạo được
-         * @summary Tạo chứng từ mới (trạng thái draft)
-         * @param {JournalEntriesApiCreate4Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        create4(requestParameters: JournalEntriesApiCreate4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.create4(requestParameters.createJournalRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {JournalEntriesApiDelete2Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        delete2(requestParameters: JournalEntriesApiDelete2Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
-            return localVarFp.delete2(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Chi tiết chứng từ kèm các dòng bút toán
+         * @summary Chi tiết bút toán kèm các dòng Nợ/Có
          * @param {JournalEntriesApiGetDetail1Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5607,78 +3599,31 @@ export const JournalEntriesApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
-         * @summary Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)
-         * @param {JournalEntriesApiList4Request} requestParameters Request parameters.
+         * @summary Danh sách bút toán (phân trang, lọc theo trạng thái / ngày)
+         * @param {JournalEntriesApiList3Request} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list4(requestParameters: JournalEntriesApiList4Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseJournalEntryResponse> {
-            return localVarFp.list4(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Post chứng từ (draft → posted)
-         * @param {JournalEntriesApiPostRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        post(requestParameters: JournalEntriesApiPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.post(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)
-         * @param {JournalEntriesApiUpdate3Request} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        update3(requestParameters: JournalEntriesApiUpdate3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseJournalEntryResponse> {
-            return localVarFp.update3(requestParameters.id, requestParameters.createJournalRequest, options).then((request) => request(axios, basePath));
+        list3(requestParameters: JournalEntriesApiList3Request, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseJournalEntryResponse> {
+            return localVarFp.list3(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
     };
 };
-
-/**
- * Request parameters for cancel operation in JournalEntriesApi.
- */
-export interface JournalEntriesApiCancelRequest {
-    /**
-     * UUID chứng từ
-     */
-    readonly id: string
-}
-
-/**
- * Request parameters for create4 operation in JournalEntriesApi.
- */
-export interface JournalEntriesApiCreate4Request {
-    readonly createJournalRequest: CreateJournalRequest
-}
-
-/**
- * Request parameters for delete2 operation in JournalEntriesApi.
- */
-export interface JournalEntriesApiDelete2Request {
-    /**
-     * UUID chứng từ
-     */
-    readonly id: string
-}
 
 /**
  * Request parameters for getDetail1 operation in JournalEntriesApi.
  */
 export interface JournalEntriesApiGetDetail1Request {
     /**
-     * UUID chứng từ
+     * UUID bút toán
      */
     readonly id: string
 }
 
 /**
- * Request parameters for list4 operation in JournalEntriesApi.
+ * Request parameters for list3 operation in JournalEntriesApi.
  */
-export interface JournalEntriesApiList4Request {
+export interface JournalEntriesApiList3Request {
     /**
      * UUID công ty
      */
@@ -5711,67 +3656,12 @@ export interface JournalEntriesApiList4Request {
 }
 
 /**
- * Request parameters for post operation in JournalEntriesApi.
- */
-export interface JournalEntriesApiPostRequest {
-    /**
-     * UUID chứng từ
-     */
-    readonly id: string
-}
-
-/**
- * Request parameters for update3 operation in JournalEntriesApi.
- */
-export interface JournalEntriesApiUpdate3Request {
-    /**
-     * UUID chứng từ
-     */
-    readonly id: string
-
-    readonly createJournalRequest: CreateJournalRequest
-}
-
-/**
  * JournalEntriesApi - object-oriented interface
  */
 export class JournalEntriesApi extends BaseAPI {
     /**
      * 
-     * @summary Huỷ chứng từ
-     * @param {JournalEntriesApiCancelRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public cancel(requestParameters: JournalEntriesApiCancelRequest, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).cancel(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Tổng Nợ phải bằng Tổng Có mới tạo được
-     * @summary Tạo chứng từ mới (trạng thái draft)
-     * @param {JournalEntriesApiCreate4Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public create4(requestParameters: JournalEntriesApiCreate4Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).create4(requestParameters.createJournalRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Xoá chứng từ (chỉ áp dụng khi ở trạng thái draft)
-     * @param {JournalEntriesApiDelete2Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public delete2(requestParameters: JournalEntriesApiDelete2Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).delete2(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Chi tiết chứng từ kèm các dòng bút toán
+     * @summary Chi tiết bút toán kèm các dòng Nợ/Có
      * @param {JournalEntriesApiGetDetail1Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5782,35 +3672,13 @@ export class JournalEntriesApi extends BaseAPI {
 
     /**
      * 
-     * @summary Danh sách chứng từ (có phân trang, lọc theo trạng thái / ngày)
-     * @param {JournalEntriesApiList4Request} requestParameters Request parameters.
+     * @summary Danh sách bút toán (phân trang, lọc theo trạng thái / ngày)
+     * @param {JournalEntriesApiList3Request} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public list4(requestParameters: JournalEntriesApiList4Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).list4(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Post chứng từ (draft → posted)
-     * @param {JournalEntriesApiPostRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public post(requestParameters: JournalEntriesApiPostRequest, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).post(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Cập nhật chứng từ (chỉ áp dụng khi ở trạng thái draft)
-     * @param {JournalEntriesApiUpdate3Request} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public update3(requestParameters: JournalEntriesApiUpdate3Request, options?: RawAxiosRequestConfig) {
-        return JournalEntriesApiFp(this.configuration).update3(requestParameters.id, requestParameters.createJournalRequest, options).then((request) => request(this.axios, this.basePath));
+    public list3(requestParameters: JournalEntriesApiList3Request, options?: RawAxiosRequestConfig) {
+        return JournalEntriesApiFp(this.configuration).list3(requestParameters.companyId, requestParameters.status, requestParameters.fromDate, requestParameters.toDate, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -7111,1062 +4979,6 @@ export class PaymentsApi extends BaseAPI {
      */
     public update(requestParameters: PaymentsApiUpdateRequest, options?: RawAxiosRequestConfig) {
         return PaymentsApiFp(this.configuration).update(requestParameters.id, requestParameters.createPaymentRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * ReportsApi - axios parameter creator
- */
-export const ReportsApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exportReport: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/reports/balance-sheet/export`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exportReport1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/reports/cash-flow/export`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exportReport2: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/reports/profit-loss/export`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Báo cáo Tuổi nợ Phải Trả (AP Aging)
-         * @param {string} companyId 
-         * @param {string} [asOfDate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getApAging: async (companyId: string, asOfDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('getApAging', 'companyId', companyId)
-            const localVarPath = `/v1/reports/ap-aging`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (asOfDate !== undefined) {
-                localVarQueryParameter['asOfDate'] = (asOfDate as any instanceof Date) ?
-                    (asOfDate as any).toISOString().substring(0,10) :
-                    asOfDate;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Báo cáo Tuổi nợ Phải Thu (AR Aging)
-         * @param {string} companyId 
-         * @param {string} [asOfDate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getArAging: async (companyId: string, asOfDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('getArAging', 'companyId', companyId)
-            const localVarPath = `/v1/reports/ar-aging`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (asOfDate !== undefined) {
-                localVarQueryParameter['asOfDate'] = (asOfDate as any instanceof Date) ?
-                    (asOfDate as any).toISOString().substring(0,10) :
-                    asOfDate;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Bảng Cân đối kế toán (Balance Sheet)
-         * @param {string} companyId 
-         * @param {string} asOfDate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getBalanceSheet: async (companyId: string, asOfDate: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('getBalanceSheet', 'companyId', companyId)
-            // verify required parameter 'asOfDate' is not null or undefined
-            assertParamExists('getBalanceSheet', 'asOfDate', asOfDate)
-            const localVarPath = `/v1/reports/balance-sheet`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (asOfDate !== undefined) {
-                localVarQueryParameter['asOfDate'] = (asOfDate as any instanceof Date) ?
-                    (asOfDate as any).toISOString().substring(0,10) :
-                    asOfDate;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Báo cáo Lưu chuyển tiền tệ (Cash Flow Statement)
-         * @param {string} companyId 
-         * @param {string} fromDate 
-         * @param {string} toDate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCashFlow: async (companyId: string, fromDate: string, toDate: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('getCashFlow', 'companyId', companyId)
-            // verify required parameter 'fromDate' is not null or undefined
-            assertParamExists('getCashFlow', 'fromDate', fromDate)
-            // verify required parameter 'toDate' is not null or undefined
-            assertParamExists('getCashFlow', 'toDate', toDate)
-            const localVarPath = `/v1/reports/cash-flow`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (fromDate !== undefined) {
-                localVarQueryParameter['fromDate'] = (fromDate as any instanceof Date) ?
-                    (fromDate as any).toISOString().substring(0,10) :
-                    fromDate;
-            }
-
-            if (toDate !== undefined) {
-                localVarQueryParameter['toDate'] = (toDate as any instanceof Date) ?
-                    (toDate as any).toISOString().substring(0,10) :
-                    toDate;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Sử dụng bộ lọc search trên /v1/accounting/journals
-         * @summary Sổ cái chi tiết theo tài khoản (Account Ledger)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGeneralLedger: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/reports/general-ledger`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Báo cáo Kết quả Hoạt động Kinh doanh (Profit & Loss / Income Statement)
-         * @param {string} companyId 
-         * @param {string} fromDate 
-         * @param {string} toDate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getProfitLoss: async (companyId: string, fromDate: string, toDate: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('getProfitLoss', 'companyId', companyId)
-            // verify required parameter 'fromDate' is not null or undefined
-            assertParamExists('getProfitLoss', 'fromDate', fromDate)
-            // verify required parameter 'toDate' is not null or undefined
-            assertParamExists('getProfitLoss', 'toDate', toDate)
-            const localVarPath = `/v1/reports/profit-loss`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (fromDate !== undefined) {
-                localVarQueryParameter['fromDate'] = (fromDate as any instanceof Date) ?
-                    (fromDate as any).toISOString().substring(0,10) :
-                    fromDate;
-            }
-
-            if (toDate !== undefined) {
-                localVarQueryParameter['toDate'] = (toDate as any instanceof Date) ?
-                    (toDate as any).toISOString().substring(0,10) :
-                    toDate;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Chuyển hướng dùng Endpoint của Accounting module
-         * @summary Bảng Cân đối tài khoản (Trial Balance)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTrialBalanceReport: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/v1/reports/trial-balance`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * ReportsApi - functional programming interface
- */
-export const ReportsApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = ReportsApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async exportReport(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.exportReport(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.exportReport']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async exportReport1(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.exportReport1(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.exportReport1']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async exportReport2(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.exportReport2(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.exportReport2']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Báo cáo Tuổi nợ Phải Trả (AP Aging)
-         * @param {string} companyId 
-         * @param {string} [asOfDate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getApAging(companyId: string, asOfDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAgingResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getApAging(companyId, asOfDate, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getApAging']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Báo cáo Tuổi nợ Phải Thu (AR Aging)
-         * @param {string} companyId 
-         * @param {string} [asOfDate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getArAging(companyId: string, asOfDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAgingResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getArAging(companyId, asOfDate, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getArAging']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Bảng Cân đối kế toán (Balance Sheet)
-         * @param {string} companyId 
-         * @param {string} asOfDate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getBalanceSheet(companyId: string, asOfDate: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseBalanceSheetResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getBalanceSheet(companyId, asOfDate, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getBalanceSheet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Báo cáo Lưu chuyển tiền tệ (Cash Flow Statement)
-         * @param {string} companyId 
-         * @param {string} fromDate 
-         * @param {string} toDate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCashFlow(companyId: string, fromDate: string, toDate: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseCashFlowResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCashFlow(companyId, fromDate, toDate, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getCashFlow']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Sử dụng bộ lọc search trên /v1/accounting/journals
-         * @summary Sổ cái chi tiết theo tài khoản (Account Ledger)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getGeneralLedger(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getGeneralLedger(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getGeneralLedger']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Báo cáo Kết quả Hoạt động Kinh doanh (Profit & Loss / Income Statement)
-         * @param {string} companyId 
-         * @param {string} fromDate 
-         * @param {string} toDate 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getProfitLoss(companyId: string, fromDate: string, toDate: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseProfitLossResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getProfitLoss(companyId, fromDate, toDate, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getProfitLoss']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Chuyển hướng dùng Endpoint của Accounting module
-         * @summary Bảng Cân đối tài khoản (Trial Balance)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTrialBalanceReport(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTrialBalanceReport(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ReportsApi.getTrialBalanceReport']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * ReportsApi - factory interface
- */
-export const ReportsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ReportsApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exportReport(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.exportReport(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exportReport1(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.exportReport1(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        exportReport2(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.exportReport2(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Báo cáo Tuổi nợ Phải Trả (AP Aging)
-         * @param {ReportsApiGetApAgingRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getApAging(requestParameters: ReportsApiGetApAgingRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAgingResponse> {
-            return localVarFp.getApAging(requestParameters.companyId, requestParameters.asOfDate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Báo cáo Tuổi nợ Phải Thu (AR Aging)
-         * @param {ReportsApiGetArAgingRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getArAging(requestParameters: ReportsApiGetArAgingRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAgingResponse> {
-            return localVarFp.getArAging(requestParameters.companyId, requestParameters.asOfDate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Bảng Cân đối kế toán (Balance Sheet)
-         * @param {ReportsApiGetBalanceSheetRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getBalanceSheet(requestParameters: ReportsApiGetBalanceSheetRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseBalanceSheetResponse> {
-            return localVarFp.getBalanceSheet(requestParameters.companyId, requestParameters.asOfDate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Báo cáo Lưu chuyển tiền tệ (Cash Flow Statement)
-         * @param {ReportsApiGetCashFlowRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCashFlow(requestParameters: ReportsApiGetCashFlowRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseCashFlowResponse> {
-            return localVarFp.getCashFlow(requestParameters.companyId, requestParameters.fromDate, requestParameters.toDate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Sử dụng bộ lọc search trên /v1/accounting/journals
-         * @summary Sổ cái chi tiết theo tài khoản (Account Ledger)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGeneralLedger(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.getGeneralLedger(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Báo cáo Kết quả Hoạt động Kinh doanh (Profit & Loss / Income Statement)
-         * @param {ReportsApiGetProfitLossRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getProfitLoss(requestParameters: ReportsApiGetProfitLossRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseProfitLossResponse> {
-            return localVarFp.getProfitLoss(requestParameters.companyId, requestParameters.fromDate, requestParameters.toDate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Chuyển hướng dùng Endpoint của Accounting module
-         * @summary Bảng Cân đối tài khoản (Trial Balance)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTrialBalanceReport(options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.getTrialBalanceReport(options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for getApAging operation in ReportsApi.
- */
-export interface ReportsApiGetApAgingRequest {
-    readonly companyId: string
-
-    readonly asOfDate?: string
-}
-
-/**
- * Request parameters for getArAging operation in ReportsApi.
- */
-export interface ReportsApiGetArAgingRequest {
-    readonly companyId: string
-
-    readonly asOfDate?: string
-}
-
-/**
- * Request parameters for getBalanceSheet operation in ReportsApi.
- */
-export interface ReportsApiGetBalanceSheetRequest {
-    readonly companyId: string
-
-    readonly asOfDate: string
-}
-
-/**
- * Request parameters for getCashFlow operation in ReportsApi.
- */
-export interface ReportsApiGetCashFlowRequest {
-    readonly companyId: string
-
-    readonly fromDate: string
-
-    readonly toDate: string
-}
-
-/**
- * Request parameters for getProfitLoss operation in ReportsApi.
- */
-export interface ReportsApiGetProfitLossRequest {
-    readonly companyId: string
-
-    readonly fromDate: string
-
-    readonly toDate: string
-}
-
-/**
- * ReportsApi - object-oriented interface
- */
-export class ReportsApi extends BaseAPI {
-    /**
-     * 
-     * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public exportReport(options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).exportReport(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public exportReport1(options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).exportReport1(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Xuất các báo cáo ra định dạng Excel / PDF (Stub)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public exportReport2(options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).exportReport2(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Báo cáo Tuổi nợ Phải Trả (AP Aging)
-     * @param {ReportsApiGetApAgingRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getApAging(requestParameters: ReportsApiGetApAgingRequest, options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getApAging(requestParameters.companyId, requestParameters.asOfDate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Báo cáo Tuổi nợ Phải Thu (AR Aging)
-     * @param {ReportsApiGetArAgingRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getArAging(requestParameters: ReportsApiGetArAgingRequest, options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getArAging(requestParameters.companyId, requestParameters.asOfDate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Bảng Cân đối kế toán (Balance Sheet)
-     * @param {ReportsApiGetBalanceSheetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getBalanceSheet(requestParameters: ReportsApiGetBalanceSheetRequest, options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getBalanceSheet(requestParameters.companyId, requestParameters.asOfDate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Báo cáo Lưu chuyển tiền tệ (Cash Flow Statement)
-     * @param {ReportsApiGetCashFlowRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getCashFlow(requestParameters: ReportsApiGetCashFlowRequest, options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getCashFlow(requestParameters.companyId, requestParameters.fromDate, requestParameters.toDate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Sử dụng bộ lọc search trên /v1/accounting/journals
-     * @summary Sổ cái chi tiết theo tài khoản (Account Ledger)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getGeneralLedger(options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getGeneralLedger(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Báo cáo Kết quả Hoạt động Kinh doanh (Profit & Loss / Income Statement)
-     * @param {ReportsApiGetProfitLossRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getProfitLoss(requestParameters: ReportsApiGetProfitLossRequest, options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getProfitLoss(requestParameters.companyId, requestParameters.fromDate, requestParameters.toDate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Chuyển hướng dùng Endpoint của Accounting module
-     * @summary Bảng Cân đối tài khoản (Trial Balance)
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getTrialBalanceReport(options?: RawAxiosRequestConfig) {
-        return ReportsApiFp(this.configuration).getTrialBalanceReport(options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * TrialBalanceApi - axios parameter creator
- */
-export const TrialBalanceApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * TODO: implement export
-         * @summary Xuất Trial Balance (Excel / PDF)
-         * @param {string} companyId 
-         * @param {string} [periodId] 
-         * @param {string} [format] Định dạng xuất: excel hoặc pdf
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        _export: async (companyId: string, periodId?: string, format?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('_export', 'companyId', companyId)
-            const localVarPath = `/v1/accounting/trial-balance/export`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (periodId !== undefined) {
-                localVarQueryParameter['periodId'] = periodId;
-            }
-
-            if (format !== undefined) {
-                localVarQueryParameter['format'] = format;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lấy Trial Balance theo kỳ hoặc khoảng ngày
-         * @param {string} companyId UUID công ty
-         * @param {string} [periodId] UUID kỳ kế toán (ưu tiên nếu có)
-         * @param {string} [fromDate] Ngày bắt đầu (yyyy-MM-dd) — dùng khi không có periodId
-         * @param {string} [toDate] Ngày kết thúc (yyyy-MM-dd) — dùng khi không có periodId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        get: async (companyId: string, periodId?: string, fromDate?: string, toDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'companyId' is not null or undefined
-            assertParamExists('get', 'companyId', companyId)
-            const localVarPath = `/v1/accounting/trial-balance`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (companyId !== undefined) {
-                localVarQueryParameter['companyId'] = companyId;
-            }
-
-            if (periodId !== undefined) {
-                localVarQueryParameter['periodId'] = periodId;
-            }
-
-            if (fromDate !== undefined) {
-                localVarQueryParameter['fromDate'] = (fromDate as any instanceof Date) ?
-                    (fromDate as any).toISOString().substring(0,10) :
-                    fromDate;
-            }
-
-            if (toDate !== undefined) {
-                localVarQueryParameter['toDate'] = (toDate as any instanceof Date) ?
-                    (toDate as any).toISOString().substring(0,10) :
-                    toDate;
-            }
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * TrialBalanceApi - functional programming interface
- */
-export const TrialBalanceApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = TrialBalanceApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * TODO: implement export
-         * @summary Xuất Trial Balance (Excel / PDF)
-         * @param {string} companyId 
-         * @param {string} [periodId] 
-         * @param {string} [format] Định dạng xuất: excel hoặc pdf
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async _export(companyId: string, periodId?: string, format?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator._export(companyId, periodId, format, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TrialBalanceApi._export']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Lấy Trial Balance theo kỳ hoặc khoảng ngày
-         * @param {string} companyId UUID công ty
-         * @param {string} [periodId] UUID kỳ kế toán (ưu tiên nếu có)
-         * @param {string} [fromDate] Ngày bắt đầu (yyyy-MM-dd) — dùng khi không có periodId
-         * @param {string} [toDate] Ngày kết thúc (yyyy-MM-dd) — dùng khi không có periodId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async get(companyId: string, periodId?: string, fromDate?: string, toDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseTrialBalanceResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.get(companyId, periodId, fromDate, toDate, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TrialBalanceApi.get']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * TrialBalanceApi - factory interface
- */
-export const TrialBalanceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = TrialBalanceApiFp(configuration)
-    return {
-        /**
-         * TODO: implement export
-         * @summary Xuất Trial Balance (Excel / PDF)
-         * @param {TrialBalanceApiExportRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        _export(requestParameters: TrialBalanceApiExportRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp._export(requestParameters.companyId, requestParameters.periodId, requestParameters.format, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lấy Trial Balance theo kỳ hoặc khoảng ngày
-         * @param {TrialBalanceApiGetRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        get(requestParameters: TrialBalanceApiGetRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseTrialBalanceResponse> {
-            return localVarFp.get(requestParameters.companyId, requestParameters.periodId, requestParameters.fromDate, requestParameters.toDate, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for _export operation in TrialBalanceApi.
- */
-export interface TrialBalanceApiExportRequest {
-    readonly companyId: string
-
-    readonly periodId?: string
-
-    /**
-     * Định dạng xuất: excel hoặc pdf
-     */
-    readonly format?: string
-}
-
-/**
- * Request parameters for get operation in TrialBalanceApi.
- */
-export interface TrialBalanceApiGetRequest {
-    /**
-     * UUID công ty
-     */
-    readonly companyId: string
-
-    /**
-     * UUID kỳ kế toán (ưu tiên nếu có)
-     */
-    readonly periodId?: string
-
-    /**
-     * Ngày bắt đầu (yyyy-MM-dd) — dùng khi không có periodId
-     */
-    readonly fromDate?: string
-
-    /**
-     * Ngày kết thúc (yyyy-MM-dd) — dùng khi không có periodId
-     */
-    readonly toDate?: string
-}
-
-/**
- * TrialBalanceApi - object-oriented interface
- */
-export class TrialBalanceApi extends BaseAPI {
-    /**
-     * TODO: implement export
-     * @summary Xuất Trial Balance (Excel / PDF)
-     * @param {TrialBalanceApiExportRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public _export(requestParameters: TrialBalanceApiExportRequest, options?: RawAxiosRequestConfig) {
-        return TrialBalanceApiFp(this.configuration)._export(requestParameters.companyId, requestParameters.periodId, requestParameters.format, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lấy Trial Balance theo kỳ hoặc khoảng ngày
-     * @param {TrialBalanceApiGetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public get(requestParameters: TrialBalanceApiGetRequest, options?: RawAxiosRequestConfig) {
-        return TrialBalanceApiFp(this.configuration).get(requestParameters.companyId, requestParameters.periodId, requestParameters.fromDate, requestParameters.toDate, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

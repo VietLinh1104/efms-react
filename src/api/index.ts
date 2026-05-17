@@ -5,19 +5,14 @@ import { apiConfigCommon, apiConfigCore, apiConfigIdentity } from "./config";
 import {
     AccountsApi,
     BankAccountsApi,
-    BankTransactionsApi,
     JournalEntriesApi,
     PartnersApi,
-    FiscalPeriodsApi,
-    TrialBalanceApi,
     InvoicesApi,
     PaymentsApi,
-    BankReconciliationApi,
-    ReportsApi,
-    InvoiceApprovalControllerApi,
+    InvoiceApprovalApi,
 } from "@/api/generated/core/api";
 
-export const coreInvoiceApprovalControllerApi = new InvoiceApprovalControllerApi(
+export const coreInvoiceApprovalApi = new InvoiceApprovalApi(
     apiConfigCore,
     undefined,
     axiosInstance
@@ -41,18 +36,7 @@ export const coreInvoicesApi = new InvoicesApi(
     axiosInstance
 );
 
-export const coreTrialBalanceApi = new TrialBalanceApi(
-    apiConfigCore,
-    undefined,
-    axiosInstance
-);
 export const coreBankAccountsApi = new BankAccountsApi(
-    apiConfigCore,
-    undefined,
-    axiosInstance
-);
-
-export const coreBankTransactionsApi = new BankTransactionsApi(
     apiConfigCore,
     undefined,
     axiosInstance
@@ -65,24 +49,6 @@ export const coreJournalEntriesApi = new JournalEntriesApi(
 );
 
 export const corePartnersApi = new PartnersApi(
-    apiConfigCore,
-    undefined,
-    axiosInstance
-);
-
-export const coreFiscalPeriodsApi = new FiscalPeriodsApi(
-    apiConfigCore,
-    undefined,
-    axiosInstance
-);
-
-export const coreBankReconciliationApi = new BankReconciliationApi(
-    apiConfigCore,
-    undefined,
-    axiosInstance
-);
-
-export const coreReportsApi = new ReportsApi(
     apiConfigCore,
     undefined,
     axiosInstance

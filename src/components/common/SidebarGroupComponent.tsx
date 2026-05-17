@@ -8,6 +8,7 @@ import {
     SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export interface SidebarGroupComponentProps {
     label: string;
@@ -27,10 +28,10 @@ export default function SidebarGroupComponent({ label, items }: SidebarGroupComp
                         {items.map((item, index) => (
                             <SidebarMenuItem key={index}>
                                 <SidebarMenuButton asChild>
-                                    <a href={item.href} target="_self" rel="noopener noreferrer">
+                                    <Link to={item.href}>
                                         {item.icon}
                                         <span>{item.label}</span>
-                                    </a>
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}

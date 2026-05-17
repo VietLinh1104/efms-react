@@ -30,7 +30,7 @@ import {
 } from "@components/ui/select.tsx";
 import { Switch } from "@components/ui/switch.tsx";
 import { coreAccountsApi } from "@/api";
-import type { AccountResponse, CreateAccountRequest, AccountsApiList6Request, AccountsApiUpdate4Request, AccountsApiToggleActive2Request, AccountsApiCreate6Request } from "@/api/generated/core";
+import type { AccountResponse, CreateAccountRequest, AccountsApiList4Request, AccountsApiUpdate3Request, AccountsApiToggleActive2Request, AccountsApiCreate3Request } from "@/api/generated/core";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -74,7 +74,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
     const { companyId } = useAuth();
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [parentAccounts, setParentAccounts] = React.useState<AccountResponse[]>([]);
-    const [accountsListRequest, setAccountsListRequest] = React.useState<AccountsApiList6Request>({
+    const [accountsListRequest, setAccountsListRequest] = React.useState<AccountsApiList4Request>({
         companyId: companyId || '',
     });
 
@@ -95,7 +95,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
             // Fetch potential parent accounts
             const fetchParents = async () => {
                 try {
-                    const response = await coreAccountsApi.list6({
+                    const response = await coreAccountsApi.list4({
                         ...accountsListRequest,
                         companyId: companyId || ''
                     });
@@ -140,7 +140,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
                 companyId: companyId || '',
             };
 
-            const accountsUpdateRequest: AccountsApiUpdate4Request = {
+            const accountsUpdateRequest: AccountsApiUpdate3Request = {
                 id: initialData?.id as string,
                 createAccountRequest: requestData,
             };
@@ -150,15 +150,15 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
             };
 
             if (initialData?.id) {
-                await coreAccountsApi.update4(accountsUpdateRequest);
+                await coreAccountsApi.update3(accountsUpdateRequest);
                 if (initialData.isActive !== values.isActive) {
                     await coreAccountsApi.toggleActive2(accountsToggleActive2Request);
                 }
             } else {
-                const accountsCreate6Request: AccountsApiCreate6Request = {
+                const accountsCreate6Request: AccountsApiCreate3Request = {
                     createAccountRequest: requestData,
                 };
-                await coreAccountsApi.create6(accountsCreate6Request);
+                await coreAccountsApi.create3(accountsCreate6Request);
             }
 
             onSuccess();
