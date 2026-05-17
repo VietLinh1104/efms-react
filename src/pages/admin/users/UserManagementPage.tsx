@@ -3,11 +3,12 @@ import { DataTable } from "@components/ui/data-table.tsx";
 import { Button } from "@components/ui/button.tsx";
 import { RefreshCcw, Search } from "lucide-react";
 import { identityUserControllerApi, identityRoleControllerApi } from "@/api";
-import type { UserResponse, RoleResponse, UserUpdateRequest } from "@/api/generated/identity/api";
+import type { UserResponse, RoleResponse, UserUpdateRequest, InviteUserRequest } from "@/api/generated/identity/api";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { Input } from "@components/ui/input.tsx";
 import { getColumns } from "./columns";
 import UserEditDialog from "./UserEditDialog";
+import UserInviteDialog from "./UserInviteDialog";
 import { isForbidden } from "@/lib/utils";
 
 const UserManagementPage: React.FC = () => {
@@ -24,12 +25,18 @@ const UserManagementPage: React.FC = () => {
         roleId: "",
     });
 
+    const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+    const [inviteValues, setInviteValues] = useState<InviteUserRequest>({
+        email: "",
+        roleId: "",
+    });
+
     const { success, error } = useToastApp();
 
     const fetchUsers = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await identityUserControllerApi.getAllUsers() as any;
+            const response = await identityUserControllerApi.getUsersByMyCompany() as any;
             const content = response.data.data?.content || response.data.data || [];
             setUsers(content);
         } catch (err) {
@@ -89,6 +96,26 @@ const UserManagementPage: React.FC = () => {
         }
     };
 
+    const handleInviteUser = async () => {
+        setIsLoading(true);
+        try {
+            const res = await identityUserControllerApi.inviteUser({ inviteUserRequest: inviteValues });
+            if (res.data.status === 200) {
+                success("Đã gửi email thêm người dùng!");
+                setIsInviteDialogOpen(false);
+                setInviteValues({ email: "", roleId: "" });
+            } else {
+                error(res.data.message || "Gửi lời mời thất bại");
+            }
+        } catch (err: any) {
+            if (isForbidden(err)) return;
+            console.error("Error inviting user:", err);
+            error(err.response?.data?.message || "Đã xảy ra lỗi khi gửi lời mời.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleDeleteUser = useCallback(async (user: UserResponse) => {
         if (!user.id) return;
         if (!window.confirm(`Bạn có chắc muốn xóa người dùng ${user.email}?`)) return;
@@ -111,13 +138,13 @@ const UserManagementPage: React.FC = () => {
         }
     }, [success, error, fetchUsers]);
 
-    const columns = useMemo(() => 
-        getColumns(handleEditUser, handleDeleteUser), 
+    const columns = useMemo(() =>
+        getColumns(handleEditUser, handleDeleteUser),
         [handleEditUser, handleDeleteUser]
     );
 
-    const filteredUsers = useMemo(() => 
-        users.filter(user => 
+    const filteredUsers = useMemo(() =>
+        users.filter(user =>
             user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email?.toLowerCase().includes(searchTerm.toLowerCase())
         ),
@@ -136,14 +163,17 @@ const UserManagementPage: React.FC = () => {
             <div className="flex justify-between items-center gap-4">
                 <div className="relative max-w-sm w-full">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                        placeholder="Tìm theo tên, email..." 
-                        className="pl-8" 
+                    <Input
+                        placeholder="Tìm theo tên, email..."
+                        className="pl-8"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 <div className="flex items-center gap-2">
+                    <Button variant="default" onClick={() => setIsInviteDialogOpen(true)}>
+                        Thêm người dùng
+                    </Button>
                     <Button variant="outline" size="icon" onClick={fetchUsers} disabled={isLoading}>
                         <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                     </Button>
@@ -164,6 +194,16 @@ const UserManagementPage: React.FC = () => {
                 values={editValues}
                 onValuesChange={setEditValues}
                 onSave={handleUpdateUser}
+                isLoading={isLoading}
+            />
+
+            <UserInviteDialog
+                open={isInviteDialogOpen}
+                onOpenChange={setIsInviteDialogOpen}
+                roles={roles}
+                values={inviteValues}
+                onValuesChange={setInviteValues}
+                onSave={handleInviteUser}
                 isLoading={isLoading}
             />
         </div>

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**totalPages** | **number** |  | [optional] [default to undefined]
 **totalElements** | **number** |  | [optional] [default to undefined]
+**totalPages** | **number** |  | [optional] [default to undefined]
 **pageable** | [**PageableObject**](PageableObject.md) |  | [optional] [default to undefined]
 **numberOfElements** | **number** |  | [optional] [default to undefined]
 **first** | **boolean** |  | [optional] [default to undefined]
@@ -23,8 +23,8 @@ Name | Type | Description | Notes
 import { PageAuditLogResponse } from './api';
 
 const instance: PageAuditLogResponse = {
-    totalPages,
     totalElements,
+    totalPages,
     pageable,
     numberOfElements,
     first,

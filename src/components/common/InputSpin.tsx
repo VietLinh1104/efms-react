@@ -16,7 +16,7 @@ export function InputSpin({ isLoading = false, icon, children, className, loadin
         <InputGroup className={className} >
             <InputGroupInput placeholder={placeholder} disabled={isLoading} {...props} />
             {(isLoading || icon) && (
-                <InputGroupAddon>
+                <InputGroupAddon >
                     {isLoading ? <Spinner data-icon="inline-start" /> : icon}
                 </InputGroupAddon>
             )}

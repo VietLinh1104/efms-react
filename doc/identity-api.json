@@ -408,6 +408,36 @@
                 }
             }
         },
+        "/v1/users/invite": {
+            "post": {
+                "tags": [
+                    "user-controller"
+                ],
+                "operationId": "inviteUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InviteUserRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/v1/roles": {
             "get": {
                 "tags": [
@@ -552,6 +582,76 @@
                 }
             }
         },
+        "/oauth/token": {
+            "post": {
+                "tags": [
+                    "o-auth-controller"
+                ],
+                "operationId": "token",
+                "parameters": [
+                    {
+                        "name": "grant_type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "redirect_uri",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_secret",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/internal/users/batch": {
             "post": {
                 "tags": [
@@ -688,19 +788,113 @@
                 }
             }
         },
-        "/v1/users": {
-            "get": {
+        "/auth/activate": {
+            "post": {
                 "tags": [
-                    "user-controller"
+                    "auth-controller"
                 ],
-                "operationId": "getAllUsers",
+                "operationId": "activateUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivateUserRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "*/*": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiResponseListUserResponse"
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users": {
+            "get": {
+                "tags": [
+                    "user-controller"
+                ],
+                "operationId": "getAllUsers",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponsePagedResponseUserResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/my-company": {
+            "get": {
+                "tags": [
+                    "user-controller"
+                ],
+                "operationId": "getUsersByMyCompany",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponsePagedResponseUserResponse"
                                 }
                             }
                         }
@@ -802,6 +996,178 @@
                             "*/*": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiResponsePageAuditLogResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/callback": {
+            "get": {
+                "tags": [
+                    "o-auth-controller"
+                ],
+                "operationId": "callback",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "redirect_uri",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/authorize": {
+            "get": {
+                "tags": [
+                    "o-auth-controller"
+                ],
+                "operationId": "authorize",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "redirect_uri",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "response_type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code_challenge",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code_challenge_method",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/.well-known/oauth-authorization-server": {
+            "get": {
+                "tags": [
+                    "o-auth-controller"
+                ],
+                "operationId": "getMetadata",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "auth-controller"
+                ],
+                "operationId": "getCurrentUser",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1075,6 +1441,37 @@
                     }
                 }
             },
+            "InviteUserRequest": {
+                "required": [
+                    "email",
+                    "roleId"
+                ],
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "roleId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }
+            },
+            "ApiResponseVoid": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                }
+            },
             "ApiResponseListUserInternalResponse": {
                 "type": "object",
                 "properties": {
@@ -1169,7 +1566,26 @@
                     }
                 }
             },
-            "ApiResponseListUserResponse": {
+            "ActivateUserRequest": {
+                "required": [
+                    "name",
+                    "password",
+                    "token"
+                ],
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ApiResponsePagedResponseUserResponse": {
                 "type": "object",
                 "properties": {
                     "status": {
@@ -1180,12 +1596,56 @@
                         "type": "string"
                     },
                     "data": {
+                        "$ref": "#/components/schemas/PagedResponseUserResponse"
+                    }
+                }
+            },
+            "PagedResponseUserResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
                         "type": "array",
+                        "description": "Danh sách phần tử",
                         "items": {
                             "$ref": "#/components/schemas/UserResponse"
                         }
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "Trang hiện tại (0-indexed)",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "Số phần tử mỗi trang",
+                        "format": "int32",
+                        "example": 20
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "description": "Tổng số phần tử",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "description": "Tổng số trang",
+                        "format": "int32",
+                        "example": 5
+                    },
+                    "hasPrevious": {
+                        "type": "boolean",
+                        "description": "Có trang trước không",
+                        "example": false
+                    },
+                    "hasNext": {
+                        "type": "boolean",
+                        "description": "Có trang sau không",
+                        "example": true
                     }
-                }
+                },
+                "description": "Wrapper cho danh sách có phân trang"
             },
             "ApiResponseListRoleResponse": {
                 "type": "object",
@@ -1297,13 +1757,13 @@
             "PageAuditLogResponse": {
                 "type": "object",
                 "properties": {
-                    "totalPages": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
                     "totalElements": {
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
                     },
                     "pageable": {
                         "$ref": "#/components/schemas/PageableObject"
@@ -1349,12 +1809,12 @@
                     "unpaged": {
                         "type": "boolean"
                     },
+                    "paged": {
+                        "type": "boolean"
+                    },
                     "pageNumber": {
                         "type": "integer",
                         "format": "int32"
-                    },
-                    "paged": {
-                        "type": "boolean"
                     },
                     "pageSize": {
                         "type": "integer",
@@ -1389,21 +1849,6 @@
                     },
                     "ignoreCase": {
                         "type": "boolean"
-                    }
-                }
-            },
-            "ApiResponseVoid": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "object"
                     }
                 }
             }

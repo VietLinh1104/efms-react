@@ -12,7 +12,8 @@ import { Link } from 'react-router-dom';
 
 export interface SidebarGroupComponentProps {
     label: string;
-    items: { label: string; href: string, icon?: React.ReactNode }[];
+    items: { label: string; href: string, icon?: React.ReactNode, roles?: string[] }[];
+    roles?: string[];
 }
 
 export default function SidebarGroupComponent({ label, items }: SidebarGroupComponentProps) {

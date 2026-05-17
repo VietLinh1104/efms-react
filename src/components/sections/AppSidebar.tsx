@@ -34,6 +34,7 @@ export function AppSidebar() {
     const sidebarGroups: SidebarGroupComponentProps[] = [
         {
             label: "Kế toán",
+            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
             items: [
                 { label: "Hệ thống tài khoản", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
                 { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
@@ -42,6 +43,7 @@ export function AppSidebar() {
         },
         {
             label: "Chứng từ",
+            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
             items: [
                 { label: "Đối tác", href: "/partners", icon: <Users className="w-4 h-4" /> },
                 { label: "Hóa đơn & Chứng từ", href: "/invoices", icon: <Receipt className="w-4 h-4" /> },
@@ -50,6 +52,7 @@ export function AppSidebar() {
         },
         {
             label: "Tiền mặt & Ngân hàng",
+            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
             items: [
                 { label: "Tài khoản ngân hàng", href: "/finance/accounts", icon: <Landmark className="w-4 h-4" /> },
                 // { label: "Lịch sử giao dịch", href: "/finance/transactions", icon: <History className="w-4 h-4" /> },
@@ -68,12 +71,23 @@ export function AppSidebar() {
         },
         {
             label: "Quản trị hệ thống",
+            roles: ["ROLE_ADMIN"],
             items: [
                 { label: "Người dùng", href: "/admin/users", icon: <User className="w-4 h-4" /> },
                 { label: "Vai trò & Quyền người dùng", href: "/admin/roles-permissions", icon: <User className="w-4 h-4" /> },
             ],
         },
     ];
+
+    const userRole = user?.role?.name?.toUpperCase() || 'USER';
+
+    const filteredSidebarGroups = sidebarGroups
+        .filter(group => !group.roles || group.roles.includes(userRole))
+        .map(group => ({
+            ...group,
+            items: group.items.filter(item => !item.roles || item.roles.includes(userRole))
+        }))
+        .filter(group => group.items.length > 0);
 
     return (
         <Sidebar>
@@ -84,7 +98,7 @@ export function AppSidebar() {
                 </div>
             </SidebarHeader>
             <SidebarContent>
-                {sidebarGroups.map((group, index) => (
+                {filteredSidebarGroups.map((group, index) => (
                     <SidebarGroupComponent key={index} label={group.label} items={group.items} />
                 ))}
             </SidebarContent>
@@ -106,7 +120,7 @@ export function AppSidebar() {
                                     {user?.name || 'Guest'}
                                 </h1>
                                 <p className="text-[10px] text-muted-foreground leading-none truncate">
-                                    {user?.role?.name || 'User'}
+                                    {userRole || 'User'}
                                 </p>
                             </div>
                         </div>

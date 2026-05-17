@@ -6,8 +6,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **unpaged** | **boolean** |  | [optional] [default to undefined]
-**pageNumber** | **number** |  | [optional] [default to undefined]
 **paged** | **boolean** |  | [optional] [default to undefined]
+**pageNumber** | **number** |  | [optional] [default to undefined]
 **pageSize** | **number** |  | [optional] [default to undefined]
 **offset** | **number** |  | [optional] [default to undefined]
 **sort** | [**Array&lt;SortObject&gt;**](SortObject.md) |  | [optional] [default to undefined]
@@ -19,8 +19,8 @@ import { PageableObject } from './api';
 
 const instance: PageableObject = {
     unpaged,
-    pageNumber,
     paged,
+    pageNumber,
     pageSize,
     offset,
     sort,

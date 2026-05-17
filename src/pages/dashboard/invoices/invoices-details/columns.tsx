@@ -123,7 +123,7 @@ export const getColumns = (
             cell: ({ row }) => {
                 const status = row.getValue("approvalStatus") as string;
                 const statusStyles: Record<string, string> = {
-                    null: "bg-none text-gray-800",
+                    null: "bg-gray-100 text-gray-800",
                     cancelled: "bg-blue-100 text-blue-800",
                     approved: "bg-green-100 text-green-800",
                 };

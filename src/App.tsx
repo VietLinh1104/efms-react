@@ -5,6 +5,7 @@ import HomePage from "@pages/dashboard/HomePage";
 import AuthLayout from "./components/layout/dashboard/AuthLayout";
 import AuthPage from "./pages/auth/AuthPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import ActivatePage from "./pages/auth/ActivatePage";
 import { ThemeProvider } from "@components/provider/ThemeProvider";
 import { ToastProvider } from "@components/provider/ToastProvider";
 import { AuthProvider } from "@/context/AuthContext";
@@ -47,6 +48,9 @@ function App() {
               </Route>
               <Route path="/register" element={<AuthLayout />}>
                 <Route index element={<RegisterPage />} />
+              </Route>
+              <Route path="/auth/activate" element={<AuthLayout />}>
+                <Route index element={<ActivatePage />} />
               </Route>
             </Route>
 

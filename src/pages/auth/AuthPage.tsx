@@ -120,7 +120,8 @@ const AuthPage: React.FC = () => {
         id: data.id,
         name: data.name,
         email: data.email,
-        company: data.companyId ? { id: data.companyId } : undefined,
+        company: data.companyId ? { id: data.companyId } : data.company,
+        role: (data.roles && data.roles.length > 0) ? { name: data.roles[0] } : undefined,
       };
 
       // Persist auth data in context + localStorage
