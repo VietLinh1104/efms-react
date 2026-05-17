@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  efms-react:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_PUBLIC_API_URL_IDENTITY=${VITE_PUBLIC_API_URL_IDENTITY}
+        - VITE_PUBLIC_API_URL_CORE=${VITE_PUBLIC_API_URL_CORE}
+        - VITE_PUBLIC_API_URL_COMMON=${VITE_PUBLIC_API_URL_COMMON}
+        - VITE_R2_ACCOUNT_ID=${VITE_R2_ACCOUNT_ID}
+        - VITE_R2_ACCESS_KEY_ID=${VITE_R2_ACCESS_KEY_ID}
+        - VITE_R2_SECRET_ACCESS_KEY=${VITE_R2_SECRET_ACCESS_KEY}
+        - VITE_R2_BUCKET_NAME=${VITE_R2_BUCKET_NAME}
+        - VITE_R2_PUBLIC_URL=${VITE_R2_PUBLIC_URL}
+    container_name: efms-react
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    restart: always
