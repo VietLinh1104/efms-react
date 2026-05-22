@@ -39,6 +39,10 @@
         {
             "name": "Journal Entries",
             "description": "Danh sách bút toán kế toán (Read-only)"
+        },
+        {
+            "name": "Dashboard",
+            "description": "API tổng hợp dữ liệu cho trang Dashboard"
         }
     ],
     "paths": {
@@ -1519,6 +1523,38 @@
                 }
             }
         },
+        "/v1/dashboard/summary": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Tổng hợp dữ liệu Dashboard",
+                "operationId": "getDashboardSummary",
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseDashboardSummaryResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/v1/accounting/journals": {
             "get": {
                 "tags": [
@@ -2986,6 +3022,149 @@
                     }
                 },
                 "description": "Wrapper cho danh sách có phân trang"
+            },
+            "ApiResponseDashboardSummaryResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/DashboardSummaryResponse"
+                    }
+                }
+            },
+            "DashboardSummaryResponse": {
+                "type": "object",
+                "properties": {
+                    "kpi": {
+                        "$ref": "#/components/schemas/KpiStats"
+                    },
+                    "invoiceStatusStats": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InvoiceStatusStat"
+                        }
+                    },
+                    "monthlyFlow": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MonthlyFlowStat"
+                        }
+                    },
+                    "pendingInvoices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PendingInvoiceItem"
+                        }
+                    },
+                    "recentPayments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RecentPaymentItem"
+                        }
+                    }
+                }
+            },
+            "InvoiceStatusStat": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "color": {
+                        "type": "string"
+                    }
+                }
+            },
+            "KpiStats": {
+                "type": "object",
+                "properties": {
+                    "totalAr": {
+                        "type": "number"
+                    },
+                    "totalAp": {
+                        "type": "number"
+                    },
+                    "paymentsThisMonth": {
+                        "type": "number"
+                    },
+                    "pendingApprovalCount": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "MonthlyFlowStat": {
+                "type": "object",
+                "properties": {
+                    "month": {
+                        "type": "string"
+                    },
+                    "revenue": {
+                        "type": "number"
+                    },
+                    "expense": {
+                        "type": "number"
+                    }
+                }
+            },
+            "PendingInvoiceItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "invoiceNumber": {
+                        "type": "string"
+                    },
+                    "partnerName": {
+                        "type": "string"
+                    },
+                    "invoiceType": {
+                        "type": "string"
+                    },
+                    "totalAmount": {
+                        "type": "number"
+                    },
+                    "invoiceDate": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "approvalStatus": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RecentPaymentItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "partnerName": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "paymentDate": {
+                        "type": "string"
+                    },
+                    "posted": {
+                        "type": "boolean"
+                    }
+                }
             },
             "ApiResponsePagedResponseJournalEntryResponse": {
                 "type": "object",

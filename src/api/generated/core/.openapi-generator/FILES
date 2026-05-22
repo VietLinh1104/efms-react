@@ -12,6 +12,7 @@ docs/ApiResponseAccountBalanceResponse.md
 docs/ApiResponseAccountResponse.md
 docs/ApiResponseBankAccountResponse.md
 docs/ApiResponseBigDecimal.md
+docs/ApiResponseDashboardSummaryResponse.md
 docs/ApiResponseInvoiceResponse.md
 docs/ApiResponseJournalEntryResponse.md
 docs/ApiResponseListAccountResponse.md
@@ -32,16 +33,21 @@ docs/CreateAccountRequest.md
 docs/CreateBankAccountRequest.md
 docs/CreatePartnerRequest.md
 docs/CreatePaymentRequest.md
+docs/DashboardApi.md
+docs/DashboardSummaryResponse.md
 docs/InvoiceApprovalApi.md
 docs/InvoiceLineRequest.md
 docs/InvoiceLineResponse.md
 docs/InvoicePaymentResponse.md
 docs/InvoiceRequest.md
 docs/InvoiceResponse.md
+docs/InvoiceStatusStat.md
 docs/InvoicesApi.md
 docs/JournalEntriesApi.md
 docs/JournalEntryResponse.md
 docs/JournalLineResponse.md
+docs/KpiStats.md
+docs/MonthlyFlowStat.md
 docs/PagedResponseAccountResponse.md
 docs/PagedResponseBankAccountResponse.md
 docs/PagedResponseInvoiceResponse.md
@@ -52,5 +58,7 @@ docs/PartnerResponse.md
 docs/PartnersApi.md
 docs/PaymentResponse.md
 docs/PaymentsApi.md
+docs/PendingInvoiceItem.md
+docs/RecentPaymentItem.md
 git_push.sh
 index.ts

@@ -10,7 +10,14 @@ import {
     InvoicesApi,
     PaymentsApi,
     InvoiceApprovalApi,
+    DashboardApi,
 } from "@/api/generated/core/api";
+
+export const coreDashboardApi = new DashboardApi(
+    apiConfigCore,
+    undefined,
+    axiosInstance
+);
 
 export const coreInvoiceApprovalApi = new InvoiceApprovalApi(
     apiConfigCore,

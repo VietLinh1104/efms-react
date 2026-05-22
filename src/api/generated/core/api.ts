@@ -130,6 +130,11 @@ export interface ApiResponseBigDecimal {
     'message'?: string;
     'data'?: number;
 }
+export interface ApiResponseDashboardSummaryResponse {
+    'status'?: number;
+    'message'?: string;
+    'data'?: DashboardSummaryResponse;
+}
 export interface ApiResponseInvoiceResponse {
     'status'?: number;
     'message'?: string;
@@ -401,6 +406,13 @@ export interface CreatePaymentRequest {
      */
     'companyId'?: string;
 }
+export interface DashboardSummaryResponse {
+    'kpi'?: KpiStats;
+    'invoiceStatusStats'?: Array<InvoiceStatusStat>;
+    'monthlyFlow'?: Array<MonthlyFlowStat>;
+    'pendingInvoices'?: Array<PendingInvoiceItem>;
+    'recentPayments'?: Array<RecentPaymentItem>;
+}
 /**
  * Payload dòng hóa đơn
  */
@@ -634,6 +646,11 @@ export interface InvoiceResponse {
      */
     'lines'?: Array<InvoiceLineResponse>;
 }
+export interface InvoiceStatusStat {
+    'name'?: string;
+    'value'?: number;
+    'color'?: string;
+}
 /**
  * Thông tin chứng từ kế toán
  */
@@ -743,6 +760,17 @@ export interface JournalLineResponse {
      * Thời điểm tạo
      */
     'createdAt'?: string;
+}
+export interface KpiStats {
+    'totalAr'?: number;
+    'totalAp'?: number;
+    'paymentsThisMonth'?: number;
+    'pendingApprovalCount'?: number;
+}
+export interface MonthlyFlowStat {
+    'month'?: string;
+    'revenue'?: number;
+    'expense'?: number;
 }
 /**
  * Wrapper cho danh sách có phân trang
@@ -1055,6 +1083,23 @@ export interface PaymentResponse {
      * Chi tiết các hóa đơn đã được phân bổ (Nếu gọi detail)
      */
     'allocations'?: Array<InvoicePaymentResponse>;
+}
+export interface PendingInvoiceItem {
+    'id'?: string;
+    'invoiceNumber'?: string;
+    'partnerName'?: string;
+    'invoiceType'?: string;
+    'totalAmount'?: number;
+    'invoiceDate'?: string;
+    'status'?: string;
+    'approvalStatus'?: string;
+}
+export interface RecentPaymentItem {
+    'id'?: string;
+    'partnerName'?: string;
+    'amount'?: number;
+    'paymentDate'?: string;
+    'posted'?: boolean;
 }
 
 /**
@@ -2233,6 +2278,117 @@ export class BankAccountsApi extends BaseAPI {
      */
     public update2(requestParameters: BankAccountsApiUpdate2Request, options?: RawAxiosRequestConfig) {
         return BankAccountsApiFp(this.configuration).update2(requestParameters.id, requestParameters.createBankAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * DashboardApi - axios parameter creator
+ */
+export const DashboardApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Tổng hợp dữ liệu Dashboard
+         * @param {string} companyId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDashboardSummary: async (companyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'companyId' is not null or undefined
+            assertParamExists('getDashboardSummary', 'companyId', companyId)
+            const localVarPath = `/v1/dashboard/summary`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (companyId !== undefined) {
+                localVarQueryParameter['companyId'] = companyId;
+            }
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DashboardApi - functional programming interface
+ */
+export const DashboardApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DashboardApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Tổng hợp dữ liệu Dashboard
+         * @param {string} companyId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDashboardSummary(companyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseDashboardSummaryResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDashboardSummary(companyId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DashboardApi.getDashboardSummary']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DashboardApi - factory interface
+ */
+export const DashboardApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DashboardApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Tổng hợp dữ liệu Dashboard
+         * @param {DashboardApiGetDashboardSummaryRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDashboardSummary(requestParameters: DashboardApiGetDashboardSummaryRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseDashboardSummaryResponse> {
+            return localVarFp.getDashboardSummary(requestParameters.companyId, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for getDashboardSummary operation in DashboardApi.
+ */
+export interface DashboardApiGetDashboardSummaryRequest {
+    readonly companyId: string
+}
+
+/**
+ * DashboardApi - object-oriented interface
+ */
+export class DashboardApi extends BaseAPI {
+    /**
+     * 
+     * @summary Tổng hợp dữ liệu Dashboard
+     * @param {DashboardApiGetDashboardSummaryRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getDashboardSummary(requestParameters: DashboardApiGetDashboardSummaryRequest, options?: RawAxiosRequestConfig) {
+        return DashboardApiFp(this.configuration).getDashboardSummary(requestParameters.companyId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
