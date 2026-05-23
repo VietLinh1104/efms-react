@@ -224,6 +224,7 @@ export interface AuditLogResponse {
     'recordId'?: string;
     'action'?: string;
     'changedBy'?: string;
+    'changedByName'?: string;
     'changedAt'?: string;
     'oldData'?: { [key: string]: object; };
     'newData'?: { [key: string]: object; };
@@ -1816,10 +1817,11 @@ export const AuditLogsApiAxiosParamCreator = function (configuration?: Configura
          * @summary Timeline lịch sử thay đổi của một record cụ thể
          * @param {string} tableName 
          * @param {string} recordId 
+         * @param {string} [xCompanyId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRecordHistory: async (tableName: string, recordId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getRecordHistory: async (tableName: string, recordId: string, xCompanyId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'tableName' is not null or undefined
             assertParamExists('getRecordHistory', 'tableName', tableName)
             // verify required parameter 'recordId' is not null or undefined
@@ -1846,6 +1848,9 @@ export const AuditLogsApiAxiosParamCreator = function (configuration?: Configura
 
             localVarHeaderParameter['Accept'] = '*/*';
 
+            if (xCompanyId != null) {
+                localVarHeaderParameter['X-Company-Id'] = String(xCompanyId);
+            }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1858,13 +1863,14 @@ export const AuditLogsApiAxiosParamCreator = function (configuration?: Configura
         /**
          * 
          * @summary Danh sách audit log (toàn hệ thống, có phân trang)
+         * @param {string} [xCompanyId] 
          * @param {string} [tableName] 
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAuditLogs: async (tableName?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listAuditLogs: async (xCompanyId?: string, tableName?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/audit-logs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1891,6 +1897,9 @@ export const AuditLogsApiAxiosParamCreator = function (configuration?: Configura
 
             localVarHeaderParameter['Accept'] = '*/*';
 
+            if (xCompanyId != null) {
+                localVarHeaderParameter['X-Company-Id'] = String(xCompanyId);
+            }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1914,11 +1923,12 @@ export const AuditLogsApiFp = function(configuration?: Configuration) {
          * @summary Timeline lịch sử thay đổi của một record cụ thể
          * @param {string} tableName 
          * @param {string} recordId 
+         * @param {string} [xCompanyId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getRecordHistory(tableName: string, recordId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAuditLogResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getRecordHistory(tableName, recordId, options);
+        async getRecordHistory(tableName: string, recordId: string, xCompanyId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAuditLogResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRecordHistory(tableName, recordId, xCompanyId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuditLogsApi.getRecordHistory']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1926,14 +1936,15 @@ export const AuditLogsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Danh sách audit log (toàn hệ thống, có phân trang)
+         * @param {string} [xCompanyId] 
          * @param {string} [tableName] 
          * @param {number} [page] 
          * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listAuditLogs(tableName?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseAuditLogResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listAuditLogs(tableName, page, size, options);
+        async listAuditLogs(xCompanyId?: string, tableName?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseAuditLogResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAuditLogs(xCompanyId, tableName, page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuditLogsApi.listAuditLogs']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1955,7 +1966,7 @@ export const AuditLogsApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         getRecordHistory(requestParameters: AuditLogsApiGetRecordHistoryRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAuditLogResponse> {
-            return localVarFp.getRecordHistory(requestParameters.tableName, requestParameters.recordId, options).then((request) => request(axios, basePath));
+            return localVarFp.getRecordHistory(requestParameters.tableName, requestParameters.recordId, requestParameters.xCompanyId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1965,7 +1976,7 @@ export const AuditLogsApiFactory = function (configuration?: Configuration, base
          * @throws {RequiredError}
          */
         listAuditLogs(requestParameters: AuditLogsApiListAuditLogsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseAuditLogResponse> {
-            return localVarFp.listAuditLogs(requestParameters.tableName, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+            return localVarFp.listAuditLogs(requestParameters.xCompanyId, requestParameters.tableName, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1977,12 +1988,16 @@ export interface AuditLogsApiGetRecordHistoryRequest {
     readonly tableName: string
 
     readonly recordId: string
+
+    readonly xCompanyId?: string
 }
 
 /**
  * Request parameters for listAuditLogs operation in AuditLogsApi.
  */
 export interface AuditLogsApiListAuditLogsRequest {
+    readonly xCompanyId?: string
+
     readonly tableName?: string
 
     readonly page?: number
@@ -2002,7 +2017,7 @@ export class AuditLogsApi extends BaseAPI {
      * @throws {RequiredError}
      */
     public getRecordHistory(requestParameters: AuditLogsApiGetRecordHistoryRequest, options?: RawAxiosRequestConfig) {
-        return AuditLogsApiFp(this.configuration).getRecordHistory(requestParameters.tableName, requestParameters.recordId, options).then((request) => request(this.axios, this.basePath));
+        return AuditLogsApiFp(this.configuration).getRecordHistory(requestParameters.tableName, requestParameters.recordId, requestParameters.xCompanyId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2013,7 +2028,7 @@ export class AuditLogsApi extends BaseAPI {
      * @throws {RequiredError}
      */
     public listAuditLogs(requestParameters: AuditLogsApiListAuditLogsRequest = {}, options?: RawAxiosRequestConfig) {
-        return AuditLogsApiFp(this.configuration).listAuditLogs(requestParameters.tableName, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
+        return AuditLogsApiFp(this.configuration).listAuditLogs(requestParameters.xCompanyId, requestParameters.tableName, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

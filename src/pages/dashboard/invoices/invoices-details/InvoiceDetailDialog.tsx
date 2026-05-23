@@ -46,6 +46,7 @@ import type {
     AuditLogsApiGetRecordHistoryRequest,
 } from "@/api/generated/core";
 import { coreAuditLogsApi } from "@/api";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────── */
 
@@ -149,6 +150,52 @@ const getAuditAction = (action?: string): AuditActionConfig =>
         dotClass: "bg-slate-400",
     };
 
+const renderAuditLogSentence = (log: AuditLogResponse) => {
+    const userName = log.changedBy ? (
+        log.changedByName ? (
+            <strong className="font-semibold text-foreground/90">{log.changedByName}</strong>
+        ) : (
+            <span className="font-mono text-muted-foreground">{String(log.changedBy).slice(0, 8)}…</span>
+        )
+    ) : (
+        <strong className="font-semibold text-foreground/90">Hệ thống</strong>
+    );
+
+    let actionText = "đã thực hiện thao tác trên hóa đơn này";
+    switch (log.action) {
+        case "INSERT":
+            actionText = "tạo mới hóa đơn này";
+            break;
+        case "UPDATE":
+            actionText = "cập nhật hóa đơn này";
+            break;
+        case "DELETE":
+            actionText = "xóa hóa đơn này";
+            break;
+        case "CONFIRM":
+            actionText = "xác nhận hóa đơn này";
+            break;
+        case "APPROVE":
+            actionText = "phê duyệt hóa đơn này";
+            break;
+        case "REJECT":
+            actionText = "từ chối hóa đơn này";
+            break;
+        case "CANCEL":
+            actionText = "hủy hóa đơn này";
+            break;
+        case "PAYMENT_ALLOCATE":
+            actionText = "phân bổ thanh toán cho hóa đơn này";
+            break;
+    }
+
+    return (
+        <span className="text-sm text-muted-foreground font-normal">
+            {userName} {actionText}
+        </span>
+    );
+};
+
 /* ─── Sub-components ────────────────────────────────────────────────────── */
 
 const InfoRow: React.FC<{ label: string; value?: React.ReactNode }> = ({
@@ -163,39 +210,7 @@ const InfoRow: React.FC<{ label: string; value?: React.ReactNode }> = ({
     </div>
 );
 
-/* Hiển thị diff old_data → new_data của một audit entry */
-const AuditDiff: React.FC<{ log: AuditLogResponse }> = ({ log }) => {
-    const old = log.oldData as Record<string, unknown> | undefined;
-    const next = log.newData as Record<string, unknown> | undefined;
-    const allKeys = Array.from(
-        new Set([...Object.keys(old ?? {}), ...Object.keys(next ?? {})])
-    ).filter((k) => old?.[k] !== next?.[k]); // Chỉ hiện keys có thay đổi
 
-    if (allKeys.length === 0) return null;
-
-    return (
-        <div className="mt-2 rounded-md border bg-muted/30 p-2 text-xs space-y-1">
-            {allKeys.map((key) => (
-                <div key={key} className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-mono text-muted-foreground">{key}:</span>
-                    {old?.[key] !== undefined && (
-                        <span className="line-through text-red-500 font-mono">
-                            {String(old[key])}
-                        </span>
-                    )}
-                    {old?.[key] !== undefined && next?.[key] !== undefined && (
-                        <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                    )}
-                    {next?.[key] !== undefined && (
-                        <span className="text-green-600 font-mono">
-                            {String(next[key])}
-                        </span>
-                    )}
-                </div>
-            ))}
-        </div>
-    );
-};
 
 /* ─── Props ─────────────────────────────────────────────────────────────── */
 
@@ -213,6 +228,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
     invoice,
 }) => {
     const navigate = useNavigate();
+    const { companyId } = useAuth();
     const [auditLogs, setAuditLogs] = useState<AuditLogResponse[]>([]);
     const [isAuditLoading, setIsAuditLoading] = useState(false);
 
@@ -229,6 +245,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                 const req: AuditLogsApiGetRecordHistoryRequest = {
                     tableName: "invoices",
                     recordId: invoice.id!,
+                    xCompanyId: companyId ?? undefined,
                 };
                 const res = await coreAuditLogsApi.getRecordHistory(req);
                 setAuditLogs(res.data.data ?? []);
@@ -241,7 +258,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
         };
 
         fetchAudit();
-    }, [open, invoice?.id]);
+    }, [open, invoice?.id, companyId]);
 
     if (!invoice) return null;
 
@@ -425,43 +442,25 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                             </div>
                         ) : (
                             <ScrollArea className="h-[380px] pr-2">
-                                <ol className="relative border-l border-border ml-3 space-y-6">
+                                <ul className="space-y-4">
                                     {[...auditLogs].reverse().map((log, idx) => {
                                         const cfg = getAuditAction(log.action);
                                         return (
-                                            <li key={log.id ?? idx} className="ml-5">
-                                                {/* Dot trên timeline */}
-                                                <span
-                                                    className={`absolute -left-[7px] flex h-3.5 w-3.5 items-center justify-center rounded-full ${cfg.dotClass} ring-2 ring-background`}
-                                                />
-
+                                            <li key={log.id ?? idx} className="pb-4 border-b border-border last:border-0 last:pb-0">
                                                 {/* Header */}
-                                                <div className="flex items-center justify-between gap-2 flex-wrap">
-                                                    <div className={`flex items-center gap-1.5 font-semibold text-sm ${cfg.colorClass}`}>
-                                                        {cfg.icon}
-                                                        <span>{cfg.label}</span>
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={cfg.colorClass}>{cfg.icon}</span>
+                                                        {renderAuditLogSentence(log)}
                                                     </div>
                                                     <time className="text-xs text-muted-foreground shrink-0">
                                                         {fmtDatetime(log.changedAt)}
                                                     </time>
                                                 </div>
-
-                                                {/* Changed by */}
-                                                {log.changedBy && (
-                                                    <p className="text-xs text-muted-foreground mt-0.5">
-                                                        bởi{" "}
-                                                        <span className="font-mono">
-                                                            {String(log.changedBy).slice(0, 8)}…
-                                                        </span>
-                                                    </p>
-                                                )}
-
-                                                {/* Diff */}
-                                                <AuditDiff log={log} />
                                             </li>
                                         );
                                     })}
-                                </ol>
+                                </ul>
                             </ScrollArea>
                         )}
                     </TabsContent>

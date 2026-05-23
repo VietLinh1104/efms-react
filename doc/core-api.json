@@ -1568,6 +1568,15 @@
                 "operationId": "listAuditLogs",
                 "parameters": [
                     {
+                        "name": "X-Company-Id",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
                         "name": "tableName",
                         "in": "query",
                         "required": false,
@@ -1618,6 +1627,15 @@
                 "summary": "Timeline lịch sử thay đổi của một record cụ thể",
                 "operationId": "getRecordHistory",
                 "parameters": [
+                    {
+                        "name": "X-Company-Id",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
                     {
                         "name": "tableName",
                         "in": "query",
@@ -3296,6 +3314,9 @@
                     "changedBy": {
                         "type": "string",
                         "format": "uuid"
+                    },
+                    "changedByName": {
+                        "type": "string"
                     },
                     "changedAt": {
                         "type": "string",

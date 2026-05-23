@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   TrendingUp,
   Receipt,
@@ -20,6 +21,14 @@ import {
   ArrowRight,
   AlertCircle,
   RefreshCw,
+  PlusCircle,
+  Pencil,
+  Trash2,
+  ShieldCheck,
+  ShieldX,
+  Ban,
+  CircleDollarSign,
+  Activity,
 } from "lucide-react";
 import {
   BarChart,
@@ -35,9 +44,9 @@ import {
   Legend,
 } from "recharts";
 import { useAuth } from "@/hooks/useAuth";
-import { coreDashboardApi } from "@/api";
+import { coreDashboardApi, coreAuditLogsApi } from "@/api";
 import { useToastApp } from "@hooks/use-toast-app.ts";
-import type { DashboardSummaryResponse } from "@/api/generated/core/api";
+import type { DashboardSummaryResponse, AuditLogResponse } from "@/api/generated/core/api";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -104,6 +113,103 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   );
 };
 
+// ── Audit helpers ──────────────────────────────────────────────────────────────
+
+const TABLE_LABELS: Record<string, string> = {
+  invoices: "Hóa đơn",
+  payments: "Thanh toán",
+  partners: "Đối tác",
+  bank_accounts: "Tài khoản NH",
+  journal_entries: "Bút toán",
+  accounts: "Tài khoản KT",
+};
+
+type AuditCfg = { label: string; icon: React.ReactNode; dot: string; text: string };
+
+const AUDIT_CFG: Record<string, AuditCfg> = {
+  INSERT: { label: "Tạo mới", icon: <PlusCircle className="h-3.5 w-3.5" />, dot: "bg-blue-500", text: "text-blue-600" },
+  UPDATE: { label: "Cập nhật", icon: <Pencil className="h-3.5 w-3.5" />, dot: "bg-amber-500", text: "text-amber-600" },
+  DELETE: { label: "Xóa", icon: <Trash2 className="h-3.5 w-3.5" />, dot: "bg-red-500", text: "text-red-600" },
+  CONFIRM: { label: "Xác nhận", icon: <CheckCircle2 className="h-3.5 w-3.5" />, dot: "bg-blue-500", text: "text-blue-600" },
+  APPROVE: { label: "Phê duyệt", icon: <ShieldCheck className="h-3.5 w-3.5" />, dot: "bg-green-500", text: "text-green-600" },
+  REJECT: { label: "Từ chối", icon: <ShieldX className="h-3.5 w-3.5" />, dot: "bg-red-500", text: "text-red-600" },
+  CANCEL: { label: "Hủy", icon: <Ban className="h-3.5 w-3.5" />, dot: "bg-red-500", text: "text-red-600" },
+  PAYMENT_ALLOCATE: { label: "Phân bổ TT", icon: <CircleDollarSign className="h-3.5 w-3.5" />, dot: "bg-purple-500", text: "text-purple-600" },
+};
+
+const getAuditCfg = (action?: string): AuditCfg =>
+  AUDIT_CFG[action ?? ""] ?? { label: action ?? "---", icon: <Activity className="h-3.5 w-3.5" />, dot: "bg-slate-400", text: "text-slate-600" };
+
+const fmtRelative = (v?: string | null): string => {
+  if (!v) return "---";
+  const diff = Date.now() - new Date(v).getTime();
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 1) return "vừa xong";
+  if (mins < 60) return `${mins} phút trước`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} giờ trước`;
+  const days = Math.floor(hrs / 24);
+  return `${days} ngày trước`;
+};
+
+const renderAuditLogSentence = (log: AuditLogResponse) => {
+  const userName = log.changedBy ? (
+    log.changedByName ? (
+      <strong className="font-semibold text-foreground/90">{log.changedByName}</strong>
+    ) : (
+      <span className="font-mono text-muted-foreground">{String(log.changedBy).slice(0, 8)}…</span>
+    )
+  ) : (
+    <strong className="font-semibold text-foreground/90">Hệ thống</strong>
+  );
+
+  const recordPart = log.recordId ? (
+    <span className="font-mono text-muted-foreground/80 font-medium">#{String(log.recordId).slice(0, 8)}</span>
+  ) : null;
+
+  const tableLabel = log.tableName ? (
+    TABLE_LABELS[log.tableName] || log.tableName
+  ) : "";
+
+  let actionText = "đã thực hiện thao tác trên";
+  switch (log.action) {
+    case "INSERT":
+      actionText = "tạo mới";
+      break;
+    case "UPDATE":
+      actionText = "cập nhật";
+      break;
+    case "DELETE":
+      actionText = "xóa";
+      break;
+    case "CONFIRM":
+      actionText = "xác nhận";
+      break;
+    case "APPROVE":
+      actionText = "phê duyệt";
+      break;
+    case "REJECT":
+      actionText = "từ chối";
+      break;
+    case "CANCEL":
+      actionText = "hủy";
+      break;
+    case "PAYMENT_POST":
+    case "POST":
+      actionText = "ghi sổ cái";
+      break;
+    case "PAYMENT_ALLOCATE":
+      actionText = "phân bổ thanh toán cho";
+      break;
+  }
+
+  return (
+    <span className="text-sm text-muted-foreground">
+      {userName} {actionText} {tableLabel.toLowerCase()} {recordPart}
+    </span>
+  );
+};
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 const HomePage: React.FC = () => {
@@ -114,6 +220,9 @@ const HomePage: React.FC = () => {
   const [data, setData] = useState<DashboardSummaryResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const [auditLogs, setAuditLogs] = useState<AuditLogResponse[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!companyId) return;
@@ -136,6 +245,22 @@ const HomePage: React.FC = () => {
     }
   }, [companyId, toastError]);
 
+  const fetchAuditLogs = useCallback(async () => {
+    setAuditLoading(true);
+    try {
+      const res = await coreAuditLogsApi.listAuditLogs({
+        xCompanyId: companyId ?? undefined,
+        page: 0,
+        size: 15,
+      });
+      setAuditLogs(res.data.data?.content ?? []);
+    } catch (err) {
+      console.error("Lỗi khi tải audit logs:", err);
+    } finally {
+      setAuditLoading(false);
+    }
+  }, [companyId]);
+
   useEffect(() => {
     if (!authLoading) {
       if (companyId) {
@@ -145,6 +270,12 @@ const HomePage: React.FC = () => {
       }
     }
   }, [authLoading, companyId, fetchData]);
+
+  useEffect(() => {
+    if (!authLoading) {
+      fetchAuditLogs();
+    }
+  }, [authLoading, fetchAuditLogs]);
 
   if (authLoading || loading) {
     return (
@@ -231,7 +362,7 @@ const HomePage: React.FC = () => {
             Dữ liệu thời gian thực được tổng hợp từ Core Service
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={fetchData} className="gap-1">
+        <Button variant="outline" size="sm" onClick={() => { fetchData(); fetchAuditLogs(); }} className="gap-1">
           <RefreshCw className="w-3.5 h-3.5" /> Làm mới
         </Button>
       </div>
@@ -401,9 +532,8 @@ const HomePage: React.FC = () => {
               recentPayments.map((pay) => (
                 <div key={pay.id} className="flex items-start gap-3">
                   <div
-                    className={`mt-0.5 rounded-full p-1.5 ${
-                      pay.posted ? "bg-green-500/10" : "bg-amber-500/10"
-                    }`}
+                    className={`mt-0.5 rounded-full p-1.5 ${pay.posted ? "bg-green-500/10" : "bg-amber-500/10"
+                      }`}
                   >
                     {pay.posted ? (
                       <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
@@ -437,6 +567,62 @@ const HomePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* ── Recent Activity (Audit Log) ── */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Activity className="w-4 h-4 text-primary" />
+              Hoạt động gần đây
+            </CardTitle>
+            <CardDescription>Các hành động của người dùng trong hệ thống</CardDescription>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={fetchAuditLogs}
+            disabled={auditLoading}
+            className="gap-1 text-muted-foreground"
+          >
+            <RefreshCw className={`w-3 h-3 ${auditLoading ? "animate-spin" : ""}`} />
+            Làm mới
+          </Button>
+        </CardHeader>
+        <CardContent className="p-0">
+          {auditLoading ? (
+            <div className="flex items-center justify-center py-10 gap-2 text-muted-foreground">
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span className="text-sm">Đang tải...</span>
+            </div>
+          ) : auditLogs.length === 0 ? (
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              Chưa có hoạt động nào
+            </div>
+          ) : (
+            <ScrollArea className="h-[320px]">
+              <ul className="px-6 py-4 space-y-4">
+                {auditLogs.map((log, idx) => {
+                  const cfg = getAuditCfg(log.action);
+                  return (
+                    <li key={log.id ?? idx} className="pb-4 border-b border-border last:border-0 last:pb-0">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className={cfg.text}>{cfg.icon}</span>
+                          {renderAuditLogSentence(log)}
+                        </div>
+                        <time className="text-xs text-muted-foreground shrink-0">
+                          {fmtRelative(log.changedAt)}
+                        </time>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </ScrollArea>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

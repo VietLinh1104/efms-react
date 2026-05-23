@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **recordId** | **string** |  | [optional] [default to undefined]
 **action** | **string** |  | [optional] [default to undefined]
 **changedBy** | **string** |  | [optional] [default to undefined]
+**changedByName** | **string** |  | [optional] [default to undefined]
 **changedAt** | **string** |  | [optional] [default to undefined]
 **oldData** | **{ [key: string]: object; }** |  | [optional] [default to undefined]
 **newData** | **{ [key: string]: object; }** |  | [optional] [default to undefined]
@@ -26,6 +27,7 @@ const instance: AuditLogResponse = {
     recordId,
     action,
     changedBy,
+    changedByName,
     changedAt,
     oldData,
     newData,

@@ -27,9 +27,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SidebarGroupComponent from "@components/common/SidebarGroupComponent";
 import type { SidebarGroupComponentProps } from "@components/common/SidebarGroupComponent";
+import { useNavigate } from "react-router-dom";
 
 export function AppSidebar() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const sidebarGroups: SidebarGroupComponentProps[] = [
         {
@@ -92,7 +94,7 @@ export function AppSidebar() {
     return (
         <Sidebar>
             <SidebarHeader className="border-b bg-none h-12 flex items-center justify-center p-2"  >
-                <div className="flex items-center gap-2 hover:bg-sidebar-accent rounded-sm cursor-pointer px-3 py-3 h-full w-full">
+                <div onClick={() => navigate("/")} className="flex items-center gap-2 hover:bg-sidebar-accent rounded-sm cursor-pointer px-3 py-3 h-full w-full">
                     <Codepen className="w-5 h-5" />
                     <h1 className="text-sm font-semibold">Dashboard</h1>
                 </div>

@@ -24,10 +24,12 @@ const apiInstance = new AuditLogsApi(configuration);
 
 let tableName: string; // (default to undefined)
 let recordId: string; // (default to undefined)
+let xCompanyId: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.getRecordHistory(
     tableName,
-    recordId
+    recordId,
+    xCompanyId
 );
 ```
 
@@ -37,6 +39,7 @@ const { status, data } = await apiInstance.getRecordHistory(
 |------------- | ------------- | ------------- | -------------|
 | **tableName** | [**string**] |  | defaults to undefined|
 | **recordId** | [**string**] |  | defaults to undefined|
+| **xCompanyId** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
@@ -75,11 +78,13 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AuditLogsApi(configuration);
 
+let xCompanyId: string; // (optional) (default to undefined)
 let tableName: string; // (optional) (default to undefined)
 let page: number; // (optional) (default to 0)
 let size: number; // (optional) (default to 20)
 
 const { status, data } = await apiInstance.listAuditLogs(
+    xCompanyId,
     tableName,
     page,
     size
@@ -90,6 +95,7 @@ const { status, data } = await apiInstance.listAuditLogs(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
+| **xCompanyId** | [**string**] |  | (optional) defaults to undefined|
 | **tableName** | [**string**] |  | (optional) defaults to undefined|
 | **page** | [**number**] |  | (optional) defaults to 0|
 | **size** | [**number**] |  | (optional) defaults to 20|
