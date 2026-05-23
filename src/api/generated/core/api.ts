@@ -150,6 +150,11 @@ export interface ApiResponseListAccountResponse {
     'message'?: string;
     'data'?: Array<AccountResponse>;
 }
+export interface ApiResponseListAuditLogResponse {
+    'status'?: number;
+    'message'?: string;
+    'data'?: Array<AuditLogResponse>;
+}
 export interface ApiResponseListInvoiceResponse {
     'status'?: number;
     'message'?: string;
@@ -159,6 +164,11 @@ export interface ApiResponsePagedResponseAccountResponse {
     'status'?: number;
     'message'?: string;
     'data'?: PagedResponseAccountResponse;
+}
+export interface ApiResponsePagedResponseAuditLogResponse {
+    'status'?: number;
+    'message'?: string;
+    'data'?: PagedResponseAuditLogResponse;
 }
 export interface ApiResponsePagedResponseBankAccountResponse {
     'status'?: number;
@@ -204,6 +214,19 @@ export interface ApiResponseVoid {
     'status'?: number;
     'message'?: string;
     'data'?: object;
+}
+/**
+ * Danh sách phần tử
+ */
+export interface AuditLogResponse {
+    'id'?: string;
+    'tableName'?: string;
+    'recordId'?: string;
+    'action'?: string;
+    'changedBy'?: string;
+    'changedAt'?: string;
+    'oldData'?: { [key: string]: object; };
+    'newData'?: { [key: string]: object; };
 }
 /**
  * Thông tin tài khoản ngân hàng
@@ -780,6 +803,39 @@ export interface PagedResponseAccountResponse {
      * Danh sách phần tử
      */
     'content'?: Array<AccountResponse>;
+    /**
+     * Trang hiện tại (0-indexed)
+     */
+    'page'?: number;
+    /**
+     * Số phần tử mỗi trang
+     */
+    'size'?: number;
+    /**
+     * Tổng số phần tử
+     */
+    'totalElements'?: number;
+    /**
+     * Tổng số trang
+     */
+    'totalPages'?: number;
+    /**
+     * Có trang trước không
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * Có trang sau không
+     */
+    'hasNext'?: boolean;
+}
+/**
+ * Wrapper cho danh sách có phân trang
+ */
+export interface PagedResponseAuditLogResponse {
+    /**
+     * Danh sách phần tử
+     */
+    'content'?: Array<AuditLogResponse>;
     /**
      * Trang hiện tại (0-indexed)
      */
@@ -1745,6 +1801,219 @@ export class AccountsApi extends BaseAPI {
      */
     public update3(requestParameters: AccountsApiUpdate3Request, options?: RawAxiosRequestConfig) {
         return AccountsApiFp(this.configuration).update3(requestParameters.id, requestParameters.createAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * AuditLogsApi - axios parameter creator
+ */
+export const AuditLogsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Timeline lịch sử thay đổi của một record cụ thể
+         * @param {string} tableName 
+         * @param {string} recordId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRecordHistory: async (tableName: string, recordId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tableName' is not null or undefined
+            assertParamExists('getRecordHistory', 'tableName', tableName)
+            // verify required parameter 'recordId' is not null or undefined
+            assertParamExists('getRecordHistory', 'recordId', recordId)
+            const localVarPath = `/v1/audit-logs/record`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (tableName !== undefined) {
+                localVarQueryParameter['tableName'] = tableName;
+            }
+
+            if (recordId !== undefined) {
+                localVarQueryParameter['recordId'] = recordId;
+            }
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Danh sách audit log (toàn hệ thống, có phân trang)
+         * @param {string} [tableName] 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAuditLogs: async (tableName?: string, page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/audit-logs`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (tableName !== undefined) {
+                localVarQueryParameter['tableName'] = tableName;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AuditLogsApi - functional programming interface
+ */
+export const AuditLogsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AuditLogsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Timeline lịch sử thay đổi của một record cụ thể
+         * @param {string} tableName 
+         * @param {string} recordId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getRecordHistory(tableName: string, recordId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseListAuditLogResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRecordHistory(tableName, recordId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuditLogsApi.getRecordHistory']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Danh sách audit log (toàn hệ thống, có phân trang)
+         * @param {string} [tableName] 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listAuditLogs(tableName?: string, page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePagedResponseAuditLogResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAuditLogs(tableName, page, size, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuditLogsApi.listAuditLogs']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AuditLogsApi - factory interface
+ */
+export const AuditLogsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AuditLogsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Timeline lịch sử thay đổi của một record cụ thể
+         * @param {AuditLogsApiGetRecordHistoryRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRecordHistory(requestParameters: AuditLogsApiGetRecordHistoryRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseListAuditLogResponse> {
+            return localVarFp.getRecordHistory(requestParameters.tableName, requestParameters.recordId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Danh sách audit log (toàn hệ thống, có phân trang)
+         * @param {AuditLogsApiListAuditLogsRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAuditLogs(requestParameters: AuditLogsApiListAuditLogsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePagedResponseAuditLogResponse> {
+            return localVarFp.listAuditLogs(requestParameters.tableName, requestParameters.page, requestParameters.size, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for getRecordHistory operation in AuditLogsApi.
+ */
+export interface AuditLogsApiGetRecordHistoryRequest {
+    readonly tableName: string
+
+    readonly recordId: string
+}
+
+/**
+ * Request parameters for listAuditLogs operation in AuditLogsApi.
+ */
+export interface AuditLogsApiListAuditLogsRequest {
+    readonly tableName?: string
+
+    readonly page?: number
+
+    readonly size?: number
+}
+
+/**
+ * AuditLogsApi - object-oriented interface
+ */
+export class AuditLogsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Timeline lịch sử thay đổi của một record cụ thể
+     * @param {AuditLogsApiGetRecordHistoryRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getRecordHistory(requestParameters: AuditLogsApiGetRecordHistoryRequest, options?: RawAxiosRequestConfig) {
+        return AuditLogsApiFp(this.configuration).getRecordHistory(requestParameters.tableName, requestParameters.recordId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Danh sách audit log (toàn hệ thống, có phân trang)
+     * @param {AuditLogsApiListAuditLogsRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public listAuditLogs(requestParameters: AuditLogsApiListAuditLogsRequest = {}, options?: RawAxiosRequestConfig) {
+        return AuditLogsApiFp(this.configuration).listAuditLogs(requestParameters.tableName, requestParameters.page, requestParameters.size, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

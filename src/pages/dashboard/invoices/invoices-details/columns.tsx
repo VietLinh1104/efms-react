@@ -129,7 +129,7 @@ export const getColumns = (
                 };
                 return (
                     <Badge className={`${statusStyles[status] || ""} border-none capitalize`}>
-                        {status || "Draft"}
+                        {status || "N/A"}
                     </Badge>
                 );
             },
@@ -148,15 +148,12 @@ export const getColumns = (
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
                             <DropdownMenuItem onClick={() => onView(invoice)}>
-                                <Eye className="mr-2 h-4 w-4" /> Xem chi tiết
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onEdit(invoice)}>
-                                <Edit className="mr-2 h-4 w-4" /> Chỉnh sửa
+                                <Eye className="mr-2 h-4 w-4" />Chi tiết
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 onClick={() => onDelete(invoice)}
-                                className="text-destructive focus:text-destructive"
+                                className=""
                             >
                                 <Trash2 className="mr-2 h-4 w-4" /> Hủy/Xóa
                             </DropdownMenuItem>

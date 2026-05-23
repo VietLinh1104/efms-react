@@ -16,8 +16,10 @@ docs/ApiResponseDashboardSummaryResponse.md
 docs/ApiResponseInvoiceResponse.md
 docs/ApiResponseJournalEntryResponse.md
 docs/ApiResponseListAccountResponse.md
+docs/ApiResponseListAuditLogResponse.md
 docs/ApiResponseListInvoiceResponse.md
 docs/ApiResponsePagedResponseAccountResponse.md
+docs/ApiResponsePagedResponseAuditLogResponse.md
 docs/ApiResponsePagedResponseBankAccountResponse.md
 docs/ApiResponsePagedResponseInvoiceResponse.md
 docs/ApiResponsePagedResponseJournalEntryResponse.md
@@ -27,6 +29,8 @@ docs/ApiResponsePartnerResponse.md
 docs/ApiResponsePaymentResponse.md
 docs/ApiResponseString.md
 docs/ApiResponseVoid.md
+docs/AuditLogResponse.md
+docs/AuditLogsApi.md
 docs/BankAccountResponse.md
 docs/BankAccountsApi.md
 docs/CreateAccountRequest.md
@@ -49,6 +53,7 @@ docs/JournalLineResponse.md
 docs/KpiStats.md
 docs/MonthlyFlowStat.md
 docs/PagedResponseAccountResponse.md
+docs/PagedResponseAuditLogResponse.md
 docs/PagedResponseBankAccountResponse.md
 docs/PagedResponseInvoiceResponse.md
 docs/PagedResponseJournalEntryResponse.md

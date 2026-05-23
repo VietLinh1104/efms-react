@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { DataTable } from "@components/ui/data-table.tsx";
 import { getColumns } from "./columns.tsx";
+import { getTasksColumns } from "./task-columns.tsx";
+import { InvoiceDetailDialog } from "./InvoiceDetailDialog.tsx";
 import { Button } from "@components/ui/button.tsx";
-import { Plus, RefreshCcw, Search, CheckSquare } from "lucide-react";
+import { Plus, RefreshCcw, Search } from "lucide-react";
 import { coreInvoicesApi, coreInvoiceApprovalApi } from "@/api";
 import type {
     InvoiceResponse, InvoiceApprovalApiGetPendingApprovalsRequest,
@@ -13,12 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@components/ui/input.tsx";
 import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import type { ColumnDef } from "@tanstack/react-table";
 import { isForbidden } from "@/lib/utils";
 
-type TaskInvoiceResponse = InvoiceResponse & {
-};
+type TaskInvoiceResponse = InvoiceResponse & {};
 
 const InvoicesListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -27,10 +26,14 @@ const InvoicesListing: React.FC = () => {
     const [isTasksLoading, setIsTasksLoading] = useState(false);
     const [tasksData, setTasksData] = useState<TaskInvoiceResponse[]>([]);
 
+    // State cho Invoice Detail Dialog
+    const [selectedInvoice, setSelectedInvoice] = useState<InvoiceResponse | null>(null);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+
     const { success, error } = useToastApp();
     const navigate = useNavigate();
     const { companyId } = useAuth();
-    const [activeTab, setActiveTab] = useState("all");
+    const [activeTab, setActiveTab] = useState("tasks");
 
     // 1. Hàm fetch dữ liệu Invoices
     const fetchInvoices = useCallback(async () => {
@@ -81,8 +84,9 @@ const InvoicesListing: React.FC = () => {
     }, [companyId, error]);
 
     const handleView = useCallback((invoice: InvoiceResponse) => {
-        navigate(`/invoices/${invoice.id}`);
-    }, [navigate]);
+        setSelectedInvoice(invoice);
+        setIsDetailOpen(true);
+    }, []);
 
     const handleEdit = useCallback((invoice: InvoiceResponse) => {
         navigate(`/invoices/${invoice.id}/edit`);
@@ -125,6 +129,10 @@ const InvoicesListing: React.FC = () => {
         getColumns(handleView, handleEdit, handleDelete),
         [handleView, handleEdit, handleDelete]);
 
+    const tasksColumns = useMemo(() =>
+        getTasksColumns(navigate, error),
+        [navigate, error]);
+
     const refreshData = () => {
         if (activeTab === "all") fetchInvoices();
         else fetchTasks();
@@ -135,65 +143,16 @@ const InvoicesListing: React.FC = () => {
         fetchTasks();
     }, [fetchInvoices, fetchTasks]);
 
-    const tasksColumns: ColumnDef<TaskInvoiceResponse>[] = [
-        {
-            accessorKey: "invoiceNumber",
-            header: "Số hóa đơn",
-            cell: ({ row }) => <div>{row.original.invoiceNumber || "DRAFT"}</div>,
-        },
-        {
-            accessorKey: "partner",
-            header: "Đối tác",
-            cell: ({ row }) => <div>{row.original.partnerName || "---"}</div>,
-        },
-        {
-            accessorKey: "totalAmount",
-            header: () => <div className="text-right">Tổng tiền</div>,
-            cell: ({ row }) => {
-                const amt = row.original.totalAmount || 0;
-                return (
-                    <div className="text-right font-medium">
-                        {new Intl.NumberFormat("vi-VN", { style: "currency", currency: row.original.currencyCode || "VND" }).format(amt)}
-                    </div>
-                );
-            },
-        },
-        {
-            accessorKey: "status",
-            header: "Trạng thái",
-            cell: ({ row }) => {
-                const status = (row.original)?.approvalStatus || "pending";
-                return <Badge className="uppercase" variant="secondary">{status}</Badge>;
-            }
-        },
-        {
-            id: "actions",
-            header: () => <div className="text-center">Thao tác</div>,
-            cell: ({ row }) => {
-                const invoice = row.original;
-                return (
-                    <div className="flex justify-center">
-                        <Button
-                            variant="outline" size="sm"
-                            className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary border-none"
-                            onClick={() => {
-                                if (invoice?.id) {
-                                    navigate(`/invoices/${invoice.id}`)
-                                } else {
-                                    error("Tác vụ không có ID hóa đơn hợp lệ.");
-                                }
-                            }}
-                        >
-                            <CheckSquare className="w-4 h-4 mr-2" /> Xử lý
-                        </Button>
-                    </div>
-                );
-            },
-        },
-    ];
+
 
     return (
         <div className="space-y-4">
+            {/* Invoice Detail Dialog */}
+            <InvoiceDetailDialog
+                open={isDetailOpen}
+                onOpenChange={setIsDetailOpen}
+                invoice={selectedInvoice}
+            />
             <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-bold tracking-tight">Hóa đơn & Chứng từ</h2>
                 <p className="text-muted-foreground">
@@ -204,15 +163,15 @@ const InvoicesListing: React.FC = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
                     <TabsList>
-                        <TabsTrigger value="all">Tất cả hóa đơn</TabsTrigger>
                         <TabsTrigger value="tasks" className="relative">
                             Công việc cần xử lý
-                            {tasksData.length > 0 && (
-                                <span className="absolute -top-1 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                            {/* {tasksData.length > 0 && (
+                                <span className="absolute -top-1 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white">
                                     {tasksData.length}
                                 </span>
-                            )}
+                            )} */}
                         </TabsTrigger>
+                        <TabsTrigger value="all">Tất cả hóa đơn</TabsTrigger>
                     </TabsList>
                 </Tabs>
 
@@ -249,12 +208,14 @@ const InvoicesListing: React.FC = () => {
                         columns={columns}
                         data={data}
                         isLoading={isLoading}
+                        onRowClick={handleView}
                     />
                 ) : (
                     <DataTable
                         columns={tasksColumns}
                         data={tasksData}
                         isLoading={isTasksLoading}
+                        onRowClick={handleView}
                     />
                 )}
             </div>

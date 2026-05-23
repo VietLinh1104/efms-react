@@ -4,6 +4,7 @@ import { apiConfigCommon, apiConfigCore, apiConfigIdentity } from "./config";
 
 import {
     AccountsApi,
+    AuditLogsApi,
     BankAccountsApi,
     JournalEntriesApi,
     PartnersApi,
@@ -56,6 +57,12 @@ export const coreJournalEntriesApi = new JournalEntriesApi(
 );
 
 export const corePartnersApi = new PartnersApi(
+    apiConfigCore,
+    undefined,
+    axiosInstance
+);
+
+export const coreAuditLogsApi = new AuditLogsApi(
     apiConfigCore,
     undefined,
     axiosInstance

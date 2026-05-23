@@ -33,6 +33,10 @@
             "description": "Quản lý Hóa đơn / Bill (AR / AP)"
         },
         {
+            "name": "Audit Logs",
+            "description": "Lịch sử thay đổi dữ liệu tài chính (Core Service)"
+        },
+        {
             "name": "Payments",
             "description": "Quản lý Thanh toán (Thu / Chi)"
         },
@@ -1548,6 +1552,97 @@
                             "*/*": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiResponseDashboardSummaryResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/audit-logs": {
+            "get": {
+                "tags": [
+                    "Audit Logs"
+                ],
+                "summary": "Danh sách audit log (toàn hệ thống, có phân trang)",
+                "operationId": "listAuditLogs",
+                "parameters": [
+                    {
+                        "name": "tableName",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponsePagedResponseAuditLogResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/audit-logs/record": {
+            "get": {
+                "tags": [
+                    "Audit Logs"
+                ],
+                "summary": "Timeline lịch sử thay đổi của một record cụ thể",
+                "operationId": "getRecordHistory",
+                "parameters": [
+                    {
+                        "name": "tableName",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recordId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseListAuditLogResponse"
                                 }
                             }
                         }
@@ -3163,6 +3258,126 @@
                     },
                     "posted": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "ApiResponsePagedResponseAuditLogResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PagedResponseAuditLogResponse"
+                    }
+                }
+            },
+            "AuditLogResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tableName": {
+                        "type": "string"
+                    },
+                    "recordId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "action": {
+                        "type": "string"
+                    },
+                    "changedBy": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "changedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "oldData": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    },
+                    "newData": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "description": "Danh sách phần tử"
+            },
+            "PagedResponseAuditLogResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "array",
+                        "description": "Danh sách phần tử",
+                        "items": {
+                            "$ref": "#/components/schemas/AuditLogResponse"
+                        }
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "Trang hiện tại (0-indexed)",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "Số phần tử mỗi trang",
+                        "format": "int32",
+                        "example": 20
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "description": "Tổng số phần tử",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "description": "Tổng số trang",
+                        "format": "int32",
+                        "example": 5
+                    },
+                    "hasPrevious": {
+                        "type": "boolean",
+                        "description": "Có trang trước không",
+                        "example": false
+                    },
+                    "hasNext": {
+                        "type": "boolean",
+                        "description": "Có trang sau không",
+                        "example": true
+                    }
+                },
+                "description": "Wrapper cho danh sách có phân trang"
+            },
+            "ApiResponseListAuditLogResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AuditLogResponse"
+                        }
                     }
                 }
             },
