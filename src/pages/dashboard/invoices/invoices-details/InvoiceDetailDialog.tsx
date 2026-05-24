@@ -371,9 +371,6 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                                         </span>
                                     }
                                 />
-                                {invoice.approvalComment && (
-                                    <InfoRow label="Ghi chú duyệt" value={invoice.approvalComment} />
-                                )}
                                 <InfoRow label="Ngày tạo" value={fmtDatetime(invoice.createdAt)} />
                             </div>
                         </div>

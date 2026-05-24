@@ -33,7 +33,7 @@ import {
     TableFooter,
 } from "@components/ui/table.tsx";
 
-import { coreAccountsApi, corePartnersApi, coreInvoicesApi } from "@/api";
+import { coreAccountsApi, corePartnersApi, coreInvoicesApi, commonCommentApi } from "@/api";
 import type {
     AccountResponse,
     PartnerResponse,
@@ -223,10 +223,29 @@ const InvoiceFormPage: React.FC = () => {
     const handleApprove = async () => {
         if (!id) return;
         const comment = window.prompt("Nhập ghi chú duyệt (tùy chọn):");
-        if (comment === null) return;
+        if (comment === null) return; // User bấm Cancel
         setIsApproveLoading(true);
         try {
-            await coreInvoicesApi.approveInvoice({ id, comment: comment || undefined });
+            // 1. Phê duyệt hóa đơn
+            await coreInvoicesApi.approveInvoice({ id });
+
+            // 2. Lưu comment vào Common Service (nếu có nội dung)
+            if (comment.trim()) {
+                try {
+                    await commonCommentApi.createComment({
+                        xCompanyId: companyId ?? "",
+                        xUserId: "", // Backend lấy từ JWT header
+                        commentRequest: {
+                            referenceId: id,
+                            referenceType: "invoices",
+                            content: `[Phê duyệt] ${comment.trim()}`,
+                        },
+                    });
+                } catch (commentErr) {
+                    console.warn("Lưu comment thất bại (không ảnh hưởng kết quả phê duyệt):", commentErr);
+                }
+            }
+
             success("Đã duyệt hóa đơn AP!");
             navigate("/invoices");
         } catch (err) {
@@ -240,11 +259,32 @@ const InvoiceFormPage: React.FC = () => {
 
     const handleReject = async () => {
         if (!id) return;
-        const comment = window.prompt("Lý do từ chối (tùy chọn):");
-        if (comment === null) return;
+        const comment = window.prompt("Lý do từ chối (bắt buộc):");
+        if (comment === null) return; // User bấm Cancel
+        if (!comment.trim()) {
+            error("Vui lòng nhập lý do từ chối.");
+            return;
+        }
         setIsRejectLoading(true);
         try {
-            await coreInvoicesApi.rejectInvoice({ id, comment: comment || undefined });
+            // 1. Từ chối hóa đơn
+            await coreInvoicesApi.rejectInvoice({ id });
+
+            // 2. Lưu lý do từ chối vào Common Service
+            try {
+                await commonCommentApi.createComment({
+                    xCompanyId: companyId ?? "",
+                    xUserId: "",
+                    commentRequest: {
+                        referenceId: id,
+                        referenceType: "invoices",
+                        content: `[Từ chối] ${comment.trim()}`,
+                    },
+                });
+            } catch (commentErr) {
+                console.warn("Lưu comment thất bại (không ảnh hưởng kết quả từ chối):", commentErr);
+            }
+
             success("Đã từ chối hóa đơn!");
             navigate("/invoices");
         } catch (err) {
@@ -640,11 +680,6 @@ const InvoiceFormPage: React.FC = () => {
                                             <span className={`absolute left-3 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full ${getStatusColor(currentApprovalStatus)} `} />
                                             <Input className="pl-8 uppercase" value={currentApprovalStatus} readOnly={true} />
                                         </div>
-                                        {invoice?.approvalComment && (
-                                            <div className="text-sm text-muted-foreground p-2 bg-muted/50 rounded-md">
-                                                <strong>Ghi chú duyệt:</strong> {invoice.approvalComment}
-                                            </div>
-                                        )}
                                     </div>
                                 )}
 
