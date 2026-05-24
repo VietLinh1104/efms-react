@@ -34,31 +34,40 @@ export function AppSidebar() {
     const navigate = useNavigate();
 
     const sidebarGroups: SidebarGroupComponentProps[] = [
+
         {
-            label: "Kế toán",
+            label: "Hoá đơn & Giao dịch",
             roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
             items: [
-                { label: "Hệ thống tài khoản", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
+                { label: "Hóa đơn & Chứng từ", href: "/invoices", icon: <Receipt className="w-4 h-4" /> },
+                { label: "Thanh toán", href: "/payments", icon: <CreditCard className="w-4 h-4" /> },
                 { label: "Bút toán nhật ký", href: "/accounting/journals", icon: <BookText className="w-4 h-4" /> },
+            ],
+        },
+        {
+            label: "Tài khoản",
+            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
+            items: [
+                { label: "Tài khoản ngân hàng", href: "/finance/accounts", icon: <Landmark className="w-4 h-4" /> },
+                { label: "Tài khoản kế toán", href: "/accounting/accounts", icon: <ListTree className="w-4 h-4" /> },
+                // { label: "Lịch sử giao dịch", href: "/finance/transactions", icon: <History className="w-4 h-4" /> },
+                // { label: "Đối soát", href: "/finance/reconciliation", icon: <ShieldCheck className="w-4 h-4" /> },
+            ],
+        },
+        {
+            label: "Đối tác",
+            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
+            items: [
+                { label: "Đối tác", href: "/partners", icon: <Users className="w-4 h-4" /> },
                 // { label: "Bảng cân đối thử", href: "/accounting/trial-balance", icon: <Scale className="w-4 h-4" /> },
             ],
         },
         {
-            label: "Chứng từ",
-            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
+            label: "Quản trị hệ thống",
+            roles: ["ROLE_ADMIN"],
             items: [
-                { label: "Đối tác", href: "/partners", icon: <Users className="w-4 h-4" /> },
-                { label: "Hóa đơn & Chứng từ", href: "/invoices", icon: <Receipt className="w-4 h-4" /> },
-                { label: "Thanh toán", href: "/payments", icon: <CreditCard className="w-4 h-4" /> },
-            ],
-        },
-        {
-            label: "Tiền mặt & Ngân hàng",
-            roles: ["ROLE_FINANCE_MANAGER", "ROLE_ACCOUNTANT", "ROLE_AUDITOR"],
-            items: [
-                { label: "Tài khoản ngân hàng", href: "/finance/accounts", icon: <Landmark className="w-4 h-4" /> },
-                // { label: "Lịch sử giao dịch", href: "/finance/transactions", icon: <History className="w-4 h-4" /> },
-                // { label: "Đối soát", href: "/finance/reconciliation", icon: <ShieldCheck className="w-4 h-4" /> },
+                { label: "Người dùng", href: "/admin/users", icon: <User className="w-4 h-4" /> },
+                { label: "Vai trò & Quyền người dùng", href: "/admin/roles-permissions", icon: <User className="w-4 h-4" /> },
             ],
         },
         {
@@ -71,14 +80,7 @@ export function AppSidebar() {
                 // { label: "Kỳ kế toán", href: "/settings/periods", icon: <CalendarDays className="w-4 h-4" /> },
             ],
         },
-        {
-            label: "Quản trị hệ thống",
-            roles: ["ROLE_ADMIN"],
-            items: [
-                { label: "Người dùng", href: "/admin/users", icon: <User className="w-4 h-4" /> },
-                { label: "Vai trò & Quyền người dùng", href: "/admin/roles-permissions", icon: <User className="w-4 h-4" /> },
-            ],
-        },
+
     ];
 
     const userRole = user?.role?.name?.toUpperCase() || 'USER';
