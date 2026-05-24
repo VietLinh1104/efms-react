@@ -9,7 +9,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install project dependencies
-RUN npm install
+# Using npm ci to avoid out-of-memory and disk space issues (exit code 228)
+RUN npm ci --no-audit --no-fund
 
 # Copy all source files
 COPY . .
