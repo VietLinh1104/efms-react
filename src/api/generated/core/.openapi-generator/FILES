@@ -7,7 +7,6 @@ configuration.ts
 docs/AccountBalanceResponse.md
 docs/AccountResponse.md
 docs/AccountsApi.md
-docs/AllocatePaymentRequest.md
 docs/ApiResponseAccountBalanceResponse.md
 docs/ApiResponseAccountResponse.md
 docs/ApiResponseBankAccountResponse.md
@@ -42,7 +41,6 @@ docs/DashboardSummaryResponse.md
 docs/InvoiceApprovalApi.md
 docs/InvoiceLineRequest.md
 docs/InvoiceLineResponse.md
-docs/InvoicePaymentResponse.md
 docs/InvoiceRequest.md
 docs/InvoiceResponse.md
 docs/InvoiceStatusStat.md

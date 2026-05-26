@@ -18,7 +18,10 @@ Name | Type | Description | Notes
 **journalEntryId** | **string** | ID bút toán (nếu đã post) | [optional] [default to undefined]
 **createdBy** | **string** | Người nhận/chi | [optional] [default to undefined]
 **createdAt** | **string** | Thời gian tạo | [optional] [default to undefined]
-**allocations** | [**Array&lt;InvoicePaymentResponse&gt;**](InvoicePaymentResponse.md) | Chi tiết các hóa đơn đã được phân bổ (Nếu gọi detail) | [optional] [default to undefined]
+**invoiceId** | **string** | ID Hóa đơn liên kết | [optional] [default to undefined]
+**invoiceNumber** | **string** | Số hóa đơn liên kết | [optional] [default to undefined]
+**bankAccountId** | **string** | ID Tài khoản ngân hàng / tiền mặt | [optional] [default to undefined]
+**bankAccountName** | **string** | Tên Tài khoản ngân hàng / tiền mặt | [optional] [default to undefined]
 
 ## Example
 
@@ -38,7 +41,10 @@ const instance: PaymentResponse = {
     journalEntryId,
     createdBy,
     createdAt,
-    allocations,
+    invoiceId,
+    invoiceNumber,
+    bankAccountId,
+    bankAccountName,
 };
 ```
 

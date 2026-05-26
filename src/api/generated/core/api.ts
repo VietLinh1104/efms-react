@@ -97,19 +97,6 @@ export interface AccountResponse {
      */
     'children'?: Array<AccountResponse>;
 }
-/**
- * Payload phân bổ thanh toán vào một hoá đơn
- */
-export interface AllocatePaymentRequest {
-    /**
-     * UUID của chứng từ Hóa đơn cần trừ nợ
-     */
-    'invoiceId': string;
-    /**
-     * Số tiền thanh toán sẽ gán vào hóa đơn này
-     */
-    'amount': number;
-}
 export interface ApiResponseAccountBalanceResponse {
     'status'?: number;
     'message'?: string;
@@ -429,6 +416,10 @@ export interface CreatePaymentRequest {
      * UUID công ty sở hữu
      */
     'companyId'?: string;
+    /**
+     * UUID của hóa đơn cần thanh toán
+     */
+    'invoiceId'?: string;
 }
 export interface DashboardSummaryResponse {
     'kpi'?: KpiStats;
@@ -510,43 +501,6 @@ export interface InvoiceLineResponse {
      * Thành tiền (trước thuế)
      */
     'amount'?: number;
-}
-/**
- * Thông tin dòng phân bổ thanh toán cho hóa đơn
- */
-export interface InvoicePaymentResponse {
-    /**
-     * ID dòng phân bổ
-     */
-    'id'?: string;
-    /**
-     * ID phiếu thanh toán gốc
-     */
-    'paymentId'?: string;
-    /**
-     * ID hóa đơn được phân bổ
-     */
-    'invoiceId'?: string;
-    /**
-     * Mã hóa đơn được phân bổ
-     */
-    'invoiceNumber'?: string;
-    /**
-     * Ngày thanh toán
-     */
-    'paymentDate'?: string;
-    /**
-     * Số tiền đã phân bổ
-     */
-    'allocatedAmount'?: number;
-    /**
-     * Người phân bổ
-     */
-    'createdBy'?: string;
-    /**
-     * Thời gian phân bổ
-     */
-    'createdAt'?: string;
 }
 /**
  * Payload tạo / cập nhật hóa đơn
@@ -1141,9 +1095,21 @@ export interface PaymentResponse {
      */
     'createdAt'?: string;
     /**
-     * Chi tiết các hóa đơn đã được phân bổ (Nếu gọi detail)
+     * ID Hóa đơn liên kết
      */
-    'allocations'?: Array<InvoicePaymentResponse>;
+    'invoiceId'?: string;
+    /**
+     * Số hóa đơn liên kết
+     */
+    'invoiceNumber'?: string;
+    /**
+     * ID Tài khoản ngân hàng / tiền mặt
+     */
+    'bankAccountId'?: string;
+    /**
+     * Tên Tài khoản ngân hàng / tiền mặt
+     */
+    'bankAccountName'?: string;
 }
 export interface PendingInvoiceItem {
     'id'?: string;
@@ -4777,45 +4743,6 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Phân bổ số tiền của payment vào 1 Inovice (AR/AP)
-         * @param {string} id 
-         * @param {AllocatePaymentRequest} allocatePaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        allocate: async (id: string, allocatePaymentRequest: AllocatePaymentRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('allocate', 'id', id)
-            // verify required parameter 'allocatePaymentRequest' is not null or undefined
-            assertParamExists('allocate', 'allocatePaymentRequest', allocatePaymentRequest)
-            const localVarPath = `/v1/payments/{id}/allocate`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(allocatePaymentRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Tạo thanh toán mới
          * @param {CreatePaymentRequest} createPaymentRequest 
          * @param {*} [options] Override http request option.
@@ -4976,44 +4903,6 @@ export const PaymentsApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Gỡ / Xóa phân bổ payment vào invoice
-         * @param {string} id 
-         * @param {string} invoiceId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        removeAllocation: async (id: string, invoiceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('removeAllocation', 'id', id)
-            // verify required parameter 'invoiceId' is not null or undefined
-            assertParamExists('removeAllocation', 'invoiceId', invoiceId)
-            const localVarPath = `/v1/payments/{id}/allocate/{invoiceId}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"invoiceId"}}`, encodeURIComponent(String(invoiceId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            localVarHeaderParameter['Accept'] = '*/*';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Cập nhật phiếu thanh toán
          * @param {string} id 
          * @param {CreatePaymentRequest} createPaymentRequest 
@@ -5075,20 +4964,6 @@ export const PaymentsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Phân bổ số tiền của payment vào 1 Inovice (AR/AP)
-         * @param {string} id 
-         * @param {AllocatePaymentRequest} allocatePaymentRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async allocate(id: string, allocatePaymentRequest: AllocatePaymentRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponsePaymentResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.allocate(id, allocatePaymentRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PaymentsApi.allocate']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary Tạo thanh toán mới
          * @param {CreatePaymentRequest} createPaymentRequest 
          * @param {*} [options] Override http request option.
@@ -5145,20 +5020,6 @@ export const PaymentsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Gỡ / Xóa phân bổ payment vào invoice
-         * @param {string} id 
-         * @param {string} invoiceId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async removeAllocation(id: string, invoiceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ApiResponseString>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.removeAllocation(id, invoiceId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PaymentsApi.removeAllocation']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary Cập nhật phiếu thanh toán
          * @param {string} id 
          * @param {CreatePaymentRequest} createPaymentRequest 
@@ -5189,16 +5050,6 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
          */
         _delete(requestParameters: PaymentsApiDeleteRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseVoid> {
             return localVarFp._delete(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Phân bổ số tiền của payment vào 1 Inovice (AR/AP)
-         * @param {PaymentsApiAllocateRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        allocate(requestParameters: PaymentsApiAllocateRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponsePaymentResponse> {
-            return localVarFp.allocate(requestParameters.id, requestParameters.allocatePaymentRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -5242,16 +5093,6 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Gỡ / Xóa phân bổ payment vào invoice
-         * @param {PaymentsApiRemoveAllocationRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        removeAllocation(requestParameters: PaymentsApiRemoveAllocationRequest, options?: RawAxiosRequestConfig): AxiosPromise<ApiResponseString> {
-            return localVarFp.removeAllocation(requestParameters.id, requestParameters.invoiceId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Cập nhật phiếu thanh toán
          * @param {PaymentsApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -5268,15 +5109,6 @@ export const PaymentsApiFactory = function (configuration?: Configuration, baseP
  */
 export interface PaymentsApiDeleteRequest {
     readonly id: string
-}
-
-/**
- * Request parameters for allocate operation in PaymentsApi.
- */
-export interface PaymentsApiAllocateRequest {
-    readonly id: string
-
-    readonly allocatePaymentRequest: AllocatePaymentRequest
 }
 
 /**
@@ -5316,15 +5148,6 @@ export interface PaymentsApiPostPaymentRequest {
 }
 
 /**
- * Request parameters for removeAllocation operation in PaymentsApi.
- */
-export interface PaymentsApiRemoveAllocationRequest {
-    readonly id: string
-
-    readonly invoiceId: string
-}
-
-/**
  * Request parameters for update operation in PaymentsApi.
  */
 export interface PaymentsApiUpdateRequest {
@@ -5346,17 +5169,6 @@ export class PaymentsApi extends BaseAPI {
      */
     public _delete(requestParameters: PaymentsApiDeleteRequest, options?: RawAxiosRequestConfig) {
         return PaymentsApiFp(this.configuration)._delete(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Phân bổ số tiền của payment vào 1 Inovice (AR/AP)
-     * @param {PaymentsApiAllocateRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public allocate(requestParameters: PaymentsApiAllocateRequest, options?: RawAxiosRequestConfig) {
-        return PaymentsApiFp(this.configuration).allocate(requestParameters.id, requestParameters.allocatePaymentRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5401,17 +5213,6 @@ export class PaymentsApi extends BaseAPI {
      */
     public postPayment(requestParameters: PaymentsApiPostPaymentRequest, options?: RawAxiosRequestConfig) {
         return PaymentsApiFp(this.configuration).postPayment(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gỡ / Xóa phân bổ payment vào invoice
-     * @param {PaymentsApiRemoveAllocationRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public removeAllocation(requestParameters: PaymentsApiRemoveAllocationRequest, options?: RawAxiosRequestConfig) {
-        return PaymentsApiFp(this.configuration).removeAllocation(requestParameters.id, requestParameters.invoiceId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

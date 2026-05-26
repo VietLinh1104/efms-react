@@ -5,12 +5,10 @@ All URIs are relative to *http://localhost:8080/api/core*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**_delete**](#_delete) | **DELETE** /v1/payments/{id} | Xoá hoàn toàn thanh toán (chỉ khi chưa Post GL)|
-|[**allocate**](#allocate) | **POST** /v1/payments/{id}/allocate | Phân bổ số tiền của payment vào 1 Inovice (AR/AP)|
 |[**create**](#create) | **POST** /v1/payments | Tạo thanh toán mới|
 |[**getDetail**](#getdetail) | **GET** /v1/payments/{id} | Chi tiết Phiếu thanh toán kèm các khoản phân bổ|
 |[**list**](#list) | **GET** /v1/payments | Danh sách phiếu thanh toán (Thu/Chi)|
 |[**postPayment**](#postpayment) | **POST** /v1/payments/{id}/post | Ghi sổ bút toán tổng hợp (Post payment → GL)|
-|[**removeAllocation**](#removeallocation) | **DELETE** /v1/payments/{id}/allocate/{invoiceId} | Gỡ / Xóa phân bổ payment vào invoice|
 |[**update**](#update) | **PUT** /v1/payments/{id} | Cập nhật phiếu thanh toán|
 
 # **_delete**
@@ -53,60 +51,6 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **allocate**
-> ApiResponsePaymentResponse allocate(allocatePaymentRequest)
-
-
-### Example
-
-```typescript
-import {
-    PaymentsApi,
-    Configuration,
-    AllocatePaymentRequest
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new PaymentsApi(configuration);
-
-let id: string; // (default to undefined)
-let allocatePaymentRequest: AllocatePaymentRequest; //
-
-const { status, data } = await apiInstance.allocate(
-    id,
-    allocatePaymentRequest
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **allocatePaymentRequest** | **AllocatePaymentRequest**|  | |
-| **id** | [**string**] |  | defaults to undefined|
-
-
-### Return type
-
-**ApiResponsePaymentResponse**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
  - **Accept**: */*
 
 
@@ -312,59 +256,6 @@ const { status, data } = await apiInstance.postPayment(
 ### Return type
 
 **ApiResponsePaymentResponse**
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: */*
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **removeAllocation**
-> ApiResponseString removeAllocation()
-
-
-### Example
-
-```typescript
-import {
-    PaymentsApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new PaymentsApi(configuration);
-
-let id: string; // (default to undefined)
-let invoiceId: string; // (default to undefined)
-
-const { status, data } = await apiInstance.removeAllocation(
-    id,
-    invoiceId
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **id** | [**string**] |  | defaults to undefined|
-| **invoiceId** | [**string**] |  | defaults to undefined|
-
-
-### Return type
-
-**ApiResponseString**
 
 ### Authorization
 

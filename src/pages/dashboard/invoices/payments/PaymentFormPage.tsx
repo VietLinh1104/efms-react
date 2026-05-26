@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, AlertCircle, Trash2, Plus } from "lucide-react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@components/ui/button.tsx";
@@ -31,14 +31,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@components/ui/select.tsx";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@components/ui/table.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert.tsx";
 import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 
@@ -58,32 +50,24 @@ import type {
     PaymentsApiUpdateRequest,
     PaymentsApiCreateRequest,
     InvoiceResponse,
-    InvoicePaymentResponse,
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useAuth } from "@/hooks/useAuth";
 
 /* ================= SCHEMA ================= */
 
-const paymentSchema = z
-    .object({
-        paymentType: z.string().min(1, "Bắt buộc chọn loại thanh toán"),
-        partnerId: z.string().min(1, "Bắt buộc chọn đối tác"),
-        paymentDate: z.string().min(1, "Bắt buộc nhập ngày thanh toán"),
-        amount: z.number().positive("Số tiền phải lớn hơn 0"),
-        currencyCode: z.string().min(1, "Bắt buộc chọn tiền tệ"),
-        exchangeRate: z.number().optional(),
-        paymentMethod: z.string().min(1, "Bắt buộc chọn phương thức"),
-        bankAccountId: z.string().optional(),
-        reference: z.string().optional(),
-    })
-    .refine(
-        (data) => data.paymentMethod !== "bank_transfer" || !!data.bankAccountId,
-        {
-            message: "Phải chọn tài khoản ngân hàng khi phương thức là Chuyển khoản",
-            path: ["bankAccountId"],
-        }
-    );
+const paymentSchema = z.object({
+    paymentType: z.string().min(1, "Bắt buộc chọn loại thanh toán"),
+    partnerId: z.string().min(1, "Bắt buộc chọn đối tác"),
+    paymentDate: z.string().min(1, "Bắt buộc nhập ngày thanh toán"),
+    amount: z.number().positive("Số tiền phải lớn hơn 0"),
+    currencyCode: z.string().min(1, "Bắt buộc chọn tiền tệ"),
+    exchangeRate: z.number().optional(),
+    paymentMethod: z.string().min(1, "Bắt buộc chọn phương thức"),
+    bankAccountId: z.string().min(1, "Bắt buộc chọn tài khoản thanh toán"),
+    reference: z.string().optional(),
+    invoiceId: z.string().optional(),
+});
 
 type PaymentFormValues = z.infer<typeof paymentSchema>;
 
@@ -103,7 +87,7 @@ const PaymentFormPage: React.FC = () => {
 
     /* ── Payment state ───────────────────────────────────────────────── */
     const [isPosted, setIsPosted] = useState(false);
-    const [allocations, setAllocations] = useState<InvoicePaymentResponse[]>([]);
+    const [invoiceNumber, setInvoiceNumber] = useState<string>("");
 
     /* ── Invoice list for allocation ────────────────────────────────── */
     const [unpaidInvoices, setUnpaidInvoices] = useState<InvoiceResponse[]>([]);
@@ -113,12 +97,6 @@ const PaymentFormPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isPosting, setIsPosting] = useState(false);
-    const [isAllocating, setIsAllocating] = useState(false);
-    const [removingAllocId, setRemovingAllocId] = useState<string | null>(null);
-
-    /* ── Allocation form state ───────────────────────────────────────── */
-    const [selectedInvoiceId, setSelectedInvoiceId] = useState("");
-    const [allocateAmount, setAllocateAmount] = useState<number>(0);
 
     const form = useForm<PaymentFormValues>({
         resolver: zodResolver(paymentSchema),
@@ -132,14 +110,13 @@ const PaymentFormPage: React.FC = () => {
             paymentMethod: "cash",
             bankAccountId: "",
             reference: "",
+            invoiceId: "",
         },
     });
 
     const paymentMethod = form.watch("paymentMethod");
-    const isBankTransfer = paymentMethod === "bank_transfer";
     const partnerId = form.watch("partnerId");
     const paymentType = form.watch("paymentType");
-    const currencyCode = form.watch("currencyCode");
 
     // Form chỉ cho chỉnh sửa khi chưa ghi sổ
     const isReadOnly = isEditMode && isPosted;
@@ -175,7 +152,7 @@ const PaymentFormPage: React.FC = () => {
             if (!p) return;
 
             setIsPosted(!!p.journalEntryId);
-            setAllocations(p.allocations || []);
+            setInvoiceNumber(p.invoiceNumber || "");
 
             form.reset({
                 paymentType: p.paymentType || "in",
@@ -185,8 +162,9 @@ const PaymentFormPage: React.FC = () => {
                 currencyCode: p.currencyCode || "VND",
                 exchangeRate: 1,
                 paymentMethod: p.paymentMethod || "cash",
-                bankAccountId: "", // PaymentResponse không trả về bankAccountId
+                bankAccountId: p.bankAccountId || "",
                 reference: p.reference || "",
+                invoiceId: p.invoiceId || "",
             });
         } catch (e) {
             console.error(e);
@@ -199,9 +177,9 @@ const PaymentFormPage: React.FC = () => {
     useEffect(() => { fetchData(); }, [fetchData]);
     useEffect(() => { fetchDetail(); }, [fetchDetail]);
 
-    /* ── Fetch unpaid invoices – chỉ khi đã posted để dùng cho allocation ── */
+    /* ── Fetch unpaid invoices ── */
     const fetchUnpaidInvoices = useCallback(async () => {
-        if (!partnerId || !companyId || !isPosted) {
+        if (!partnerId || !companyId) {
             setUnpaidInvoices([]);
             return;
         }
@@ -229,9 +207,16 @@ const PaymentFormPage: React.FC = () => {
         } finally {
             setIsInvoicesLoading(false);
         }
-    }, [partnerId, paymentType, companyId, isPosted]);
+    }, [partnerId, paymentType, companyId]);
 
     useEffect(() => { fetchUnpaidInvoices(); }, [fetchUnpaidInvoices]);
+
+    // Reset invoiceId when partnerId or paymentType changes to prevent mismatched/invalid selections
+    useEffect(() => {
+        if (!isReadOnly) {
+            form.setValue("invoiceId", "");
+        }
+    }, [partnerId, paymentType, form, isReadOnly]);
 
     /* ================= ACTIONS ================= */
 
@@ -246,59 +231,13 @@ const PaymentFormPage: React.FC = () => {
         setIsPosting(true);
         try {
             await corePaymentsApi.postPayment({ id });
-            success("Ghi sổ thành công! Bạn có thể phân bổ hóa đơn bên dưới.");
-            await fetchDetail(); // Reload để hiển thị section phân bổ
+            success("Ghi sổ thành công!");
+            await fetchDetail();
         } catch (e) {
             console.error("Ghi sổ thất bại:", e);
             error("Ghi sổ thất bại. Vui lòng thử lại.");
         } finally {
             setIsPosting(false);
-        }
-    };
-
-    /** Phân bổ payment vào một hóa đơn */
-    const handleAllocate = async () => {
-        if (!id || !selectedInvoiceId || allocateAmount <= 0) {
-            error("Vui lòng chọn hóa đơn và nhập số tiền hợp lệ.");
-            return;
-        }
-        setIsAllocating(true);
-        try {
-            const res = await corePaymentsApi.allocate({
-                id,
-                allocatePaymentRequest: {
-                    invoiceId: selectedInvoiceId,
-                    amount: allocateAmount,
-                },
-            });
-            setAllocations(res.data.data?.allocations || []);
-            setSelectedInvoiceId("");
-            setAllocateAmount(0);
-            success("Phân bổ hóa đơn thành công!");
-            // Refresh danh sách invoices còn nợ
-            await fetchUnpaidInvoices();
-        } catch (e: unknown) {
-            console.error("Phân bổ thất bại:", e);
-            const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message;
-            error(msg || "Phân bổ thất bại. Kiểm tra số tiền hoặc trạng thái hóa đơn.");
-        } finally {
-            setIsAllocating(false);
-        }
-    };
-
-    /** Xóa phân bổ khỏi một hóa đơn */
-    const handleRemoveAllocation = async (invoiceId: string) => {
-        if (!id) return;
-        setRemovingAllocId(invoiceId);
-        try {
-            await corePaymentsApi.removeAllocation({ id, invoiceId });
-            success("Đã xóa phân bổ.");
-            await fetchDetail(); // Reload toàn bộ
-        } catch (e) {
-            console.error("Xóa phân bổ thất bại:", e);
-            error("Xóa phân bổ thất bại.");
-        } finally {
-            setRemovingAllocId(null);
         }
     };
 
@@ -315,9 +254,10 @@ const PaymentFormPage: React.FC = () => {
                 currencyCode: values.currencyCode,
                 exchangeRate: values.exchangeRate,
                 paymentMethod: values.paymentMethod,
-                bankAccountId: isBankTransfer ? values.bankAccountId : undefined,
+                bankAccountId: values.bankAccountId && values.bankAccountId !== "" ? values.bankAccountId : undefined,
                 reference: values.reference,
                 companyId: companyId ?? "",
+                invoiceId: values.invoiceId && values.invoiceId !== "none" ? values.invoiceId : undefined,
             };
 
             if (isEditMode && id) {
@@ -325,7 +265,6 @@ const PaymentFormPage: React.FC = () => {
                 await corePaymentsApi.update(params);
                 success("Cập nhật phiếu thanh toán thành công!");
             } else {
-                // Tạo mới → redirect sang edit để tiếp tục ghi sổ & phân bổ
                 const params: PaymentsApiCreateRequest = { createPaymentRequest: request };
                 const res = await corePaymentsApi.create(params);
                 const newId = res.data.data?.id;
@@ -345,8 +284,7 @@ const PaymentFormPage: React.FC = () => {
     const formatCurrency = (amount?: number, currency = "VND") =>
         new Intl.NumberFormat("vi-VN", { style: "currency", currency }).format(amount || 0);
 
-    const formatDate = (d?: string) =>
-        d ? new Intl.DateTimeFormat("vi-VN").format(new Date(d)) : "---";
+
 
     const currentStatus = isPosted ? "posted" : "draft";
 
@@ -556,31 +494,43 @@ const PaymentFormPage: React.FC = () => {
                                     )}
                                 />
 
-                                {/* TK Ngân hàng – chỉ khi bank_transfer */}
-                                {isBankTransfer && (
-                                    <FormField name="bankAccountId" control={form.control}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>TK Ngân hàng <span className="text-destructive">*</span></FormLabel>
-                                                <Select onValueChange={field.onChange} value={field.value} disabled={isLoading || isReadOnly}>
-                                                    <FormControl>
-                                                        <SelectTrigger className="w-full">
-                                                            <SelectValue placeholder="Chọn tài khoản" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        {bankAccounts.map((b) => (
+                                {/* Tài khoản Thanh toán (Ngân hàng / Tiền mặt) */}
+                                <FormField name="bankAccountId" control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                {paymentMethod === "cash" ? "Tài khoản tiền mặt" : "Tài khoản ngân hàng"} <span className="text-destructive">*</span>
+                                            </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isLoading || isReadOnly}>
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder={paymentMethod === "cash" ? "Chọn tài khoản tiền mặt" : "Chọn tài khoản ngân hàng"} />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {(() => {
+                                                        const filtered = bankAccounts.filter((b) => {
+                                                            if (paymentMethod === "cash") {
+                                                                return b.type === "cash";
+                                                            }
+                                                            if (paymentMethod === "bank_transfer") {
+                                                                return b.type === "bank";
+                                                            }
+                                                            return true;
+                                                        });
+                                                        const listToRender = filtered.length > 0 ? filtered : bankAccounts;
+                                                        return listToRender.map((b) => (
                                                             <SelectItem key={b.id} value={b.id!}>
-                                                                {b.name} — {b.accountNumber}
+                                                                {b.name} {b.accountNumber ? `— ${b.accountNumber}` : ""} ({b.type === "cash" ? "Tiền mặt" : "Ngân hàng"})
                                                             </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                )}
+                                                        ));
+                                                    })()}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
                                 {/* Tham chiếu */}
                                 <FormField name="reference" control={form.control}
@@ -594,137 +544,67 @@ const PaymentFormPage: React.FC = () => {
                                         </FormItem>
                                     )}
                                 />
-                            </CardContent>
-                        </Card>
 
-                        {/* ── CARD: Phân bổ hóa đơn – chỉ hiện sau khi posted ── */}
-                        {isEditMode && isPosted && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Phân bổ hóa đơn</CardTitle>
-                                    <CardDescription>
-                                        Liên kết khoản thanh toán này với các hóa đơn còn nợ ({paymentType === "in" ? "AR" : "AP"})
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-
-                                    {/* Bảng allocations hiện tại */}
-                                    {allocations.length > 0 ? (
-                                        <Table className="border">
-                                            <TableHeader>
-                                                <TableRow>
-                                                    <TableHead>Mã hóa đơn</TableHead>
-                                                    <TableHead>Ngày phân bổ</TableHead>
-                                                    <TableHead className="text-right">Số tiền phân bổ</TableHead>
-                                                    <TableHead className="w-[60px]"></TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {allocations.map((alloc) => (
-                                                    <TableRow key={alloc.id}>
-                                                        <TableCell className="font-medium">
-                                                            {alloc.invoiceNumber || "---"}
-                                                        </TableCell>
-                                                        <TableCell>{formatDate(alloc.paymentDate)}</TableCell>
-                                                        <TableCell className="text-right">
-                                                            {formatCurrency(alloc.allocatedAmount, currencyCode)}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <Button
-                                                                type="button"
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                                disabled={removingAllocId === alloc.invoiceId}
-                                                                onClick={() => alloc.invoiceId && handleRemoveAllocation(alloc.invoiceId)}
-                                                                title="Xóa phân bổ"
-                                                            >
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground text-center py-6 border rounded-md">
-                                            Chưa có phân bổ nào. Thêm phân bổ bên dưới.
-                                        </p>
-                                    )}
-
-                                    {/* Form thêm phân bổ mới */}
-                                    {partnerId ? (
-                                        <div className="border rounded-md p-4 space-y-3 bg-muted/30">
-                                            <p className="text-sm font-medium text-foreground">Thêm phân bổ mới</p>
-                                            <div className="grid grid-cols-3 gap-3 items-end">
-                                                <div className="col-span-2 space-y-1">
-                                                    <p className="text-xs text-muted-foreground">Hóa đơn</p>
+                                {/* Hóa đơn liên kết (Nếu có) */}
+                                {isReadOnly && form.getValues("invoiceId") ? (
+                                    <FormItem>
+                                        <FormLabel>Hóa đơn thanh toán</FormLabel>
+                                        <Input value={invoiceNumber || "Hóa đơn liên kết"} readOnly />
+                                    </FormItem>
+                                ) : (
+                                    !isReadOnly && (
+                                        <FormField name="invoiceId" control={form.control}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Hóa đơn thanh toán</FormLabel>
                                                     <Select
-                                                        value={selectedInvoiceId}
                                                         onValueChange={(val) => {
-                                                            setSelectedInvoiceId(val);
-                                                            const inv = unpaidInvoices.find((i) => i.id === val);
-                                                            if (inv) {
-                                                                const remaining = (inv.totalAmount || 0) - (inv.paidAmount || 0);
-                                                                setAllocateAmount(remaining);
+                                                            field.onChange(val);
+                                                            const currentAmount = form.getValues("amount");
+                                                            if (!currentAmount || currentAmount === 0) {
+                                                                const inv = unpaidInvoices.find((i) => i.id === val);
+                                                                if (inv) {
+                                                                    const remaining = (inv.totalAmount || 0) - (inv.paidAmount || 0);
+                                                                    form.setValue("amount", remaining);
+                                                                }
                                                             }
                                                         }}
-                                                        disabled={isInvoicesLoading}
+                                                        value={field.value}
+                                                        disabled={!partnerId}
                                                     >
-                                                        <SelectTrigger className="w-full">
-                                                            <SelectValue placeholder={
-                                                                isInvoicesLoading
-                                                                    ? "Đang tải hóa đơn..."
-                                                                    : unpaidInvoices.length === 0
-                                                                        ? "Không có hóa đơn còn nợ"
-                                                                        : "Chọn hóa đơn để phân bổ"
-                                                            } />
-                                                        </SelectTrigger>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder={
+                                                                    !partnerId
+                                                                        ? "Vui lòng chọn đối tác trước"
+                                                                        : isInvoicesLoading
+                                                                            ? "Đang tải danh sách hóa đơn..."
+                                                                            : unpaidInvoices.length === 0
+                                                                                ? "Không có hóa đơn còn nợ"
+                                                                                : "Chọn hóa đơn (tùy chọn)"
+                                                                } />
+                                                            </SelectTrigger>
+                                                        </FormControl>
                                                         <SelectContent>
+                                                            <SelectItem value="none">-- Không liên kết hóa đơn --</SelectItem>
                                                             {unpaidInvoices.map((inv) => {
                                                                 const remaining = (inv.totalAmount || 0) - (inv.paidAmount || 0);
                                                                 return (
                                                                     <SelectItem key={inv.id} value={inv.id!}>
-                                                                        {inv.invoiceNumber || `HĐ (${inv.id?.slice(0, 8)})`}
-                                                                        {" "}— Còn nợ: {formatCurrency(remaining, inv.currencyCode)}
+                                                                        {inv.invoiceNumber || `HĐ (${inv.id?.slice(0, 8)})`} — Còn nợ: {formatCurrency(remaining, inv.currencyCode)}
                                                                     </SelectItem>
                                                                 );
                                                             })}
                                                         </SelectContent>
                                                     </Select>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <p className="text-xs text-muted-foreground">Số tiền phân bổ</p>
-                                                    <Input
-                                                        type="number"
-                                                        min={0}
-                                                        step="any"
-                                                        placeholder="0"
-                                                        value={allocateAmount || ""}
-                                                        onChange={(e) => setAllocateAmount(e.target.valueAsNumber)}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <ButtonSpin
-                                                type="button"
-                                                variant="outline"
-                                                isLoading={isAllocating}
-                                                loadingText="Đang phân bổ..."
-                                                onClick={handleAllocate}
-                                                disabled={!selectedInvoiceId || !(allocateAmount > 0) || isAllocating}
-                                            >
-                                                <Plus className="h-4 w-4 mr-2" />
-                                                Phân bổ
-                                            </ButtonSpin>
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground text-center py-2">
-                                            Không có đối tác. Không thể phân bổ hóa đơn.
-                                        </p>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        )}
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    )
+                                )}
+                            </CardContent>
+                        </Card>
                     </div>
 
                     {/* ── SIDEBAR – 2 cols ─────────────────────────────────── */}
@@ -741,11 +621,6 @@ const PaymentFormPage: React.FC = () => {
                                     />
                                     <Input className="pl-8 uppercase" value={currentStatus} readOnly />
                                 </div>
-                                {isPosted && (
-                                    <p className="text-xs text-muted-foreground">
-                                        Phân bổ: <span className="font-semibold">{allocations.length} hóa đơn</span>
-                                    </p>
-                                )}
                             </CardContent>
                             <CardFooter className="flex flex-col gap-3 pt-0">
                                 {/* Hủy / Về danh sách */}

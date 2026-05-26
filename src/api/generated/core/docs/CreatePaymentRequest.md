@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **bankAccountId** | **string** | UUID tài khoản ngân hàng (nếu method&#x3D;bank) | [optional] [default to undefined]
 **reference** | **string** | Số tham chiếu / Lý do | [optional] [default to undefined]
 **companyId** | **string** | UUID công ty sở hữu | [optional] [default to undefined]
+**invoiceId** | **string** | UUID của hóa đơn cần thanh toán | [optional] [default to undefined]
 
 ## Example
 
@@ -33,6 +34,7 @@ const instance: CreatePaymentRequest = {
     bankAccountId,
     reference,
     companyId,
+    invoiceId,
 };
 ```
 

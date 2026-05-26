@@ -41,7 +41,7 @@ const PaymentsListing: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [error]);
+    }, [companyId, error]);
 
     // Mở quick-view dialog khi click vào row
     const handleRowClick = useCallback((payment: PaymentResponse) => {

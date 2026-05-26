@@ -153,10 +153,10 @@ export function PaymentQuickViewDialog({
                     </div>
 
                     {/* Row 5: Hóa đơn liên kết (nếu có) */}
-                    {payment.allocations && payment.allocations.length > 0 && (
+                    {payment.invoiceId && (
                         <div className="space-y-2">
                             <Label>Hóa đơn liên kết</Label>
-                            <Input readOnly value={`${payment.allocations.length} hóa đơn`} />
+                            <Input readOnly value={payment.invoiceNumber || "Hóa đơn liên kết"} />
                         </div>
                     )}
 

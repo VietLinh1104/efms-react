@@ -602,48 +602,6 @@
                 }
             }
         },
-        "/v1/payments/{id}/allocate": {
-            "post": {
-                "tags": [
-                    "Payments"
-                ],
-                "summary": "Phân bổ số tiền của payment vào 1 Inovice (AR/AP)",
-                "operationId": "allocate",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AllocatePaymentRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiResponsePaymentResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/v1/partners": {
             "get": {
                 "tags": [
@@ -1891,47 +1849,6 @@
                     }
                 }
             }
-        },
-        "/v1/payments/{id}/allocate/{invoiceId}": {
-            "delete": {
-                "tags": [
-                    "Payments"
-                ],
-                "summary": "Gỡ / Xóa phân bổ payment vào invoice",
-                "operationId": "removeAllocation",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    },
-                    {
-                        "name": "invoiceId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiResponseString"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -2005,6 +1922,11 @@
                         "type": "string",
                         "description": "UUID công ty sở hữu",
                         "format": "uuid"
+                    },
+                    "invoiceId": {
+                        "type": "string",
+                        "description": "UUID của hóa đơn cần thanh toán",
+                        "format": "uuid"
                     }
                 },
                 "description": "Payload tạo/cập nhật phiếu thu/chi"
@@ -2023,50 +1945,6 @@
                         "$ref": "#/components/schemas/PaymentResponse"
                     }
                 }
-            },
-            "InvoicePaymentResponse": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "ID dòng phân bổ",
-                        "format": "uuid"
-                    },
-                    "paymentId": {
-                        "type": "string",
-                        "description": "ID phiếu thanh toán gốc",
-                        "format": "uuid"
-                    },
-                    "invoiceId": {
-                        "type": "string",
-                        "description": "ID hóa đơn được phân bổ",
-                        "format": "uuid"
-                    },
-                    "invoiceNumber": {
-                        "type": "string",
-                        "description": "Mã hóa đơn được phân bổ",
-                        "example": "INV-2025-001"
-                    },
-                    "paymentDate": {
-                        "type": "string",
-                        "description": "Ngày thanh toán",
-                        "format": "date"
-                    },
-                    "allocatedAmount": {
-                        "type": "number",
-                        "description": "Số tiền đã phân bổ"
-                    },
-                    "createdBy": {
-                        "type": "string",
-                        "description": "Người phân bổ"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "description": "Thời gian phân bổ",
-                        "format": "date-time"
-                    }
-                },
-                "description": "Thông tin dòng phân bổ thanh toán cho hóa đơn"
             },
             "PaymentResponse": {
                 "type": "object",
@@ -2130,12 +2008,23 @@
                         "description": "Thời gian tạo",
                         "format": "date-time"
                     },
-                    "allocations": {
-                        "type": "array",
-                        "description": "Chi tiết các hóa đơn đã được phân bổ (Nếu gọi detail)",
-                        "items": {
-                            "$ref": "#/components/schemas/InvoicePaymentResponse"
-                        }
+                    "invoiceId": {
+                        "type": "string",
+                        "description": "ID Hóa đơn liên kết",
+                        "format": "uuid"
+                    },
+                    "invoiceNumber": {
+                        "type": "string",
+                        "description": "Số hóa đơn liên kết"
+                    },
+                    "bankAccountId": {
+                        "type": "string",
+                        "description": "ID Tài khoản ngân hàng / tiền mặt",
+                        "format": "uuid"
+                    },
+                    "bankAccountName": {
+                        "type": "string",
+                        "description": "Tên Tài khoản ngân hàng / tiền mặt"
                     }
                 },
                 "description": "Thông tin phiếu thu/chi"
@@ -2822,28 +2711,6 @@
                         "$ref": "#/components/schemas/AccountResponse"
                     }
                 }
-            },
-            "AllocatePaymentRequest": {
-                "required": [
-                    "amount",
-                    "invoiceId"
-                ],
-                "type": "object",
-                "properties": {
-                    "invoiceId": {
-                        "type": "string",
-                        "description": "UUID của chứng từ Hóa đơn cần trừ nợ",
-                        "format": "uuid"
-                    },
-                    "amount": {
-                        "minimum": 0.01,
-                        "exclusiveMinimum": false,
-                        "type": "number",
-                        "description": "Số tiền thanh toán sẽ gán vào hóa đơn này",
-                        "example": 500000.0
-                    }
-                },
-                "description": "Payload phân bổ thanh toán vào một hoá đơn"
             },
             "ApiResponsePagedResponsePaymentResponse": {
                 "type": "object",
