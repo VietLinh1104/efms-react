@@ -124,7 +124,7 @@ const PaymentsListing: React.FC = () => {
                             navigate("/payments/new");
                         }}
                     >
-                        <Plus className="mr-2 h-4 w-4" /> Cập nhật Thu/Chi
+                        <Plus className="mr-2 h-4 w-4" /> Tạo phiếu mới
                     </Button>
                 </div>
             </div>

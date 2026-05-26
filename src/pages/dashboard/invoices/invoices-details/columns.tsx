@@ -122,14 +122,27 @@ export const getColumns = (
             header: "Phê duyệt",
             cell: ({ row }) => {
                 const status = row.getValue("approvalStatus") as string;
+                const isAR = row.original.invoiceType === "AR";
+                
+                if (isAR) {
+                    return <span className="text-muted-foreground text-xs pl-4">—</span>;
+                }
+
                 const statusStyles: Record<string, string> = {
-                    null: "bg-gray-100 text-gray-800",
-                    cancelled: "bg-blue-100 text-blue-800",
-                    approved: "bg-green-100 text-green-800",
+                    pending: "bg-amber-100 text-amber-800 hover:bg-amber-200",
+                    approved: "bg-green-100 text-green-800 hover:bg-green-200",
+                    rejected: "bg-red-100 text-red-800 hover:bg-red-200",
                 };
+
+                const labels: Record<string, string> = {
+                    pending: "Chờ duyệt",
+                    approved: "Đã duyệt",
+                    rejected: "Từ chối",
+                };
+
                 return (
-                    <Badge className={`${statusStyles[status] || ""} border-none capitalize`}>
-                        {status || "N/A"}
+                    <Badge className={`${statusStyles[status] || "bg-gray-100 text-gray-800"} border-none`}>
+                        {labels[status] || status || "Chờ duyệt"}
                     </Badge>
                 );
             },

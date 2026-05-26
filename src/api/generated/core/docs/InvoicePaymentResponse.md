@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **string** | ID dòng phân bổ | [optional] [default to undefined]
 **paymentId** | **string** | ID phiếu thanh toán gốc | [optional] [default to undefined]
+**invoiceId** | **string** | ID hóa đơn được phân bổ | [optional] [default to undefined]
 **invoiceNumber** | **string** | Mã hóa đơn được phân bổ | [optional] [default to undefined]
 **paymentDate** | **string** | Ngày thanh toán | [optional] [default to undefined]
 **allocatedAmount** | **number** | Số tiền đã phân bổ | [optional] [default to undefined]
@@ -22,6 +23,7 @@ import { InvoicePaymentResponse } from './api';
 const instance: InvoicePaymentResponse = {
     id,
     paymentId,
+    invoiceId,
     invoiceNumber,
     paymentDate,
     allocatedAmount,

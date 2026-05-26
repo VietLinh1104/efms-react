@@ -524,6 +524,10 @@ export interface InvoicePaymentResponse {
      */
     'paymentId'?: string;
     /**
+     * ID hóa đơn được phân bổ
+     */
+    'invoiceId'?: string;
+    /**
      * Mã hóa đơn được phân bổ
      */
     'invoiceNumber'?: string;

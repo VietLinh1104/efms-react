@@ -2037,6 +2037,11 @@
                         "description": "ID phiếu thanh toán gốc",
                         "format": "uuid"
                     },
+                    "invoiceId": {
+                        "type": "string",
+                        "description": "ID hóa đơn được phân bổ",
+                        "format": "uuid"
+                    },
                     "invoiceNumber": {
                         "type": "string",
                         "description": "Mã hóa đơn được phân bổ",
