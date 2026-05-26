@@ -1,16 +1,19 @@
 # ==========================================
 # STAGE 1: Build stage
 # ==========================================
-FROM node:22-alpine AS build
+# Using slim image instead of alpine to avoid memory fragmentation issues with musl libc
+FROM node:22-slim AS build
 
 WORKDIR /app
 
 # Copy package configuration files
 COPY package*.json ./
 
-# Install project dependencies
-# Using npm ci to avoid out-of-memory and disk space issues (exit code 228)
-RUN npm ci --no-audit --no-fund
+# Limit memory and network concurrency to prevent exit code 228 (Out of Memory / Disk Space) on low-resource VPS
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+RUN npm config set maxsockets 3 && \
+    npm ci --no-audit --no-fund && \
+    npm cache clean --force
 
 # Copy all source files
 COPY . .
