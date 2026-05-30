@@ -310,7 +310,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                 <Separator />
 
                 {/* ── Body tabs ── */}
-                <Tabs defaultValue="info" className="flex-1 flex flex-col min-h-0">
+                <Tabs defaultValue="info" className="h-[520px] flex flex-col">
                     <TabsList className="mx-6 mt-3 w-fit">
                         <TabsTrigger value="info">Thông tin chính</TabsTrigger>
                         <TabsTrigger value="lines">Dòng chi tiết</TabsTrigger>
@@ -325,7 +325,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                     </TabsList>
 
                     {/* ── Tab: Thông tin chính ── */}
-                    <TabsContent value="info" className="flex-1 overflow-auto px-6 py-4">
+                    <TabsContent value="info" className="flex-1 overflow-y-auto px-6 py-4">
                         <div className="space-y-4">
 
                             {/* Row 1: Loại hóa đơn + Số hóa đơn */}
@@ -414,7 +414,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                     </TabsContent>
 
                     {/* ── Tab: Dòng chi tiết ── */}
-                    <TabsContent value="lines" className="flex-1 overflow-auto px-6 py-4">
+                    <TabsContent value="lines" className="flex-1 overflow-y-auto px-6 py-4">
                         {!invoice.lines || invoice.lines.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-2">
                                 <FileText className="h-8 w-8 opacity-30" />
@@ -463,7 +463,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                     </TabsContent>
 
                     {/* ── Tab: Lịch sử thay đổi (Audit) ── */}
-                    <TabsContent value="history" className="flex-1 min-h-0 px-6 py-4">
+                    <TabsContent value="history" className="flex-1 overflow-y-auto px-6 py-4">
                         {isAuditLoading ? (
                             <div className="flex items-center justify-center py-12 text-muted-foreground gap-2">
                                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -475,7 +475,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                                 <p className="text-sm">Chưa có lịch sử thay đổi</p>
                             </div>
                         ) : (
-                            <ScrollArea className="h-[380px] pr-2">
+                            <div className="pr-2">
                                 <ul className="space-y-4">
                                     {[...auditLogs].reverse().map((log, idx) => {
                                         const cfg = getAuditAction(log.action);
@@ -495,7 +495,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                                         );
                                     })}
                                 </ul>
-                            </ScrollArea>
+                            </div>
                         )}
                     </TabsContent>
                 </Tabs>
