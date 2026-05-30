@@ -4,16 +4,17 @@
 # Using slim image instead of alpine to avoid memory fragmentation issues with musl libc
 FROM node:22-slim AS build
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@11.5.0 --activate
+
 WORKDIR /app
 
 # Copy package configuration files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Limit memory and network concurrency to prevent exit code 228 (Out of Memory / Disk Space) on low-resource VPS
 ENV NODE_OPTIONS="--max-old-space-size=2048"
-RUN npm config set maxsockets 3 && \
-    npm ci --no-audit --no-fund && \
-    npm cache clean --force
+RUN pnpm install --frozen-lockfile
 
 # Copy all source files
 COPY . .
@@ -39,7 +40,7 @@ ENV VITE_R2_BUCKET_NAME=$VITE_R2_BUCKET_NAME
 ENV VITE_R2_PUBLIC_URL=$VITE_R2_PUBLIC_URL
 
 # Build the React application
-RUN npm run build
+RUN pnpm run build
 
 # ==========================================
 # STAGE 2: Production environment
