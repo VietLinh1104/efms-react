@@ -5,6 +5,7 @@ import { InputSpin } from "@/components/common/InputSpin";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { identityAuthControllerApi } from "@/api";
 import type { ActivateUserRequest } from "@/api/generated/identity/api";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const ActivatePage: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -46,9 +47,8 @@ const ActivatePage: React.FC = () => {
             } else {
                 error("Kích hoạt thất bại. Token có thể đã hết hạn.");
             }
-        } catch (err: any) {
-            console.error(err);
-            error(err.response?.data?.message || "Đã xảy ra lỗi khi kích hoạt tài khoản.");
+        } catch (err) {
+            error(formatApiErrorForUser(err, "Đã xảy ra lỗi khi kích hoạt tài khoản."));
         } finally {
             setIsLoading(false);
         }

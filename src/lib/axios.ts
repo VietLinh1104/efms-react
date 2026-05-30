@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logApiError, normalizeApiError } from "@/lib/api-error";
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -29,17 +30,27 @@ axiosInstance.interceptors.response.use(
                 return response;
             }
             if (response.data.status >= 400) {
-                console.error(response.data.message);
+                const normalized = normalizeApiError(response.data);
+                logApiError("API business error", normalized);
                 if (response.data.status === 403) {
-                    window.dispatchEvent(new CustomEvent('api-forbidden'));
+                    window.dispatchEvent(new CustomEvent('api-forbidden', {
+                        detail: {
+                            message: normalized.message,
+                            traceId: normalized.traceId,
+                            code: normalized.code,
+                        }
+                    }));
                 }
-                return Promise.reject(response.data);
+                return Promise.reject(normalized);
             }
         }
         return response;
     },
     (error) => {
-        if (error.response && error.response.status === 401) {
+        const normalized = normalizeApiError(error);
+        logApiError("API request failed", normalized);
+
+        if (normalized.status === 401) {
             // Clear auth data and redirect to login page
             localStorage.removeItem('efms_token');
             localStorage.removeItem('efms_user');
@@ -48,10 +59,16 @@ axiosInstance.interceptors.response.use(
                 window.location.href = '/login';
             }
         }
-        if (error.response && error.response.status === 403) {
-            window.dispatchEvent(new CustomEvent('api-forbidden'));
+        if (normalized.status === 403) {
+            window.dispatchEvent(new CustomEvent('api-forbidden', {
+                detail: {
+                    message: normalized.message,
+                    traceId: normalized.traceId,
+                    code: normalized.code,
+                }
+            }));
         }
-        return Promise.reject(error);
+        return Promise.reject(normalized);
     }
 );
 

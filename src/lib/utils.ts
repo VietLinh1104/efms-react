@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { isApiForbidden } from "@/lib/api-error";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -36,5 +37,5 @@ export function formatCurrency(value: number): string {
 
 
 export function isForbidden(err: any) {
-  return err?.status === 403 || err?.response?.status === 403;
+  return isApiForbidden(err);
 }

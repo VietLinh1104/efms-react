@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import googleLogo from "@/assets/image/google-logo.png";
 import { useAuthContext } from "@/context/AuthContext";
 import { ShieldCheck, ArrowRight, Lock } from "lucide-react";
+import { getApiErrorMessage, logApiError } from "@/lib/api-error";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -142,13 +143,8 @@ const AuthPage: React.FC = () => {
         navigate(from, { replace: true });
       }
     } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string } }; message?: string };
-      setErrorMsg(
-        axiosError?.response?.data?.message ??
-        axiosError?.message ??
-        "Login failed. Please check your credentials."
-      );
-      console.error("Login Error:", error);
+      setErrorMsg(getApiErrorMessage(error, "Login failed. Please check your credentials."));
+      logApiError("Login failed", error);
     }
   };
 

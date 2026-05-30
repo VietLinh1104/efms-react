@@ -27,6 +27,7 @@ import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 import { identityCompanyControllerApi } from "@/api";
 import type { CompanyResponse, CompanyRequest } from "@/api/generated/identity/api";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const companySchema = z.object({
     name: z.string().min(2, "Tên công ty phải có ít nhất 2 ký tự"),
@@ -69,8 +70,7 @@ const CompanySettingsPage: React.FC = () => {
             }
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Fetch company detail failed:", err);
-            error("Không thể tải thông tin công ty.");
+            error(formatApiErrorForUser(err, "Không thể tải thông tin công ty."));
         } finally {
             setIsLoading(false);
         }
@@ -104,8 +104,7 @@ const CompanySettingsPage: React.FC = () => {
             }
         } catch (e) {
             if (isForbidden(e)) return;
-            console.error(e);
-            error("Cập nhật thất bại");
+            error(formatApiErrorForUser(e, "Cập nhật thất bại"));
         } finally {
             setIsSubmitting(false);
         }

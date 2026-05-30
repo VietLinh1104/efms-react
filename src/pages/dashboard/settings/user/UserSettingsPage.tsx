@@ -20,6 +20,7 @@ import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 import { identityUserControllerApi } from "@/api";
 import type { UserResponse, UserUpdateRequest } from "@/api/generated/identity/api";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const userSchema = z.object({
     name: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
@@ -56,8 +57,7 @@ const UserSettingsPage: React.FC = () => {
             }
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Fetch user detail failed:", err);
-            error("Không thể tải thông tin người dùng.");
+            error(formatApiErrorForUser(err, "Không thể tải thông tin người dùng."));
         } finally {
             setIsLoading(false);
         }
@@ -89,8 +89,7 @@ const UserSettingsPage: React.FC = () => {
             }
         } catch (e) {
             if (isForbidden(e)) return;
-            console.error(e);
-            error("Cập nhật thất bại");
+            error(formatApiErrorForUser(e, "Cập nhật thất bại"));
         } finally {
             setIsSubmitting(false);
         }

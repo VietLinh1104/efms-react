@@ -16,6 +16,7 @@ import { Input } from "@components/ui/input.tsx";
 import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 type TaskInvoiceResponse = InvoiceResponse & {};
 
@@ -52,8 +53,7 @@ const InvoicesListing: React.FC = () => {
             setData(invoices);
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error fetching invoices:", err);
-            error("Không thể tải danh sách hóa đơn.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách hóa đơn."));
         } finally {
             setIsLoading(false);
         }
@@ -76,8 +76,7 @@ const InvoicesListing: React.FC = () => {
             }
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error fetching tasks:", err);
-            error("Không thể tải công việc cần xử lý.");
+            error(formatApiErrorForUser(err, "Không thể tải công việc cần xử lý."));
         } finally {
             setIsTasksLoading(false);
         }
@@ -117,8 +116,7 @@ const InvoicesListing: React.FC = () => {
             }
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Lỗi khi xóa hóa đơn:", err);
-            error("Không thể xóa hóa đơn này.");
+            error(formatApiErrorForUser(err, "Không thể xóa hóa đơn này."));
         } finally {
             // Luôn tắt loading dù thành công hay thất bại (ĐÂY LÀ CHUẨN NHẤT)
             setIsLoading(false);

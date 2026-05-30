@@ -46,6 +46,7 @@ import type {
     AuditLogsApiGetRecordHistoryRequest,
 } from "@/api/generated/core";
 import { coreAuditLogsApi } from "@/api";
+import { logApiError } from "@/lib/api-error";
 import { useAuth } from "@/hooks/useAuth";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────── */
@@ -250,7 +251,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                 const res = await coreAuditLogsApi.getRecordHistory(req);
                 setAuditLogs(res.data.data ?? []);
             } catch (err) {
-                console.error("Không thể tải lịch sử audit:", err);
+                logApiError("Fetch invoice audit history failed", err);
                 setAuditLogs([]);
             } finally {
                 setIsAuditLoading(false);

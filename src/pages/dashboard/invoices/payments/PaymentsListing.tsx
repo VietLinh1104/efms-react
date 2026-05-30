@@ -11,6 +11,7 @@ import { Input } from "@components/ui/input.tsx";
 import { PaymentQuickViewDialog } from "./PaymentQuickViewDialog.tsx";
 import { useAuth } from "@/hooks/useAuth";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const PaymentsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -36,8 +37,7 @@ const PaymentsListing: React.FC = () => {
             setData(payments);
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error fetching payments:", err);
-            error("Không thể tải danh sách thanh toán.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách thanh toán."));
         } finally {
             setIsLoading(false);
         }
@@ -81,8 +81,7 @@ const PaymentsListing: React.FC = () => {
             fetchPayments();
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Lỗi khi xóa thanh toán:", err);
-            error("Không thể xóa phiếu thanh toán này.");
+            error(formatApiErrorForUser(err, "Không thể xóa phiếu thanh toán này."));
         }
     }, [fetchPayments, success, error]);
 

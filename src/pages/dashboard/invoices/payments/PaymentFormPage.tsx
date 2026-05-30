@@ -53,6 +53,7 @@ import type {
 } from "@/api/generated/core";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useAuth } from "@/hooks/useAuth";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 /* ================= SCHEMA ================= */
 
@@ -135,8 +136,7 @@ const PaymentFormPage: React.FC = () => {
             setPartners(partRes.data.data?.content || []);
             setBankAccounts(bankRes.data.data?.content || []);
         } catch (e) {
-            console.error(e);
-            error("Không thể tải dữ liệu khởi tạo.");
+            error(formatApiErrorForUser(e, "Không thể tải dữ liệu khởi tạo."));
         } finally {
             setIsLoading(false);
         }
@@ -167,8 +167,7 @@ const PaymentFormPage: React.FC = () => {
                 invoiceId: p.invoiceId || "",
             });
         } catch (e) {
-            console.error(e);
-            error("Không thể tải thông tin thanh toán.");
+            error(formatApiErrorForUser(e, "Không thể tải thông tin thanh toán."));
         } finally {
             setIsLoading(false);
         }
@@ -203,7 +202,8 @@ const PaymentFormPage: React.FC = () => {
             });
             setUnpaidInvoices(filtered);
         } catch (e) {
-            console.error("Lỗi khi tải hóa đơn:", e);
+            logApiError("Fetch unpaid invoices failed", e);
+            error(formatApiErrorForUser(e, "Không thể tải danh sách hóa đơn chưa thanh toán."));
         } finally {
             setIsInvoicesLoading(false);
         }
@@ -234,8 +234,7 @@ const PaymentFormPage: React.FC = () => {
             success("Ghi sổ thành công!");
             await fetchDetail();
         } catch (e) {
-            console.error("Ghi sổ thất bại:", e);
-            error("Ghi sổ thất bại. Vui lòng thử lại.");
+            error(formatApiErrorForUser(e, "Ghi sổ thất bại. Vui lòng thử lại."));
         } finally {
             setIsPosting(false);
         }
@@ -272,8 +271,7 @@ const PaymentFormPage: React.FC = () => {
                 navigate(newId ? `/payments/${newId}/edit` : "/payments");
             }
         } catch (e) {
-            console.error(e);
-            error(isEditMode ? "Cập nhật thất bại." : "Tạo phiếu thất bại.");
+            error(formatApiErrorForUser(e, isEditMode ? "Cập nhật thất bại." : "Tạo phiếu thất bại."));
         } finally {
             setIsSubmitting(false);
         }

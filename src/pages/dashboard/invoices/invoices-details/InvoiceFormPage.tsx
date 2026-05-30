@@ -56,6 +56,7 @@ import {
 import { ButtonSpin } from "@components/common/ButtonSpin.tsx";
 import { AttachmentSection } from "@components/common/AttachmentSection.tsx";
 import { CommentSection } from "@components/common/CommentSection.tsx";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 /* ================= SCHEMA ================= */
 
@@ -165,8 +166,7 @@ const InvoiceFormPage: React.FC = () => {
             });
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Fetch invoice detail failed:", err);
-            error("Không thể tải chi tiết hóa đơn.");
+            error(formatApiErrorForUser(err, "Không thể tải chi tiết hóa đơn."));
         } finally {
             setIsLoading(false);
         }
@@ -192,7 +192,8 @@ const InvoiceFormPage: React.FC = () => {
                 setAccounts(acc.data.data || []);
                 setPartners(part.data.data?.content || []);
             } catch (e) {
-                console.error(e);
+                logApiError("Fetch invoice form reference data failed", e);
+                error(formatApiErrorForUser(e, "Không thể tải dữ liệu tham chiếu."));
             }
         };
 
@@ -213,8 +214,7 @@ const InvoiceFormPage: React.FC = () => {
             navigate("/invoices");
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Confirm fail", err);
-            error("Xác nhận thất bại.");
+            error(formatApiErrorForUser(err, "Xác nhận thất bại."));
         } finally {
             setIsConfirmLoading(false);
         }
@@ -242,7 +242,7 @@ const InvoiceFormPage: React.FC = () => {
                         },
                     });
                 } catch (commentErr) {
-                    console.warn("Lưu comment thất bại (không ảnh hưởng kết quả phê duyệt):", commentErr);
+                    logApiError("Create approval comment failed", commentErr);
                 }
             }
 
@@ -250,8 +250,7 @@ const InvoiceFormPage: React.FC = () => {
             navigate("/invoices");
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Approve fail", err);
-            error("Duyệt hóa đơn thất bại.");
+            error(formatApiErrorForUser(err, "Duyệt hóa đơn thất bại."));
         } finally {
             setIsApproveLoading(false);
         }
@@ -282,15 +281,14 @@ const InvoiceFormPage: React.FC = () => {
                     },
                 });
             } catch (commentErr) {
-                console.warn("Lưu comment thất bại (không ảnh hưởng kết quả từ chối):", commentErr);
+                logApiError("Create rejection comment failed", commentErr);
             }
 
             success("Đã từ chối hóa đơn!");
             navigate("/invoices");
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Reject fail", err);
-            error("Từ chối thất bại.");
+            error(formatApiErrorForUser(err, "Từ chối thất bại."));
         } finally {
             setIsRejectLoading(false);
         }
@@ -388,8 +386,7 @@ const InvoiceFormPage: React.FC = () => {
             }
         } catch (e) {
             if (isForbidden(e)) return;
-            console.error(e);
-            error(isEditMode ? "Cập nhật thất bại" : "Tạo thất bại");
+            error(formatApiErrorForUser(e, isEditMode ? "Cập nhật thất bại" : "Tạo thất bại"));
         } finally {
             setIsSubmitting(false);
         }

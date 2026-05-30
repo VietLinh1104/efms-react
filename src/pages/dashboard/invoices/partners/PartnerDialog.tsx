@@ -46,6 +46,8 @@ import type {
 
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useToastApp } from "@/hooks/use-toast-app";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 // ================= SCHEMA =================
 const partnerSchema = z.object({
@@ -86,6 +88,7 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [accounts, setAccounts] = React.useState<AccountResponse[]>([]);
     const { companyId } = useAuth();
+    const { error } = useToastApp();
 
     const form = useForm<PartnerFormValues>({
         resolver: zodResolver(partnerSchema),
@@ -113,7 +116,8 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
                     const res = await coreAccountsApi.list4(params);
                     setAccounts(res.data.data || []);
                 } catch (err) {
-                    console.error("Error fetching accounts:", err);
+                    logApiError("Fetch partner accounts failed", err);
+                    error(formatApiErrorForUser(err, "Không thể tải danh sách tài khoản."));
                 }
             };
 
@@ -185,8 +189,8 @@ export const PartnerDialog: React.FC<PartnerDialogProps> = ({
 
             onSuccess();
             onOpenChange(false);
-        } catch (error) {
-            console.error("Error saving partner:", error);
+        } catch (err) {
+            error(formatApiErrorForUser(err, "Lưu đối tác thất bại."));
         } finally {
             setIsSubmitting(false);
         }

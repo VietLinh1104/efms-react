@@ -10,6 +10,7 @@ import { getColumns } from "./columns";
 import UserEditDialog from "./UserEditDialog";
 import UserInviteDialog from "./UserInviteDialog";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 const UserManagementPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -41,8 +42,7 @@ const UserManagementPage: React.FC = () => {
             setUsers(content);
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error fetching users:", err);
-            error("Không thể tải danh sách người dùng.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách người dùng."));
         } finally {
             setIsLoading(false);
         }
@@ -53,7 +53,7 @@ const UserManagementPage: React.FC = () => {
             const response = await identityRoleControllerApi.getAllRoles();
             setRoles(response.data.data || []);
         } catch (err) {
-            console.error("Error fetching roles:", err);
+            logApiError("Fetch user management roles failed", err);
         }
     }, []);
 
@@ -89,8 +89,7 @@ const UserManagementPage: React.FC = () => {
             }
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error updating user:", err);
-            error("Đã xảy ra lỗi khi cập nhật.");
+            error(formatApiErrorForUser(err, "Đã xảy ra lỗi khi cập nhật."));
         } finally {
             setIsLoading(false);
         }
@@ -107,10 +106,9 @@ const UserManagementPage: React.FC = () => {
             } else {
                 error(res.data.message || "Gửi lời mời thất bại");
             }
-        } catch (err: any) {
+        } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error inviting user:", err);
-            error(err.response?.data?.message || "Đã xảy ra lỗi khi gửi lời mời.");
+            error(formatApiErrorForUser(err, "Đã xảy ra lỗi khi gửi lời mời."));
         } finally {
             setIsLoading(false);
         }
@@ -131,8 +129,7 @@ const UserManagementPage: React.FC = () => {
             }
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error("Error deleting user:", err);
-            error("Đã xảy ra lỗi khi xóa.");
+            error(formatApiErrorForUser(err, "Đã xảy ra lỗi khi xóa."));
         } finally {
             setIsLoading(false);
         }

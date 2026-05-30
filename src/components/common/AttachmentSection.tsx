@@ -6,6 +6,7 @@ import { commonAttachmentApi } from "@/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useToastApp } from "@/hooks/use-toast-app";
 import { r2Service } from "@/services/r2Service";
+import { formatApiErrorForUser } from "@/lib/api-error";
 import type {
     AttachmentApiGetAttachmentsByReferenceRequest,
     AttachmentApiCreateAttachmentRequest,
@@ -70,8 +71,7 @@ export function AttachmentSection({
             const data = response.data?.data ?? [];
             setAttachments(data);
         } catch (err) {
-            console.error("Lỗi khi tải tệp đính kèm:", err);
-            error("Không thể tải danh sách tệp đính kèm.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách tệp đính kèm."));
         } finally {
             setIsLoading(false);
         }
@@ -125,8 +125,7 @@ export function AttachmentSection({
                 success(`Đã tải lên "${file.name}" thành công.`);
             }
         } catch (err) {
-            console.error("Lỗi khi tải lên file:", err);
-            error(`Không thể tải lên "${file.name}". Vui lòng thử lại.`);
+            error(formatApiErrorForUser(err, `Không thể tải lên "${file.name}". Vui lòng thử lại.`));
         } finally {
             setUploadingFiles((prev) => {
                 const next = new Set(prev);
@@ -156,8 +155,7 @@ export function AttachmentSection({
             setAttachments((prev) => prev.filter((a) => a.id !== attachment.id));
             success(`Đã xóa "${attachment.fileName}".`);
         } catch (err) {
-            console.error("Lỗi khi xóa file:", err);
-            error(`Không thể xóa "${attachment.fileName}". Vui lòng thử lại.`);
+            error(formatApiErrorForUser(err, `Không thể xóa "${attachment.fileName}". Vui lòng thử lại.`));
         } finally {
             setDeletingIds((prev) => {
                 const next = new Set(prev);

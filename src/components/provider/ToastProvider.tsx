@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react"
 import type { Toast } from "@/hooks/use-toast-app"
 import { ToastContext } from "@/hooks/use-toast-app"
 import { AlertApp } from "@/components/common/AlertApp"
+import type { ApiForbiddenEventDetail } from "@/lib/api-error"
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
     const [toasts, setToasts] = useState<Toast[]>([])
@@ -66,8 +67,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     }, [toast])
 
     useEffect(() => {
-        const handleForbidden = () => {
-            info("Bạn không có quyền thực hiện hành động này", {
+        const handleForbidden = (event: Event) => {
+            const detail = (event as CustomEvent<ApiForbiddenEventDetail>).detail;
+            const description = detail?.traceId
+                ? `${detail.message || "Bạn không có quyền thực hiện hành động này"} (Trace ID: ${detail.traceId})`
+                : detail?.message || "Bạn không có quyền thực hiện hành động này";
+
+            info(description, {
                 title: "Truy cập bị từ chối"
             });
         };

@@ -8,6 +8,8 @@ import { coreAccountsApi } from "@/api";
 import { AccountDialog } from "./AccountDialog.tsx";
 import { Plus, RefreshCcw } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useToastApp } from "@/hooks/use-toast-app";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const AccountListing: React.FC = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -15,10 +17,10 @@ const AccountListing: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [selectedAccount, setSelectedAccount] = React.useState<AccountResponse | null>(null);
     const { companyId } = useAuth();
+    const { error } = useToastApp();
 
     const handleGetAllAccounts = async () => {
         setIsLoading(true);
-        console.log("companyId", companyId);
         try {
             const accountsListPageRequest: AccountsApiListPageRequest = {
                 companyId: companyId,
@@ -27,8 +29,8 @@ const AccountListing: React.FC = () => {
             };
             const response = await coreAccountsApi.listPage(accountsListPageRequest);
             setData(response.data.data?.content || []);
-        } catch (error) {
-            console.error("Error fetching accounts:", error);
+        } catch (err) {
+            error(formatApiErrorForUser(err, "Không thể tải danh sách tài khoản kế toán."));
         } finally {
             setIsLoading(false);
         }
@@ -47,8 +49,8 @@ const AccountListing: React.FC = () => {
             };
             await coreAccountsApi.toggleActive2(accountsToggleActive2Request);
             handleGetAllAccounts();
-        } catch (error) {
-            console.error("Error toggling status:", error);
+        } catch (err) {
+            error(formatApiErrorForUser(err, "Thay đổi trạng thái tài khoản thất bại."));
         }
     };
 

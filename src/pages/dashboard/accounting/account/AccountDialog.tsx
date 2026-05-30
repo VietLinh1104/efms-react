@@ -33,6 +33,8 @@ import { coreAccountsApi } from "@/api";
 import type { AccountResponse, CreateAccountRequest, AccountsApiList4Request, AccountsApiUpdate3Request, AccountsApiToggleActive2Request, AccountsApiCreate3Request } from "@/api/generated/core";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useToastApp } from "@/hooks/use-toast-app";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 const accountSchema = z.object({
     code: z.string().min(1, "Mã tài khoản là bắt buộc"),
@@ -72,6 +74,7 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
     onSuccess,
 }) => {
     const { companyId } = useAuth();
+    const { error } = useToastApp();
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [parentAccounts, setParentAccounts] = React.useState<AccountResponse[]>([]);
     const [accountsListRequest, setAccountsListRequest] = React.useState<AccountsApiList4Request>({
@@ -100,8 +103,9 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
                         companyId: companyId || ''
                     });
                     setParentAccounts(response.data.data || []);
-                } catch (error) {
-                    console.error("Error fetching parent accounts:", error);
+                } catch (err) {
+                    logApiError("Fetch parent accounts failed", err);
+                    error(formatApiErrorForUser(err, "Không thể tải tài khoản cha."));
                 }
             };
             fetchParents();
@@ -163,8 +167,8 @@ export const AccountDialog: React.FC<AccountDialogProps> = ({
 
             onSuccess();
             onOpenChange(false);
-        } catch (error) {
-            console.error("Error saving account:", error);
+        } catch (err) {
+            error(formatApiErrorForUser(err, "Lưu tài khoản thất bại."));
         } finally {
             setIsSubmitting(false);
         }

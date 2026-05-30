@@ -21,6 +21,7 @@ import { getPermissionColumns } from "./permission-columns";
 import RoleEditDialog from "./RoleEditDialog";
 import PermissionEditDialog from "./PermissionEditDialog";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const RolesPermissionsPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState("roles");
@@ -56,8 +57,7 @@ const RolesPermissionsPage: React.FC = () => {
             setRoles(res.data.data || []);
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error(err);
-            error("Không thể tải danh sách vai trò.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách vai trò."));
         } finally {
             setIsLoading(false);
         }
@@ -70,8 +70,7 @@ const RolesPermissionsPage: React.FC = () => {
             setPermissions(res.data.data || []);
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error(err);
-            error("Không thể tải danh sách quyền.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách quyền."));
         } finally {
             setIsLoading(false);
         }
@@ -119,8 +118,7 @@ const RolesPermissionsPage: React.FC = () => {
             fetchRoles();
         } catch (err) {
             if (isForbidden(err)) return;
-            console.error(err);
-            error("Lưu vai trò thất bại.");
+            error(formatApiErrorForUser(err, "Lưu vai trò thất bại."));
         } finally {
             setIsLoading(false);
         }
@@ -134,7 +132,7 @@ const RolesPermissionsPage: React.FC = () => {
             fetchRoles();
         } catch (err) {
             if (isForbidden(err)) return;
-            error("Xóa vai trò thất bại");
+            error(formatApiErrorForUser(err, "Xóa vai trò thất bại"));
         }
     }, [success, error, fetchRoles]);
 
@@ -187,7 +185,7 @@ const RolesPermissionsPage: React.FC = () => {
             fetchPermissions();
         } catch (err) {
             if (isForbidden(err)) return;
-            error("Lưu quyền thất bại.");
+            error(formatApiErrorForUser(err, "Lưu quyền thất bại."));
         } finally {
             setIsLoading(false);
         }
@@ -201,7 +199,7 @@ const RolesPermissionsPage: React.FC = () => {
             fetchPermissions();
         } catch (err) {
             if (isForbidden(err)) return;
-            error("Xóa quyền thất bại");
+            error(formatApiErrorForUser(err, "Xóa quyền thất bại"));
         }
     }, [success, error, fetchPermissions]);
 

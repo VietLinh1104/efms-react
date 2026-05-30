@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import { commonCommentApi } from "@/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useToastApp } from "@/hooks/use-toast-app";
+import { formatApiErrorForUser } from "@/lib/api-error";
 import type {
     CommentApiGetCommentsByReferenceRequest,
     CommentApiCreateCommentRequest,
@@ -92,8 +93,7 @@ export function CommentSection({
                 new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
             ));
         } catch (err) {
-            console.error("Lỗi khi tải bình luận:", err);
-            error("Không thể tải danh sách bình luận.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách bình luận."));
         } finally {
             setIsLoading(false);
         }
@@ -136,8 +136,7 @@ export function CommentSection({
             }
             setNewContent("");
         } catch (err) {
-            console.error("Lỗi khi gửi bình luận:", err);
-            error("Không thể gửi bình luận. Vui lòng thử lại.");
+            error(formatApiErrorForUser(err, "Không thể gửi bình luận. Vui lòng thử lại."));
         } finally {
             setIsSubmitting(false);
         }
@@ -164,8 +163,7 @@ export function CommentSection({
             setComments((prev) => prev.filter((c) => c.id !== comment.id));
             success("Đã xóa bình luận.");
         } catch (err) {
-            console.error("Lỗi khi xóa bình luận:", err);
-            error("Không thể xóa bình luận. Vui lòng thử lại.");
+            error(formatApiErrorForUser(err, "Không thể xóa bình luận. Vui lòng thử lại."));
         } finally {
             setDeletingIds((prev) => {
                 const next = new Set(prev);

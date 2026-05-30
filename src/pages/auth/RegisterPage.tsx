@@ -7,8 +7,8 @@ import { ButtonSpin } from "@/components/common/ButtonSpin";
 import { InputSpin } from "@/components/common/InputSpin";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { identityAuthControllerApi } from "@/api/index";
-import axiosInstance from "@/lib/axios";
 import { useToastApp } from "@/hooks/use-toast-app";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters").max(255),
@@ -55,8 +55,7 @@ const RegisterPage: React.FC = () => {
 
       success("Mã xác thực đã được gửi tới email của bạn!");
     } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string } }; message?: string };
-      const msg = axiosError?.response?.data?.message ?? axiosError?.message ?? "Lỗi gửi mã xác thực";
+      const msg = getApiErrorMessage(error, "Lỗi gửi mã xác thực");
       setErrorMsg(msg);
     } finally {
       setIsSendingOtp(false);
@@ -78,12 +77,7 @@ const RegisterPage: React.FC = () => {
 
       navigate("/login");
     } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string } }; message?: string };
-      setErrorMsg(
-        axiosError?.response?.data?.message ??
-        axiosError?.message ??
-        "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin."
-      );
+      setErrorMsg(getApiErrorMessage(error, "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin."));
     }
   };
 

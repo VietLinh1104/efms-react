@@ -10,6 +10,7 @@ import { useToastApp } from "@hooks/use-toast-app.ts";
 import { BankAccountDialog } from "./BankAccountDialog.tsx";
 import { coreBankAccountsApi } from "@/api";
 import { useAuth } from "@/hooks/useAuth";
+import { formatApiErrorForUser } from "@/lib/api-error";
 
 const BankAccountsListing: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +34,7 @@ const BankAccountsListing: React.FC = () => {
             const res = await coreBankAccountsApi.list2(BankAccountsApiList2Request);
             setData(res.data.data?.content || []);
         } catch (e) {
-            console.error(e);
-            error("Không thể tải danh sách tài khoản.");
+            error(formatApiErrorForUser(e, "Không thể tải danh sách tài khoản."));
         } finally {
             setIsLoading(false);
         }
@@ -59,8 +59,7 @@ const BankAccountsListing: React.FC = () => {
             success(`Đã ${row.isActive ? "vô hiệu hóa" : "kích hoạt"} tài khoản.`);
             fetchAccounts(search);
         } catch (e) {
-            console.error(e);
-            error("Thao tác thất bại.");
+            error(formatApiErrorForUser(e, "Thao tác thất bại."));
         }
     }, [fetchAccounts, search, success, error]);
 

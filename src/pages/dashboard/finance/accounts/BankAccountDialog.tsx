@@ -41,6 +41,7 @@ import type {
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { coreAccountsApi, coreBankAccountsApi } from "@/api";
 import { useAuth } from "@/hooks/useAuth";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 /* ─── Schema ─────────────────────────────────────────────────────────── */
 
@@ -109,7 +110,8 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
                 const res = await coreAccountsApi.list4(AccountsApiList4Request);
                 setGlAccounts(res.data.data || []);
             } catch (e) {
-                console.error(e);
+                logApiError("Fetch bank account GL accounts failed", e);
+                error(formatApiErrorForUser(e, "Không thể tải danh sách tài khoản kế toán."));
             }
         };
         fetchGlAccounts();
@@ -164,8 +166,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
             onSuccess();
             onOpenChange(false);
         } catch (e) {
-            console.error(e);
-            error("Lưu thất bại. Vui lòng thử lại.");
+            error(formatApiErrorForUser(e, "Lưu thất bại. Vui lòng thử lại."));
         } finally {
             setIsSubmitting(false);
         }

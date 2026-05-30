@@ -11,6 +11,7 @@ import type {
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import { useAuth } from "@/hooks/useAuth";
 import { isForbidden } from "@/lib/utils";
+import { formatApiErrorForUser } from "@/lib/api-error";
 import {
     Dialog,
     DialogContent,
@@ -49,7 +50,7 @@ const JournalDetailDialog: React.FC<JournalDetailDialogProps> = ({
             .getDetail1({ id: journal.id })
             .then((res) => setDetail(res.data.data ?? null))
             .catch((err) => {
-                if (!isForbidden(err)) error("Không thể tải chi tiết bút toán.");
+                if (!isForbidden(err)) error(formatApiErrorForUser(err, "Không thể tải chi tiết bút toán."));
             })
             .finally(() => setIsLoading(false));
     }, [open, journal?.id]);
@@ -191,7 +192,7 @@ const JournalListing: React.FC = () => {
             setData(response.data.data?.content ?? []);
         } catch (err) {
             if (isForbidden(err)) return;
-            error("Không thể tải danh sách bút toán.");
+            error(formatApiErrorForUser(err, "Không thể tải danh sách bút toán."));
         } finally {
             setIsLoading(false);
         }

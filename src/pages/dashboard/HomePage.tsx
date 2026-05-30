@@ -47,6 +47,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { coreDashboardApi, coreAuditLogsApi } from "@/api";
 import { useToastApp } from "@hooks/use-toast-app.ts";
 import type { DashboardSummaryResponse, AuditLogResponse } from "@/api/generated/core/api";
+import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -235,9 +236,8 @@ const HomePage: React.FC = () => {
       } else {
         setErrorMsg("Không thể phân tích dữ liệu tổng hợp.");
       }
-    } catch (err: any) {
-      console.error("Lỗi khi tải dữ liệu dashboard:", err);
-      const errMsg = err.response?.data?.message || err.message || "Lỗi kết nối tới máy chủ.";
+    } catch (err) {
+      const errMsg = formatApiErrorForUser(err, "Lỗi kết nối tới máy chủ.");
       setErrorMsg(errMsg);
       toastError(errMsg);
     } finally {
@@ -255,7 +255,7 @@ const HomePage: React.FC = () => {
       });
       setAuditLogs(res.data.data?.content ?? []);
     } catch (err) {
-      console.error("Lỗi khi tải audit logs:", err);
+      logApiError("Fetch dashboard audit logs failed", err);
     } finally {
       setAuditLoading(false);
     }
