@@ -31,7 +31,7 @@ interface JournalDetailDialogProps {
 
 const formatCurrency = (value: number | undefined) =>
     value
-        ? new Intl.NumberFormat("vi-VN").format(value) + " ₫"
+        ? new Intl.NumberFormat("vi-VN").format(value)
         : "—";
 
 const JournalDetailDialog: React.FC<JournalDetailDialogProps> = ({
@@ -61,7 +61,7 @@ const JournalDetailDialog: React.FC<JournalDetailDialogProps> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-3xl">
+            <DialogContent className="sm:max-w-[1000px]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-3">
                         <BookText className="w-5 h-5" />
@@ -99,7 +99,7 @@ const JournalDetailDialog: React.FC<JournalDetailDialogProps> = ({
                             </span>
                             {isBalanced && (
                                 <Badge variant="outline" className="text-green-500 border-green-500/40 ml-auto">
-                                    ✓ Cân đối
+                                    Cân đối
                                 </Badge>
                             )}
                         </div>
@@ -128,14 +128,14 @@ const JournalDetailDialog: React.FC<JournalDetailDialogProps> = ({
                                                 <td className="px-3 py-2 text-muted-foreground">{line.description || "—"}</td>
                                                 <td className="px-3 py-2 text-right tabular-nums">
                                                     {Number(line.debit) > 0 ? (
-                                                        <span className="text-blue-500 font-medium">
+                                                        <span>
                                                             {formatCurrency(Number(line.debit))}
                                                         </span>
                                                     ) : "—"}
                                                 </td>
                                                 <td className="px-3 py-2 text-right tabular-nums">
                                                     {Number(line.credit) > 0 ? (
-                                                        <span className="text-green-600 font-medium">
+                                                        <span>
                                                             {formatCurrency(Number(line.credit))}
                                                         </span>
                                                     ) : "—"}
@@ -150,13 +150,13 @@ const JournalDetailDialog: React.FC<JournalDetailDialogProps> = ({
                                         </tr>
                                     )}
                                 </tbody>
-                                <tfoot className="bg-muted/50 font-semibold">
+                                <tfoot className="bg-muted/50 font-normal">
                                     <tr className="border-t">
                                         <td colSpan={2} className="px-3 py-2 text-right">Tổng cộng</td>
-                                        <td className="px-3 py-2 text-right tabular-nums text-blue-500">
+                                        <td className="px-3 py-2 text-right tabular-nums">
                                             {formatCurrency(totalDebit)}
                                         </td>
-                                        <td className="px-3 py-2 text-right tabular-nums text-green-600">
+                                        <td className="px-3 py-2 text-right tabular-nums">
                                             {formatCurrency(totalCredit)}
                                         </td>
                                     </tr>
@@ -233,7 +233,7 @@ const JournalListing: React.FC = () => {
             </div>
 
             {/* Table */}
-            <DataTable columns={columns} data={data} isLoading={isLoading} />
+            <DataTable columns={columns} data={data} isLoading={isLoading} onRowClick={handleView} />
 
             {/* Detail Dialog */}
             <JournalDetailDialog

@@ -12,6 +12,8 @@ import { Badge } from "@components/ui/badge.tsx";
 import { Separator } from "@components/ui/separator.tsx";
 import { ScrollArea } from "@components/ui/scroll-area.tsx";
 import { Button } from "@components/ui/button.tsx";
+import { Input } from "@components/ui/input.tsx";
+import { Label } from "@components/ui/label.tsx";
 import {
     Tabs,
     TabsList,
@@ -62,10 +64,11 @@ const fmtDatetime = (v?: string | null) => {
     }).format(new Date(v));
 };
 
-const fmtCurrency = (amount?: number | null, currency = "VND") =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency }).format(
-        amount ?? 0
-    );
+const fmtCurrency = (amount?: number | null, currency = "VND") => {
+    if (amount === undefined || amount === null) return "---";
+    const formatted = new Intl.NumberFormat("vi-VN").format(amount);
+    return `${formatted} ${currency}`;
+};
 
 /* ─── Status helpers ────────────────────────────────────────────────────── */
 
@@ -199,15 +202,14 @@ const renderAuditLogSentence = (log: AuditLogResponse) => {
 
 /* ─── Sub-components ────────────────────────────────────────────────────── */
 
-const InfoRow: React.FC<{ label: string; value?: React.ReactNode }> = ({
+const ReadonlyField: React.FC<{ label: string; value?: string; className?: string }> = ({
     label,
     value,
+    className,
 }) => (
-    <div className="flex items-start justify-between gap-2 py-1.5">
-        <span className="text-sm text-muted-foreground shrink-0 min-w-[130px]">
-            {label}
-        </span>
-        <span className="text-sm font-medium text-right">{value ?? "---"}</span>
+    <div className="space-y-2">
+        <Label>{label}</Label>
+        <Input readOnly value={value ?? "---"} className={className} />
     </div>
 );
 
@@ -324,56 +326,90 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
 
                     {/* ── Tab: Thông tin chính ── */}
                     <TabsContent value="info" className="flex-1 overflow-auto px-6 py-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0 divide-y sm:divide-y-0">
-                            {/* Cột trái */}
-                            <div>
-                                <InfoRow label="Loại hóa đơn" value={invoice.invoiceType === "AR" ? "Bán hàng (AR)" : "Mua hàng (AP)"} />
-                                <InfoRow label="Số hóa đơn" value={invoice.invoiceNumber || "---"} />
-                                <InfoRow label="Đối tác" value={invoice.partnerName} />
-                                <InfoRow label="Ngày phát hành" value={fmtDate(invoice.invoiceDate)} />
-                                <InfoRow label="Ngày đến hạn" value={fmtDate(invoice.dueDate)} />
-                                <InfoRow label="Tiền tệ" value={invoice.currencyCode} />
-                                {invoice.exchangeRate && invoice.exchangeRate !== 1 && (
-                                    <InfoRow label="Tỷ giá" value={invoice.exchangeRate?.toLocaleString()} />
+                        <div className="space-y-4">
+
+                            {/* Row 1: Loại hóa đơn + Số hóa đơn */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <ReadonlyField
+                                    label="Loại hóa đơn"
+                                    value={invoice.invoiceType === "AR" ? "Bán hàng (AR)" : "Mua hàng (AP)"}
+                                />
+                                <ReadonlyField
+                                    label="Số hóa đơn"
+                                    value={invoice.invoiceNumber || "---"}
+                                />
+                            </div>
+
+                            {/* Row 2: Đối tác */}
+                            <ReadonlyField
+                                label="Đối tác"
+                                value={invoice.partnerName || "---"}
+                            />
+
+                            {/* Row 3: Ngày phát hành + Ngày đến hạn */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <ReadonlyField
+                                    label="Ngày phát hành"
+                                    value={fmtDate(invoice.invoiceDate)}
+                                />
+                                <ReadonlyField
+                                    label="Ngày đến hạn"
+                                    value={fmtDate(invoice.dueDate)}
+                                />
+                            </div>
+
+                            {/* Row 4: Tiền tệ + Tỷ giá */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <ReadonlyField
+                                    label="Tiền tệ"
+                                    value={invoice.currencyCode || "VND"}
+                                />
+                                {invoice.exchangeRate && invoice.exchangeRate !== 1 ? (
+                                    <ReadonlyField
+                                        label="Tỷ giá"
+                                        value={invoice.exchangeRate?.toLocaleString()}
+                                    />
+                                ) : (
+                                    <div />
                                 )}
                             </div>
 
-                            {/* Cột phải */}
-                            <div>
-                                <InfoRow
+                            {/* Row 5: Tiền trước thuế + Tiền thuế */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <ReadonlyField
                                     label="Tiền trước thuế"
                                     value={fmtCurrency(invoice.subtotal, invoice.currencyCode)}
                                 />
-                                <InfoRow
+                                <ReadonlyField
                                     label="Tiền thuế"
                                     value={fmtCurrency(invoice.taxAmount, invoice.currencyCode)}
                                 />
-                                <InfoRow
-                                    label="Tổng cộng"
-                                    value={
-                                        <span className="font-bold text-primary">
-                                            {fmtCurrency(invoice.totalAmount, invoice.currencyCode)}
-                                        </span>
-                                    }
-                                />
-                                <InfoRow
-                                    label="Đã thanh toán"
-                                    value={
-                                        <span className="text-green-600">
-                                            {fmtCurrency(invoice.paidAmount, invoice.currencyCode)}
-                                        </span>
-                                    }
-                                />
-                                <InfoRow
-                                    label="Còn lại"
-                                    value={
-                                        <span className={remaining > 0 ? "text-amber-600 font-semibold" : "text-green-600"}>
-                                            {fmtCurrency(remaining, invoice.currencyCode)}
-                                        </span>
-                                    }
-                                />
-                                <InfoRow label="Ngày tạo" value={fmtDatetime(invoice.createdAt)} />
                             </div>
+
+                            {/* Row 6: Tổng cộng + Đã thanh toán */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <ReadonlyField
+                                    label="Tổng cộng"
+                                    value={fmtCurrency(invoice.totalAmount, invoice.currencyCode)}
+                                />
+                                <ReadonlyField
+                                    label="Đã thanh toán"
+                                    value={fmtCurrency(invoice.paidAmount, invoice.currencyCode)}
+                                />
+                            </div>
+
+                            {/* Row 7: Còn lại + Ngày tạo */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <ReadonlyField
+                                    label="Còn lại"
+                                    value={fmtCurrency(remaining, invoice.currencyCode)}
+                                />
+                                <ReadonlyField
+                                    label="Ngày tạo"
+                                    value={fmtDatetime(invoice.createdAt)}
+                                />
+                            </div>
+
                         </div>
                     </TabsContent>
 
@@ -408,7 +444,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                                             <TableCell className="text-right">{line.quantity?.toLocaleString()}</TableCell>
                                             <TableCell className="text-right">{fmtCurrency(line.unitPrice, invoice.currencyCode)}</TableCell>
                                             <TableCell className="text-right">{line.taxRate}%</TableCell>
-                                            <TableCell className="text-right font-medium">
+                                            <TableCell className="text-right">
                                                 {fmtCurrency((line.amount ?? 0) + (line.taxAmount ?? 0), invoice.currencyCode)}
                                             </TableCell>
                                         </TableRow>
@@ -417,7 +453,7 @@ export const InvoiceDetailDialog: React.FC<InvoiceDetailDialogProps> = ({
                                 <TableFooter>
                                     <TableRow>
                                         <TableCell colSpan={5} className="text-right">Tổng cộng</TableCell>
-                                        <TableCell className="text-right font-bold">
+                                        <TableCell className="text-right">
                                             {fmtCurrency(invoice.totalAmount, invoice.currencyCode)}
                                         </TableCell>
                                     </TableRow>

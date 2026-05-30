@@ -59,7 +59,6 @@ const InvoicesListing: React.FC = () => {
         }
     }, [companyId, error]);
 
-    // 2. Hàm fetch dữ liệu Tasks (từ API backend)
     const fetchTasks = useCallback(async () => {
         if (!companyId) return;
         setIsTasksLoading(true);
@@ -73,6 +72,9 @@ const InvoicesListing: React.FC = () => {
             const content = res.data?.data?.content || [];
             if (Array.isArray(content)) {
                 setTasksData(content);
+                if (content.length === 0) {
+                    setActiveTab("all");
+                }
             }
         } catch (err) {
             if (isForbidden(err)) return;
@@ -80,7 +82,9 @@ const InvoicesListing: React.FC = () => {
         } finally {
             setIsTasksLoading(false);
         }
-    }, [companyId, error]);
+    }, [companyId, error, setActiveTab]);
+
+
 
     const handleView = useCallback((invoice: InvoiceResponse) => {
         setSelectedInvoice(invoice);
@@ -162,7 +166,7 @@ const InvoicesListing: React.FC = () => {
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
                     <TabsList>
                         <TabsTrigger value="tasks" className="relative">
-                            Công việc cần xử lý
+                            Hoá đơn cần xử lý
                             {/* {tasksData.length > 0 && (
                                 <span className="absolute -top-1 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white">
                                     {tasksData.length}

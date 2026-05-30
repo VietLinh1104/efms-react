@@ -26,10 +26,8 @@ const formatDate = (dateStr?: string) => {
 
 const formatCurrency = (amount?: number, currencyCode = "VND") => {
     if (amount === undefined || amount === null) return "---";
-    return new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: currencyCode || "VND",
-    }).format(amount);
+    const formatted = new Intl.NumberFormat("vi-VN").format(amount);
+    return `${formatted} ${currencyCode}`;
 };
 
 const METHOD_LABEL: Record<string, string> = {

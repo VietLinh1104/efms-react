@@ -91,7 +91,7 @@ export const getColumns = (
                 (sum, line) => sum + (Number(line.debit) || 0), 0
             ) ?? 0;
             return (
-                <div className="text-right font-semibold tabular-nums">
+                <div className="text-right tabular-nums">
                     {formatCurrency(total)}
                 </div>
             );
@@ -105,7 +105,7 @@ export const getColumns = (
                 (sum, line) => sum + (Number(line.credit) || 0), 0
             ) ?? 0;
             return (
-                <div className="text-right font-semibold tabular-nums">
+                <div className="text-right tabular-nums">
                     {formatCurrency(total)}
                 </div>
             );
