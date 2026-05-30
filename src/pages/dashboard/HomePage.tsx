@@ -52,8 +52,8 @@ import { formatApiErrorForUser, logApiError } from "@/lib/api-error";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const formatCurrency = (val: number | undefined | null) => {
-  if (val === undefined || val === null) return "0 ₫";
-  return val.toLocaleString("vi-VN") + " ₫";
+  if (val === undefined || val === null) return "0 VND";
+  return val.toLocaleString("vi-VN") + " VND";
 };
 
 const formatDate = (dateStr: string | undefined | null) => {
@@ -107,7 +107,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <p className="font-semibold text-foreground">{label}</p>
       {payload.map((p: any) => (
         <p key={p.name} style={{ color: p.color }}>
-          {p.name}: <strong>{(p.value * 1_000_000).toLocaleString("vi-VN")} ₫</strong>
+          {p.name}: <span>{(p.value * 1_000_000).toLocaleString("vi-VN")} VND</span>
         </p>
       ))}
     </div>
@@ -378,7 +378,7 @@ const HomePage: React.FC = () => {
               <div className={`rounded-full p-2 ${stat.bg}`}>{stat.icon}</div>
             </CardHeader>
             <CardContent>
-              <p className="text-xl font-bold tabular-nums">{stat.value}</p>
+              <p className="text-xl tabular-nums">{stat.value}</p>
             </CardContent>
           </Card>
         ))}
@@ -495,7 +495,7 @@ const HomePage: React.FC = () => {
                       >
                         {inv.invoiceType}
                       </Badge>
-                      <span className="text-sm font-semibold tabular-nums">
+                      <span className="text-sm tabular-nums">
                         {formatCurrency(inv.totalAmount)}
                       </span>
                       <StatusBadge status={inv.status} approvalStatus={inv.approvalStatus} />
@@ -547,7 +547,7 @@ const HomePage: React.FC = () => {
                       {pay.id?.slice(0, 8)} · {formatDate(pay.paymentDate)}
                     </p>
                   </div>
-                  <div className="text-sm font-semibold tabular-nums text-right shrink-0">
+                  <div className="text-sm tabular-nums text-right shrink-0">
                     {formatCurrency(pay.amount)}
                   </div>
                 </div>
