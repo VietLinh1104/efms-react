@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Building2, Save, Globe, CreditCard } from "lucide-react";
+import { Building2, Save, Globe, CreditCard, Lock } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@components/ui/card.tsx";
 import {
     Form,
@@ -40,7 +40,8 @@ type CompanyFormValues = z.infer<typeof companySchema>;
 
 const CompanySettingsPage: React.FC = () => {
     const { success, error } = useToastApp();
-    const { companyId } = useAuth();
+    const { companyId, user } = useAuth();
+    const isAdmin = !!user?.role?.name?.toLowerCase().includes("admin");
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -121,6 +122,16 @@ const CompanySettingsPage: React.FC = () => {
                 <h2 className="text-2xl font-bold">Cài đặt doanh nghiệp</h2>
             </div>
 
+            {/* Permission notice for non-admins */}
+            {!isAdmin && (
+                <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-400">
+                    <Lock className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>
+                        Bạn chỉ có quyền xem thông tin công ty. Liên hệ Admin để thực hiện thay đổi.
+                    </span>
+                </div>
+            )}
+
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <Card>
@@ -139,7 +150,7 @@ const CompanySettingsPage: React.FC = () => {
                                             <FormControl>
                                                 <div className="relative">
                                                     <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                    <Input className="pl-10" placeholder="Công ty TNHH EFMS" {...field} />
+                                                    <Input className="pl-10" placeholder="Công ty TNHH EFMS" readOnly={!isAdmin} {...field} />
                                                 </div>
                                             </FormControl>
                                             <FormMessage />
@@ -156,7 +167,7 @@ const CompanySettingsPage: React.FC = () => {
                                             <FormControl>
                                                 <div className="relative">
                                                     <CreditCard className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                    <Input className="pl-10" placeholder="0123456789" {...field} />
+                                                    <Input className="pl-10" placeholder="0123456789" readOnly={!isAdmin} {...field} />
                                                 </div>
                                             </FormControl>
                                             <FormMessage />
@@ -172,7 +183,7 @@ const CompanySettingsPage: React.FC = () => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Tiền tệ mặc định</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={!isAdmin}>
                                                 <FormControl>
                                                     <SelectTrigger className="w-full relative pl-10">
                                                         <Globe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -199,7 +210,7 @@ const CompanySettingsPage: React.FC = () => {
                                             <FormControl>
                                                 <div className="relative">
                                                     <Globe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                    <Input className="pl-10" placeholder="Số 1, Đường ABC, Hà Nội" {...field} />
+                                                    <Input className="pl-10" placeholder="Số 1, Đường ABC, Hà Nội" readOnly={!isAdmin} {...field} />
                                                 </div>
                                             </FormControl>
                                             <FormMessage />
@@ -208,17 +219,20 @@ const CompanySettingsPage: React.FC = () => {
                                 />
                             </div>
                         </CardContent>
-                        <CardFooter className="flex justify-end border-t p-6 pb-0">
-                            <ButtonSpin
-                                variant="default"
-                                isLoading={isSubmitting}
-                                loadingText="Đang lưu..."
-                                type="submit"
-                                className="w-full sm:w-auto"
-                            >
-                                Lưu
-                            </ButtonSpin>
-                        </CardFooter>
+                        {isAdmin && (
+                            <CardFooter className="flex justify-end border-t p-6 pb-0">
+                                <ButtonSpin
+                                    variant="default"
+                                    isLoading={isSubmitting}
+                                    loadingText="Đang lưu..."
+                                    type="submit"
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Save className="w-4 h-4 mr-2" />
+                                    Lưu thay đổi
+                                </ButtonSpin>
+                            </CardFooter>
+                        )}
                     </Card>
                 </form>
             </Form>

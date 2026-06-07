@@ -11,6 +11,9 @@ import {
   ChevronUp,
   ExternalLink,
   Info,
+  Monitor,
+  Wifi,
+  AlertTriangle,
 } from "lucide-react";
 import {
   Card,
@@ -32,6 +35,8 @@ import { Separator } from "@/components/ui/separator";
 // ─── Constants ───────────────────────────────────────────────────────────────
 const BASE_URL = "https://efms.hnhdecor.com";
 const MCP_URL = "https://mcp.hnhdecor.com/mcp";
+const OAUTH_CLIENT_ID = "claude-connector";
+const OAUTH_CLIENT_SECRET = "scXLlfmeZSXIcCxu8nbWbwzq";
 
 const CLAUDE_CONFIG = JSON.stringify(
   {
@@ -164,26 +169,97 @@ const McpSettingsPage: React.FC = () => {
           <Badge variant="secondary" className="text-xs">Beta</Badge>
         </div>
         <p className="text-sm text-muted-foreground">
-          Tích hợp EFMS với Claude Desktop thông qua Model Context Protocol (MCP) để AI có thể truy cập dữ liệu tài chính của bạn.
+          Tích hợp EFMS với Claude thông qua Model Context Protocol (MCP) để AI có thể truy cập dữ liệu tài chính của bạn.
         </p>
       </div>
 
-      {/* Status Card */}
-      {/* <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/20">
-        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-green-700 dark:text-green-400">MCP Server đang hoạt động</p>
-          <p className="text-xs text-muted-foreground truncate">{MCP_URL}</p>
+      {/* ── Cách 1: Claude.ai Web Connector ─────────────────────────────── */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Wifi className="w-4 h-4 text-primary" />
+          <h3 className="text-base font-semibold">Cách 1: Claude.ai (Web)</h3>
+          <Badge variant="outline" className="text-xs">Khuyến nghị</Badge>
         </div>
-        <a
-          href={MCP_URL.replace("/mcp", "")}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-      </div> */}
+
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-base">Thông tin kết nối</CardTitle>
+            <CardDescription>
+              Nhập các thông tin sau khi thêm Custom Connector trong Claude.ai
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <CopyField label="NAME" value="EFMS" description="Tên hiển thị connector" />
+            <CopyField label="MCP Server URL" value={MCP_URL} description="Endpoint chính" mono />
+            <CopyField label="OAuth Client ID" value={OAUTH_CLIENT_ID} description="Định danh OAuth client" mono />
+            <CopyField label="OAuth Client Secret" value={OAUTH_CLIENT_SECRET} description="Mã bảo mật OAuth" mono />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-primary" />
+              <CardTitle className="text-base">Hướng dẫn từng bước</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-5">
+              {([
+                { title: "Truy cập claude.ai", desc: "Mở trình duyệt và đăng nhập tại claude.ai." },
+                { title: 'Mở Customize → Connectors', desc: 'Nhấn vào avatar góc trên phải → chọn Customize → tab Connectors.' },
+                { title: 'Thêm connector mới', desc: 'Nhấn dấu "+" → chọn Add custom connector.' },
+                { title: 'Nhập thông tin kết nối', desc: 'Copy các giá trị NAME, MCP Server URL, OAuth Client ID và OAuth Client Secret từ bảng trên vào form.' },
+                { title: 'Lưu và xác thực', desc: 'Nhấn Save. Claude sẽ mở luồng đăng nhập EFMS — đăng nhập bằng tài khoản EFMS của bạn.' },
+                { title: 'Kết nối thành công', desc: 'Sau khi xác thực xong, Claude có thể truy cập các chức năng EFMS theo đúng quyền của tài khoản đã đăng nhập.' },
+              ] as { title: string; desc: string }[]).map((step, i) => (
+                <div key={i} className="flex gap-4">
+                  <StepBadge step={i + 1} />
+                  <div className="flex-1 space-y-1 pt-0.5">
+                    <p className="text-sm font-medium">{step.title}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Security note */}
+        <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm">
+          <AlertTriangle className="mt-0.5 h-4 w-4 text-amber-500 shrink-0" />
+          <span className="text-amber-700 dark:text-amber-400 text-xs leading-relaxed">
+            Không chia sẻ thông tin kết nối và OAuth Client Secret cho người không được phép sử dụng hệ thống.
+          </span>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* ── Cách 2: Claude Desktop ───────────────────────────────────────── */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Monitor className="w-4 h-4 text-primary" />
+          <h3 className="text-base font-semibold">Cách 2: Claude Desktop</h3>
+          <Badge variant="secondary" className="text-xs">Nâng cao</Badge>
+        </div>
+
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/5 border border-green-500/20">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-green-700 dark:text-green-400">MCP Server đang hoạt động</p>
+            <p className="text-xs text-muted-foreground truncate">{MCP_URL}</p>
+          </div>
+          <a
+            href={MCP_URL.replace("/mcp", "")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </div>
 
       {/* Section 1: OAuth Endpoints */}
       <Card>
